@@ -864,12 +864,6 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 961126481}
   m_Script: {fileID: 11500000, guid: d11c1ef457e58004dbe45e8c94d013bd, type: 3}
---- !u!114 &804693282 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11498538, guid: 1af3a40eecd3bee40939e0d9122826d9,
-    type: 2}
-  m_PrefabInternal: {fileID: 961126481}
-  m_Script: {fileID: 11500000, guid: 588346f7197757f499b081cebde3fa8e, type: 3}
 --- !u!1 &909607335
 GameObject:
   m_ObjectHideFlags: 0
@@ -954,6 +948,8 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11411926, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
+    - {fileID: 11498538, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
+    - {fileID: 11475352, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1022014935
@@ -1296,6 +1292,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1406049025}
   - 114: {fileID: 1406049026}
+  - 114: {fileID: 1406049027}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
@@ -1329,9 +1326,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathParent: {fileID: 786162453}
   carBanking: {fileID: 804693281}
-  carBouncing: {fileID: 804693282}
+  carBouncing: {fileID: 1406049027}
   bankMaxAngle: 5
-  bounceDuration: 0.5
+  bounceDuration: 1.5
+--- !u!114 &1406049027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1406049024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 588346f7197757f499b081cebde3fa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _trunkLid: {fileID: 1589671489}
+  _maxAmp: 25
 --- !u!1 &1415197815
 GameObject:
   m_ObjectHideFlags: 0
@@ -1620,6 +1630,10 @@ MonoBehaviour:
   _nextNode: {fileID: 0}
   speedLimitUPS: 20
   stopAfterFinish: 0.5
+--- !u!1 &1589671489 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 192478, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
+  m_PrefabInternal: {fileID: 961126481}
 --- !u!1 &1595383310
 GameObject:
   m_ObjectHideFlags: 0

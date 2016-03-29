@@ -4,28 +4,25 @@ using System.Collections;
 [ExecuteInEditMode]
 public class Bouncer : MonoBehaviour {
 
-    GameObject _trunkLid = null;
-    public float _duration = 0f;
-    public float _timer = 0f;
+    public GameObject _trunkLid = null;
+    float _duration = 0f;
+    float _timer = 0f;
 
-    [Range(1, 100)]
-    public float _final = 4f; 
+    float _final = 4f; 
 
     bool _isBouncing;
 
-    [Range(1, 250)]
-    public float _maxAmp = 3f;
+    [Range(10, 200)]
+    public float _maxAmp = 25f;
 
-    [Range(0, 1)]
-    public float t = 0f;
+    float t = 0f;
 
-    public float _start;
+    float _start;
 
-    public float y = 0f;
+
 
     // Use this for initialization
-    void Start () {
-	    _trunkLid = GameObject.Find("Trunk Hinge");
+    void Start() {
     }
 	
 	// Update is called once per frame
@@ -37,6 +34,9 @@ public class Bouncer : MonoBehaviour {
 
         _timer += Time.deltaTime;
         t = _timer / _duration;
+
+        var y = 0f;
+        
         if (t < 0.5)
         {
             y = Ease.ElasticEaseIn(t, 0, _final, 1);
@@ -46,7 +46,7 @@ public class Bouncer : MonoBehaviour {
             y = Ease.ElasticEaseIn(1-t, 0, _final, 1);
         }
 
-        y = Mathf.Max(360f, (_start - y * _maxAmp)); 
+        y = Mathf.Min(360f, (_start - y * _maxAmp)); 
         y = Mathf.Max(y, 270f);
 
         _trunkLid.transform.localRotation = Quaternion.Euler(0, y, 0);
