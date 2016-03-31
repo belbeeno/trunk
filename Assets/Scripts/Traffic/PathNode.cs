@@ -184,7 +184,6 @@ public class PathNode : MonoBehaviour
     public void OnDrawGizmos()
     {
         if (Vector3.SqrMagnitude(transform.position - NextNodePos) <= Mathf.Epsilon) return; 
-        Vector3 nextPos = NextNodePos;
         switch (behaviourToNext)
         {
             case Behaviour.Straight:
