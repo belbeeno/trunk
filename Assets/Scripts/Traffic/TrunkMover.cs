@@ -27,7 +27,7 @@ public class TrunkMover : MonoBehaviour
     }
 
     public float bankMaxAngle = 100f;
-    public float bounceDuration = 0.5f;
+    public float bounceDuration = 1.5f;
 
 	// Update is called once per frame
 	void Update () 
@@ -60,17 +60,17 @@ public class TrunkMover : MonoBehaviour
                 else if (behaviour == PathNode.Behaviour.Straight)
                 {
                 }
-            }
-
-            if (carBouncing != null)
-            {
-                // I'm lazyyyy
-                if (Input.GetKeyUp(KeyCode.B))
-                {
-                    carBouncing.Bounce(bounceDuration);
-                }
-
-            }
+            }  
         }
-	}
+
+        if (carBouncing != null)
+        {
+            // I'm lazyyyy
+            if (Input.GetKeyUp(KeyCode.B))
+            {
+                carBouncing.Bounce(bounceDuration);
+            }
+
+        }
+    }
 }
