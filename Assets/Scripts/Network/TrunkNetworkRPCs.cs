@@ -36,8 +36,16 @@ namespace NetMessage
 
     public static class ID
     {
-        public const short Ping = 100;
-        public const short APB = 101;
+        public const short InitSession      = 100;
+        public const short Ping             = 101;
+        public const short APB              = 102;
+    }
+
+    public class InitSessionMsg : MessageBase
+    {
+        // Don't really do anything yet, but...
+        public int citySeed = -1;
+        public int pathSeed = -1;
     }
     
     public class PingMsg : MessageBase
