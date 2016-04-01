@@ -9,6 +9,9 @@ public class DebugConsole : MonoBehaviour
 
     public static void SetText(string name, string msg)
     {
+#if UNITY_EDITOR
+        Debug.Log("[" + name + "] - " + msg);
+#endif
         if (Debug.isDebugBuild && _instance != null)
         {
             if (_instance.messages.ContainsKey(name))

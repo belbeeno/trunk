@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 435088}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Camera Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ GameObject:
   - 33: {fileID: 3380896}
   - 65: {fileID: 6557142}
   - 23: {fileID: 2306254}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Feet Side
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - 33: {fileID: 3338358}
   - 65: {fileID: 6587676}
   - 23: {fileID: 2333328}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trunk Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 445480}
   - 108: {fileID: 10850756}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   - 33: {fileID: 3334250}
   - 65: {fileID: 6558786}
   - 23: {fileID: 2308442}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Left Side
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - 33: {fileID: 3396568}
   - 65: {fileID: 6594808}
   - 23: {fileID: 2366852}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lid Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ GameObject:
   - 33: {fileID: 3396282}
   - 65: {fileID: 6566786}
   - 23: {fileID: 2312776}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Head Side
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   - 20: {fileID: 2076596}
   - 124: {fileID: 12464546}
   - 114: {fileID: 11475532}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Camera Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ GameObject:
   - 224: {fileID: 22439574}
   - 222: {fileID: 22296426}
   - 114: {fileID: 11438498}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: TextConsole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   - 114: {fileID: 11424180}
   - 114: {fileID: 11475352}
   - 114: {fileID: 11498538}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +185,7 @@ GameObject:
   - 223: {fileID: 22360086}
   - 114: {fileID: 11450534}
   - 114: {fileID: 11435614}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: DebugCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -200,7 +200,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 412892}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rotation Layer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,13 +216,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 462686}
   - 114: {fileID: 11469812}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CardboardHeadWithDebug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &168592
 GameObject:
   m_ObjectHideFlags: 1
@@ -234,7 +234,7 @@ GameObject:
   - 20: {fileID: 2031258}
   - 124: {fileID: 12422468}
   - 114: {fileID: 11463624}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Camera Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 410174}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rotation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   - 33: {fileID: 3362832}
   - 65: {fileID: 6582888}
   - 23: {fileID: 2312610}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Right Side Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -285,7 +285,7 @@ GameObject:
   - 33: {fileID: 3309410}
   - 65: {fileID: 6511524}
   - 23: {fileID: 2388886}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trunk Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -302,7 +302,7 @@ GameObject:
   - 224: {fileID: 22421780}
   - 222: {fileID: 22292662}
   - 114: {fileID: 11425526}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -317,7 +317,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 432550}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trunk Hinge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,9 +339,8 @@ GameObject:
   - 114: {fileID: 11460990}
   - 114: {fileID: 11439134}
   - 23: {fileID: 2350608}
-  - 114: {fileID: 11411926}
   - 114: {fileID: 11477640}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -425,8 +424,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 145974}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0.24300003, y: -1.32, z: 2.64}
+  m_LocalRotation: {x: -0.49991354, y: 0.5000864, z: 0.49991363, w: 0.50008637}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 435088}
@@ -593,7 +592,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294966783
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -627,7 +626,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294966783
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -661,7 +660,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294966783
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1059,19 +1058,6 @@ Light:
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 1, y: 1}
---- !u!114 &11411926
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 194404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c512fe85aa020e042b1eca0bfa2151d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  reticleSegments: 20
-  reticleGrowthSpeed: 8
 --- !u!114 &11424180
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1165,7 +1151,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 194404}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1156c073149742478887bb24456f32d, type: 3}
   m_Name: 
@@ -1300,13 +1286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 588346f7197757f499b081cebde3fa8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _duration: 0
-  _timer: 0
-  _final: 4.9
+  _trunkLid: {fileID: 192478}
   _maxAmp: 116.1
-  t: 0
-  _start: 0
-  y: 0
 --- !u!124 &12422468
 Behaviour:
   m_ObjectHideFlags: 1
