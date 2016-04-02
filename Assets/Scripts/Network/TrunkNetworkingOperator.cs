@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 using System.Collections;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
-public class TrunkNetworkingOperator : MonoBehaviour
+public class TrunkNetworkingOperator : TrunkNetworkingBase
 {
     public static int GAME_PORT = 7777;
 
@@ -12,15 +13,7 @@ public class TrunkNetworkingOperator : MonoBehaviour
     protected TrunkNetworkingServer server = null;
     protected TrunkNetworkDiscovery broadcaster = null;
 
-    public UnityEngine.UI.Text statusText = null;
-
-    public void Log(string msg, bool asError = false)
-    {
-        statusText.text += "\n" + (asError ? "<color=\"red\">ERROR: " + msg + "</color>" : msg);
-        DebugConsole.SetText("NetworkStatus", msg);
-    }
-
-    public void Begin() 
+    public override void Begin() 
     {
         server = new TrunkNetworkingServer();
         //server.Configure(topology);
@@ -67,40 +60,11 @@ public class TrunkNetworkingOperator : MonoBehaviour
         Restart("Disconnect detected!");
     }
 
-    public IEnumerator SetUpSession(int citySeed, int pathSeed)
-    {
-        // We have nothing to set up / syncronize, so just do nothing for now.
-        var wfs = new WaitForSeconds(1f);
-        for (int i = 0; i < 10; i++)
-        {
-            yield return wfs;
-            Log("Setting up game: " + i * 10f + "% complete");
-        }
-        Log("Setting up game: Done!");
-    }
-
     public void OnInitSession(NetworkMessage msg)
     {
         // Don't really do anything with this yet.  Just for visual purposes.
         NetMessage.InitSessionMsg castedMsg = msg.ReadMessage<NetMessage.InitSessionMsg>();
         StartCoroutine(SetUpSession(castedMsg.citySeed, castedMsg.pathSeed));
-    }
-
-    public void Restart(string msg)
-    {
-        StopAllCoroutines();
-        StartCoroutine(RestartingIn(msg));
-    }
-
-    public IEnumerator RestartingIn(string msg)
-    {
-        Log(msg + "  Resetting in...", true);
-        for (int sec = 5; sec > 0; sec--)
-        {
-            Log(sec + "...");
-            yield return new WaitForSeconds(1f);
-        }
-        SceneManager.LoadScene("Trunk", LoadSceneMode.Single);
     }
 
     public void OnPing(NetworkMessage msg)

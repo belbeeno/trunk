@@ -5,22 +5,12 @@ using UnityEngine.Events;
 using System.Collections;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
-public class TrunkNetworkingHostage : MonoBehaviour
+public class TrunkNetworkingHostage : TrunkNetworkingBase
 {
     TrunkNetworkDiscovery broadcaster = null;
     NetworkClient network = null;
-
-    public UnityEngine.UI.Text statusText = null;
-
-    public UnityEvent OnSessionEstablished;
-
-    public void Log(string msg, bool asError = false)
-    {
-        statusText.text += "\n" + (asError ? "<color=\"red\">ERROR:</color> " : string.Empty) + msg;
-        DebugConsole.SetText("NetworkStatus", msg);
-    }
     
-    public void Begin()
+    public override void Begin()
     {
         broadcaster = GetComponent<TrunkNetworkDiscovery>();
         broadcaster.Initialize();
@@ -39,19 +29,6 @@ public class TrunkNetworkingHostage : MonoBehaviour
         network.RegisterHandler(MsgType.Disconnect, OnDisconnect);
         network.RegisterHandler(NetMessage.ID.Ping, OnPing);
         network.Connect(ip, TrunkNetworkingOperator.GAME_PORT);
-    }
-
-    public IEnumerator SetUpSession(int citySeed, int pathSeed)
-    {
-        // We have nothing to set up / syncronize, so just do nothing for now.
-        var wfs = new WaitForSeconds(1f);
-        for (int i = 0; i < 10; i++ )
-        {
-            yield return wfs;
-            Log("Setting up game: " + i * 10f + "% complete");
-        }
-        Log("Setting up game: Done!");
-        OnSessionEstablished.Invoke();
     }
 
     public void OnConnect(NetworkMessage msg)
@@ -80,23 +57,6 @@ public class TrunkNetworkingHostage : MonoBehaviour
         msg.conn.Send(NetMessage.ID.InitSession, initMsg);
 
         StartCoroutine(SetUpSession(initMsg.citySeed, initMsg.pathSeed));
-    }
-
-    public void Restart(string msg)
-    {
-        StopAllCoroutines();
-        StartCoroutine(RestartingIn(msg));
-    }
-
-    public IEnumerator RestartingIn(string msg)
-    {
-        Log(msg + "  Resetting in...", true);
-        for (int sec = 5; sec > 0; sec--)
-        {
-            Log(sec + "...");
-            yield return new WaitForSeconds(1f);
-        }
-        SceneManager.LoadScene("Trunk", LoadSceneMode.Single);
     }
 
     public void OnDestroy()
