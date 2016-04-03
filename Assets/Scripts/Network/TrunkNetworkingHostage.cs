@@ -7,6 +7,13 @@ using System.Collections;
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingHostage : TrunkNetworkingBase
 {
+    protected static TrunkNetworkingHostage _instance = null;
+    public static TrunkNetworkingHostage Get()
+    {
+        if (_instance == null) _instance = FindObjectOfType<TrunkNetworkingHostage>();  // Shouldn't happen but just in case...
+        return _instance;
+    }
+
     TrunkNetworkDiscovery broadcaster = null;
     NetworkClient network = null;
     
@@ -28,6 +35,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         network.RegisterHandler(MsgType.Connect, OnConnect);
         network.RegisterHandler(MsgType.Disconnect, OnDisconnect);
         network.RegisterHandler(NetMessage.ID.Ping, OnPing);
+        network.RegisterHandler(NetMessage.ID.APB, OnAPBRequest);
         network.Connect(ip, TrunkNetworkingOperator.GAME_PORT);
     }
 
@@ -59,6 +67,34 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         StartCoroutine(SetUpSession(initMsg.citySeed, initMsg.pathSeed));
     }
 
+    public void OnAPBRequest(NetworkMessage msg)
+    {
+        NetMessage.APBRequest castedMsg = msg.ReadMessage<NetMessage.APBRequest>();
+        Log("APB requested at position " + castedMsg.position.ToString());
+
+        // Will be needed for hints.
+        //Physics.CheckSphere(castedMsg.position, GameSettings.APB_RADIUS, LayerMask.NameToLayer("ClientOnly"));
+
+        NetMessage.APBResponse response = new NetMessage.APBResponse();
+        response.origin = castedMsg.position;
+        Debug.DrawLine(Camera.main.transform.position, response.origin, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
+        float distFromOrigin = (Camera.main.transform.position - response.origin).sqrMagnitude;
+        if (distFromOrigin <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
+        {
+            response.hints.Add(new NetMessage.APBResponse.Hint(Camera.main.transform.position, NetMessage.APBResponse.Hint.HintType.Hostage));
+        }
+        msg.conn.Send(NetMessage.ID.APB, response);
+    }
+
+    public void Start()
+    {
+        _instance = this;
+    }
+
     public void OnDestroy()
     {
         if (network != null)
@@ -66,5 +102,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
             network.Disconnect();
             network = null;
         }
+
+        _instance = null;
     }
 }

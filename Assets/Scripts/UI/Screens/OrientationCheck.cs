@@ -35,7 +35,8 @@ public class OrientationCheck : MonoBehaviour
         timer += Time.deltaTime;
         if (timer > duration)
         {
-            if (Screen.orientation == ScreenOrientation.LandscapeLeft)
+            if (SystemInfo.deviceType != DeviceType.Handheld ||
+                Screen.orientation == ScreenOrientation.LandscapeLeft)
             {
                 updating = false;
                 fader.FadeOut();

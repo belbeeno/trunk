@@ -16,7 +16,7 @@ namespace NetMessage
             }
             for (int i = 0; i < listCountRemote; i++)
             {
-                while (i > list.Count)
+                while (i >= list.Count)
                 {
                     list.Add(new T());
                 }
@@ -55,14 +55,14 @@ namespace NetMessage
 
     public class APBRequest : MessageBase
     {
-        public Vector2 position;
+        public Vector3 position;
     }
     public class APBResponse : MessageBase
     {
         public class Trail : MessageBase
         {
-            public Vector2 start;
-            public Vector2 end;
+            public Vector3 start;
+            public Vector3 end;
 
             public Trail()
             {
@@ -74,18 +74,6 @@ namespace NetMessage
                 this.start = start;
                 this.end = end;
             }
-            public override void Serialize(NetworkWriter writer)
-            {
-                writer.Write(start);
-                writer.Write(end);
-                base.Serialize(writer);
-            }
-            public override void Deserialize(NetworkReader reader)
-            {
-                start = reader.ReadVector2();
-                end = reader.ReadVector2();
-                base.Deserialize(reader);
-            }
         }
         public class Hint : MessageBase
         {
@@ -95,6 +83,7 @@ namespace NetMessage
                 Screwdriver,
                 Blanket,
                 Rope,
+                Hostage,        // <- if you get this, you've won!!!!
 
                 INVALID = -1,
             }
@@ -107,7 +96,7 @@ namespace NetMessage
                 this.pos = new Vector2(float.MaxValue, float.MaxValue);
                 this.type = HintType.INVALID;
             }
-            Hint(Vector2 pos, HintType type)
+            public Hint(Vector2 pos, HintType type)
             {
                 this.pos = pos;
                 this.type = type;
@@ -128,18 +117,19 @@ namespace NetMessage
         public List<Trail> trails = new List<Trail>();
         public List<Hint> hints = new List<Hint>();
 
+        public Vector3 origin;
+
         public override void Serialize(NetworkWriter writer)
         {
             Helpers.SerializeList(writer, ref trails);
             Helpers.SerializeList(writer, ref hints);
-            base.Serialize(writer);
+            writer.Write(origin);
         }
 
         public override void Deserialize(NetworkReader reader)
         {
             Helpers.DeserializeList(reader, ref trails);
             Helpers.DeserializeList(reader, ref hints);
-            base.Deserialize(reader);
         }
     }
 

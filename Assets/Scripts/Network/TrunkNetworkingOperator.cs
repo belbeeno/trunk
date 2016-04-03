@@ -7,10 +7,18 @@ using System.Collections;
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingOperator : TrunkNetworkingBase
 {
+    protected static TrunkNetworkingOperator _instance = null;
+    public static TrunkNetworkingOperator Get() 
+    {
+        if (_instance == null) _instance = FindObjectOfType<TrunkNetworkingOperator>(); // Shouldn't happen but just in case...
+        return _instance;  
+    }
+
     public static int GAME_PORT = 7777;
 
     public HostTopology topology;
     protected TrunkNetworkingServer server = null;
+    protected int clientId = -1;
     protected TrunkNetworkDiscovery broadcaster = null;
 
     public override void Begin() 
@@ -22,6 +30,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         server.RegisterHandler(MsgType.Disconnect, OnDisconnect);
         server.RegisterHandler(NetMessage.ID.InitSession, OnInitSession);
         server.RegisterHandler(NetMessage.ID.Ping, OnPing);
+        server.RegisterHandler(NetMessage.ID.APB, OnAPBResponse);
         if (!server.Listen(GAME_PORT))
         {
             Restart("Unable to start a host!");
@@ -41,6 +50,37 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         }
     }
 
+    public void RequestAPB(Vector3 pos)
+    {
+        if (server == null) return;
+
+        NetworkConnection client = server.FindConnection(clientId);
+        if (client != null)
+        {
+            Log("Requesting APB at pos " + pos.ToString());
+            NetMessage.APBRequest msg = new NetMessage.APBRequest();
+            msg.position = pos;
+            client.Send(NetMessage.ID.APB, msg);
+        }
+        else
+        {
+            Debug.LogWarning("Attempting to find connection for clientId " + clientId + " but got nothin!");
+        }
+    }
+
+    public void OnAPBResponse(NetworkMessage msg)
+    {
+        NetMessage.APBResponse castedMsg = msg.ReadMessage<NetMessage.APBResponse>();
+        Log("Attempting to find hostage at position " + castedMsg.origin);
+        for (int i = 0; i < castedMsg.hints.Count; i++)
+        {
+            if (castedMsg.hints[i].type == NetMessage.APBResponse.Hint.HintType.Hostage)
+            {
+                Log("Hostage found!  You win!  You can stop playing now.");
+            }
+        }
+    }
+
     public void Update()
     {
         if (server != null)
@@ -53,6 +93,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
     {
         Log("New player connected!");
         broadcaster.StopBroadcast();
+        clientId = msg.conn.connectionId;
     }
 
     public void OnDisconnect(NetworkMessage msg)
@@ -77,6 +118,11 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         msg.conn.Send(NetMessage.ID.Ping, response);
     }
 
+    public void Start()
+    {
+        _instance = this;
+    }
+
     public void OnDestroy()
     {
         if (server != null)
@@ -84,5 +130,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
             server.Stop();
             server = null;
         }
+
+        _instance = null;
     }
 }
