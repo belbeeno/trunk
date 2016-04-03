@@ -17,6 +17,11 @@ public abstract class Interactable : MonoBehaviour
     {
         return _itemsToInteractWith.Contains(item); 
     }
+
+    public void Interact()
+    {
+        
+    }
     
     public void ItemSelected()
     {

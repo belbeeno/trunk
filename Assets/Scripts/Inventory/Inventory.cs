@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class Inventory : MonoBehaviour {
 
@@ -33,6 +34,27 @@ public class Inventory : MonoBehaviour {
         return currentObject; 
     }
 
+    public void InteractWithItem(GameObject item)
+    {
+        // looking at item
+        if (item != null)
+        {
+            // Pick up the item
+            if (isEmpty())
+            {
+                // TODO: Check if item is pick-up able
+                var interactable = item.GetComponent<Interactable>();
+                interactable.ItemSelected();
+                HoldItem(item);
+            } else
+            {
+                // check if current object can interact with item
+                // if it can, then do so
+            }
+        }
+        
+    }
+
     public void HoldItem(GameObject item)
     {
         currentObject = item;
@@ -46,6 +68,14 @@ public class Inventory : MonoBehaviour {
 
     public void DropItem()
     {
+        if (isEmpty())
+        {
+            return;
+        }
+        // Drop the item
+        var interactable = currentObject.GetComponent<Interactable>();
+        interactable.ItemDropped();
+
         var curScale = currentObject.transform.localScale;
         currentObject.transform.localScale = new Vector3(curScale.x / scaleFactor, curScale.y / scaleFactor, curScale.z / scaleFactor);
         var rigidBody = currentObject.GetComponent<Rigidbody>();

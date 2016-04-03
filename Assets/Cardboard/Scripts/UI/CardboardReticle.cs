@@ -54,14 +54,9 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   private float reticleInnerDiameter = 0.0f;
   private float reticleOuterDiameter = 0.0f;
 
-    //The current object that's being gazed at
-    GameObject currentTargetObject;
-
     // Position of the gaze
     [SerializeField]
-    private Vector3 targetLocalPosition;
-
-    public Inventory inventory; 
+    private bool drawReticle = false; 
 
   void Start () {
     CreateReticleVertices();
@@ -100,9 +95,12 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// the user is looking at, and the intersectionPosition is the intersection
   /// point of the ray sent from the camera on the object.
   public virtual void OnGazeStart(Camera camera, GameObject targetObject, Vector3 intersectionPosition) {
-    SetGazeTarget(intersectionPosition);
+    drawReticle = targetObject.layer == LayerMask.NameToLayer("Interactable");
+        if (drawReticle)
+        {
+            SetGazeTarget(intersectionPosition);
+        }
 
-    currentTargetObject = targetObject;
   }
 
   /// Called every frame the user is still looking at a valid GameObject. This
@@ -112,8 +110,11 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// looking at, and the intersectionPosition is the intersection point of the
   /// ray sent from the camera on the object.
   public virtual void OnGazeStay(Camera camera, GameObject targetObject, Vector3 intersectionPosition) {
-    SetGazeTarget(intersectionPosition);
-  }
+        if (drawReticle)
+        {
+            SetGazeTarget(intersectionPosition);
+        }
+    }
 
   /// Called when the user's look no longer intersects an object previously
   /// intersected with a ray projected from the camera.
@@ -123,11 +124,10 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// The camera is the event camera and the target is the object the user
   /// previously looked at.
   public void OnGazeExit(Camera camera, GameObject targetObject) {
+    drawReticle = false;
     reticleDistanceInMeters = kReticleDistanceMax;
     reticleInnerAngle = kReticleMinInnerAngle;
     reticleOuterAngle = kReticleMinOuterAngle;
-
-    currentTargetObject = null;
   }
 
   /// Called when the Cardboard trigger is initiated. This is practically when
@@ -139,20 +139,6 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// Called when the Cardboard trigger is finished. This is practically when
   /// the user releases the trigger.
   public void OnGazeTriggerEnd(Camera camera) {
-    // Put your reticle trigger end logic here :)
-    if (currentTargetObject != null && inventory.isEmpty())
-        {
-            var interactable = currentTargetObject.GetComponent<Interactable>();
-            interactable.ItemSelected();
-            inventory.HoldItem(currentTargetObject); 
-        }
-    else if (currentTargetObject == null && !inventory.isEmpty())
-        {
-
-            var interactable = inventory.GetCurrentObject().GetComponent<Interactable>();
-            interactable.ItemDropped();
-            inventory.DropItem();
-        }
   }
 
   private void CreateReticleVertices() {
@@ -236,7 +222,7 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   }
 
   private void SetGazeTarget(Vector3 target) {
-    targetLocalPosition = transform.parent.InverseTransformPoint(target);
+    var targetLocalPosition = transform.parent.InverseTransformPoint(target);
 
     reticleDistanceInMeters =
         Mathf.Clamp(targetLocalPosition.z, kReticleDistanceMin, kReticleDistanceMax);
