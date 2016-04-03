@@ -11,8 +11,13 @@ public class Fade : MonoBehaviour
         FADE_IN,
         FADE_OUT
     }
+    [Tooltip("Only ONE of myImage, group or meshRend need to be assigned!!")]
     public Image myImage = null;
+    [Tooltip("Only ONE of myImage, group or meshRend need to be assigned!!")]
     public CanvasGroup group = null;
+    [Tooltip("Only ONE of myImage, group or meshRend need to be assigned!!")]
+    public MeshRenderer meshRend = null;
+
     public State state = State.IDLE;
 
     public float duration = 3f;
@@ -20,16 +25,22 @@ public class Fade : MonoBehaviour
 
     private Color myColor = Color.black;
 
-    public UnityEvent OnFadeComplete = new UnityEvent();
+    public UnityEvent OnFadeInComplete = new UnityEvent();
+    public UnityEvent OnFadeOutComplete = new UnityEvent();
 
 	// Use this for initialization
 	void Start () 
     {
-        if (group == null && myImage == null)
+        if (group == null 
+            && myImage == null
+            && meshRend == null)
         {
             Debug.LogError("Fade is missing both a group and a image!", gameObject);
         }
+	}
 
+    void OnEnable()
+    {
         switch (state)
         {
             case State.FADE_IN:
@@ -39,7 +50,7 @@ public class Fade : MonoBehaviour
                 timer = duration;
                 break;
         }
-	}
+    }
 	
     public void FadeIn()
     {
@@ -64,7 +75,14 @@ public class Fade : MonoBehaviour
             group.interactable = (state == State.FADE_IN);
             group.blocksRaycasts = (state == State.FADE_IN);
         }
-        OnFadeComplete.Invoke();
+        if (state == State.FADE_IN)
+        {
+            OnFadeInComplete.Invoke();
+        }
+        else
+        {
+            OnFadeOutComplete.Invoke();
+        }
     }
 
 	// Update is called once per frame
@@ -91,15 +109,22 @@ public class Fade : MonoBehaviour
             }
         }
 
+        float a = Ease.ExpoEaseInOut(Mathf.Clamp01(timer / duration), 0f, 1f, 1f);
         if (group != null)
         {
-            group.alpha = Ease.ExpoEaseInOut(Mathf.Clamp01(timer / duration), 0f, 1f, 1f);
+            group.alpha = a;
         }
         else if (myImage != null)
         {
             myColor = myImage.color;
-            myColor.a = Ease.ExpoEaseInOut(Mathf.Clamp01(timer / duration), 0f, 1f, 1f);
+            myColor.a = a;
             myImage.color = myColor;
+        }
+        else if (meshRend != null)
+        {
+            Color prevColor = meshRend.material.color;
+            prevColor.a = a; 
+            meshRend.material.color = prevColor;
         }
 	}
 }

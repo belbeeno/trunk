@@ -1,30 +1,29 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 using System.Collections;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
-public class TrunkNetworkingHostage : MonoBehaviour
+public class TrunkNetworkingHostage : TrunkNetworkingBase
 {
+    protected static TrunkNetworkingHostage _instance = null;
+    public static TrunkNetworkingHostage Get()
+    {
+        if (_instance == null) _instance = FindObjectOfType<TrunkNetworkingHostage>();  // Shouldn't happen but just in case...
+        return _instance;
+    }
+
     TrunkNetworkDiscovery broadcaster = null;
     NetworkClient network = null;
-
-    public UnityEngine.UI.Text statusText = null;
-
-    public void Log(string msg, bool asError = false)
-    {
-        statusText.text += "\n" + (asError ? "<color=\"red\">ERROR:</color> " : string.Empty) + msg;
-
-        DebugConsole.SetText("NetworkStatus", msg);
-    }
     
-    public void Begin()
+    public override void Begin()
     {
         broadcaster = GetComponent<TrunkNetworkDiscovery>();
         broadcaster.Initialize();
         if (!broadcaster.StartAsClient(Connect))
         {
-            Log("Unable to listen for host on network!", true);
+            Restart("Unable to listen for host on network!");
             return;
         }
         Log("Listening for a host!");
@@ -36,6 +35,7 @@ public class TrunkNetworkingHostage : MonoBehaviour
         network.RegisterHandler(MsgType.Connect, OnConnect);
         network.RegisterHandler(MsgType.Disconnect, OnDisconnect);
         network.RegisterHandler(NetMessage.ID.Ping, OnPing);
+        network.RegisterHandler(NetMessage.ID.APB, OnAPBRequest);
         network.Connect(ip, TrunkNetworkingOperator.GAME_PORT);
     }
 
@@ -51,24 +51,58 @@ public class TrunkNetworkingHostage : MonoBehaviour
 
     public void OnDisconnect(NetworkMessage msg)
     {
-        StopAllCoroutines();
-        StartCoroutine(RestartingIn("Disconnect detected!"));
+        Restart("Disconnect detected!");
     }
 
     public void OnPing(NetworkMessage msg)
     {
         NetMessage.PingMsg castedMsg = msg.ReadMessage<NetMessage.PingMsg>();
         Log("Ping! " + castedMsg.msg);
+
+        NetMessage.InitSessionMsg initMsg = new NetMessage.InitSessionMsg();
+        initMsg.citySeed = Random.seed;
+        initMsg.pathSeed = Random.Range(int.MinValue, int.MaxValue);
+        msg.conn.Send(NetMessage.ID.InitSession, initMsg);
+
+        StartCoroutine(SetUpSession(initMsg.citySeed, initMsg.pathSeed));
     }
 
-    public IEnumerator RestartingIn(string msg)
+    public void OnAPBRequest(NetworkMessage msg)
     {
-        Log(msg + "  Resetting in...");
-        for (int sec = 5; sec > 0; sec--)
+        NetMessage.APBRequest castedMsg = msg.ReadMessage<NetMessage.APBRequest>();
+        Log("APB requested at position " + castedMsg.position.ToString());
+
+        // Will be needed for hints.
+        //Physics.CheckSphere(castedMsg.position, GameSettings.APB_RADIUS, LayerMask.NameToLayer("ClientOnly"));
+
+        NetMessage.APBResponse response = new NetMessage.APBResponse();
+        response.origin = castedMsg.position;
+        Debug.DrawLine(Camera.main.transform.position, response.origin, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
+        float distFromOrigin = (Camera.main.transform.position - response.origin).sqrMagnitude;
+        if (distFromOrigin <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
         {
-            Log(sec + "...");
-            yield return new WaitForSeconds(1f);
+            response.hints.Add(new NetMessage.APBResponse.Hint(Camera.main.transform.position, NetMessage.APBResponse.Hint.HintType.Hostage));
         }
-        SceneManager.LoadScene("Trunk", LoadSceneMode.Single);
+        msg.conn.Send(NetMessage.ID.APB, response);
+    }
+
+    public void Start()
+    {
+        _instance = this;
+    }
+
+    public void OnDestroy()
+    {
+        if (network != null)
+        {
+            network.Disconnect();
+            network = null;
+        }
+
+        _instance = null;
     }
 }

@@ -5,7 +5,7 @@ using System.Collections;
 [RequireComponent(typeof(CanvasGroup))]
 public class OrientationCheck : MonoBehaviour 
 {
-    CanvasGroup group = null;
+    public Fade fader = null;
     public float duration = 5f;
     float timer = 0f;
     bool updating = false;
@@ -14,42 +14,19 @@ public class OrientationCheck : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-        if (group == null) group = GetComponent<CanvasGroup>();
-        group.alpha = 0f;
+        if (fader == null) fader = GetComponent<Fade>();
 	}
 
-    IEnumerator SetAlpha(float a)
+    public void OnFadeInComplete()
     {
-        float alphaTimer = Mathf.Clamp01(1f - a);
-        while (!Mathf.Approximately(alphaTimer, duration))
-        {
-            alphaTimer = Mathf.MoveTowards(alphaTimer, a, Time.deltaTime);
-            group.alpha = alphaTimer;
-            yield return 0;
-        }
-        OnFadeComplete();
+        updating = true;
+        timer = 0f;
     }
 
-    void Reveal()
+    public void OnFadeOutComplete()
     {
-        StopAllCoroutines();
-        StartCoroutine(SetAlpha(1f));
-    }
-
-    void Hide()
-    {
-        StopAllCoroutines();
-        StartCoroutine(SetAlpha(0f));
-    }
-
-    void OnFadeComplete()
-    {
-        StopAllCoroutines();
-        if (!updating)
-        {
-            OnOrientationCheckComplete.Invoke();
-            gameObject.SetActive(false);
-        }
+        OnOrientationCheckComplete.Invoke();
+        gameObject.SetActive(false);
     }
 
     void Update()
@@ -58,10 +35,11 @@ public class OrientationCheck : MonoBehaviour
         timer += Time.deltaTime;
         if (timer > duration)
         {
-            if (Screen.orientation == ScreenOrientation.LandscapeRight)
+            if (SystemInfo.deviceType != DeviceType.Handheld ||
+                Screen.orientation == ScreenOrientation.LandscapeLeft)
             {
                 updating = false;
-                Hide();
+                fader.FadeOut();
             }
         }
     }
