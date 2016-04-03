@@ -48,5 +48,11 @@ public class City : MonoBehaviour
             var cityBlockScript = plotObj.AddComponent<CityBlock>();
             cityBlockScript.data = plotData;
         }
+        
+        // River
+        var riverObj = new GameObject("River");
+        riverObj.transform.parent = this.transform;
+        var riverScript = riverObj.AddComponent<River>();
+        riverScript.data = result.riverPath.river;
     }
 }

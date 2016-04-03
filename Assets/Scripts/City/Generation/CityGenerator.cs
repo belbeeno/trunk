@@ -11,12 +11,17 @@ public class CityGenerationOptions
     [Range(0f, 8f)] public float floorHeight;
     [Range(4f, 8f)] public float blockSize;
     [Range(1f, 4f)] public float roadWidth;
+    
+    [Range(0f, 8f)] public float riverWidth;
+    [Range(0, 32)] public int riverControlPoints;
+    [Range(0f, 16f)] public float riverMaxDeviation;   
 }
 
 public class CityGenerationResult
 {
     public IRoadGraph roadGraph { get; set; }
     public ICityPlan cityPlan { get; set; }
+    public IRiverLayout riverPath { get; set; }
 }
 
 public class CityGenerator
@@ -25,17 +30,20 @@ public class CityGenerator
     
     private GridRoadGraph _roadGraph;
     private GridCityPlan _cityPlan;
+    private BezierRiver _riverPath;
     
     public CityGenerationResult Generate(CityGenerationOptions options)
     {
         _options = options;
         
         GenerateCity();
+        GenerateRiver();
         
         var results = new CityGenerationResult
             {
                 roadGraph = _roadGraph,
-                cityPlan = _cityPlan
+                cityPlan = _cityPlan,
+                riverPath = _riverPath
             };
             
         return results;
@@ -55,5 +63,16 @@ public class CityGenerator
             }
             _roadGraph.AddIntersection(x, y);
         }
+    }
+    
+    private void GenerateRiver()
+    {
+        var cityWidth = _options.blockSize * _options.width;
+        var cityHeight = _options.blockSize * _options.height;
+        _riverPath = new BezierRiver(cityWidth, cityHeight, _options.riverWidth, _options.riverControlPoints);
+        _riverPath.Generate();
+        
+        _roadGraph.Remove(_riverPath.IsInRiver);
+        _cityPlan.Remove(_riverPath.IsInRiver);
     }
 }

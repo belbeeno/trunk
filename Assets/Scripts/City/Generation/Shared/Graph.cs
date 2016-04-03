@@ -40,6 +40,10 @@ public class Graph<TNode>
         {
             nodes.Remove(node);
             _neighbours.Remove(node);
+            foreach (var otherNode in nodes)
+            {
+                _neighbours[otherNode].Remove(node);
+            }
         }
     }
     

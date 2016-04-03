@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Random = UnityEngine.Random;
 using UnityEngine;
 
 public class GridCityPlan : ICityPlan
@@ -44,5 +46,19 @@ public class GridCityPlan : ICityPlan
             };
          
         return corners;
+    }
+    
+    public void Remove(Func<Vector3, bool> check)
+    {
+        var plotsCopy = new List<CityBlockData>(_plots);
+        foreach (var plot in plotsCopy)
+        foreach (var corner in plot.corners)
+        {
+            if (check(corner))
+            {
+                _plots.Remove(plot);
+                break;
+            }
+        }
     }
 }

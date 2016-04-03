@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,9 +20,7 @@ public class GridRoadGraph : IRoadGraph
             var roads = new List<RoadData>();
             foreach (var edge in _graph.edges)
             {
-                var from = new Vector3(edge.from.x, 0f, edge.from.y) * _gridSize;
-                var to = new Vector3(edge.to.x, 0f, edge.to.y) * _gridSize;
-                roads.Add(new RoadData(from, to));
+                roads.Add(new RoadData(ToVector3(edge.from), ToVector3(edge.to)));
             }
             return roads; 
         }
@@ -47,6 +46,23 @@ public class GridRoadGraph : IRoadGraph
         if (_graph.ContainsNode(from) && _graph.ContainsNode(to))
         {
             _graph.AddEdge(from, to);
+        }
+    }
+    
+    private Vector3 ToVector3(Point2D point)
+    {
+        return new Vector3(point.x, 0f, point.y) * _gridSize;
+    }
+    
+    public void Remove(Func<Vector3, bool> check)
+    {
+        var nodesCopy = new List<Point2D>(_graph.nodes);
+        foreach (var node in nodesCopy)
+        {
+            if (check(ToVector3(node)))
+            {
+                _graph.RemoveNode(node);
+            }
         }
     }
 }
