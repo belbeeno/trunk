@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class City : MonoBehaviour 
 {
-    public CityGenerationOptions generationOptions;
+    public GenerationOptions generationOptions;
     
     private CityGenerator _generator = new CityGenerator();
     
@@ -28,7 +28,7 @@ public class City : MonoBehaviour
         // Roads
         var roadsObj = new GameObject("Roads");
         roadsObj.transform.parent = this.transform;
-        foreach (var roadData in result.roadGraph.roads)
+        foreach (var roadData in result.roads)
         {
             var roadObj = new GameObject("Road");
             roadObj.transform.parent = roadsObj.transform;
@@ -39,7 +39,7 @@ public class City : MonoBehaviour
         // City blocks
         var cityBlocksObj = new GameObject("City Blocks");
         cityBlocksObj.transform.parent = this.transform;
-        foreach (var plotData in result.cityPlan.plots)
+        foreach (var plotData in result.cityBlocks)
         {
             var plotObj = new GameObject("City Block");
             plotObj.transform.parent = cityBlocksObj.transform;
@@ -53,6 +53,6 @@ public class City : MonoBehaviour
         var riverObj = new GameObject("River");
         riverObj.transform.parent = this.transform;
         var riverScript = riverObj.AddComponent<River>();
-        riverScript.data = result.riverPath.river;
+        riverScript.data = result.river;
     }
 }

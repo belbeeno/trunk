@@ -4,30 +4,29 @@ using System.Linq;
 using Random = UnityEngine.Random;
 using UnityEngine;
 
-public class GridCityPlan : ICityPlan
+public class CityPlan
 {
     private float _blockSize;
     private float _roadWidth;
     private float _floorHeight;
-    private IList<CityBlockData> _plots;
     
-    public GridCityPlan(float blockSize, float roadWidth, float floorHeight)
+    private IList<CityBlockData> _cityBlocks;
+    
+    public CityPlan(float blockSize, float roadWidth, float floorHeight)
     {
         _blockSize = blockSize;
         _roadWidth = roadWidth;
         _floorHeight = floorHeight;
         
-        _plots = new List<CityBlockData>();
+        _cityBlocks = new List<CityBlockData>();
     }
-    
-    public IEnumerable<CityBlockData> plots { get { return _plots.ToArray(); } }
-    
+        
     public void AddCityBlock(int x, int y)
     {
         var corners = GetCityBlockCorners(x, y);
         var numFloors = Random.Range(1, 6);
-        var plot = new CityBlockData(corners, numFloors, _floorHeight);
-        _plots.Add(plot);
+        var cityBlock = new CityBlockData(corners, numFloors, _floorHeight);
+        _cityBlocks.Add(cityBlock);
     }
         
     private Vector3[] GetCityBlockCorners(int x, int y)
@@ -50,15 +49,20 @@ public class GridCityPlan : ICityPlan
     
     public void Remove(Func<Vector3, bool> check)
     {
-        var plotsCopy = new List<CityBlockData>(_plots);
-        foreach (var plot in plotsCopy)
-        foreach (var corner in plot.corners)
+        var cityBlocksCopy = new List<CityBlockData>(_cityBlocks);
+        foreach (var cityBlock in cityBlocksCopy)
+        foreach (var corner in cityBlock.corners)
         {
             if (check(corner))
             {
-                _plots.Remove(plot);
+                _cityBlocks.Remove(cityBlock);
                 break;
             }
         }
+    }
+    
+    public CityBlockData[] GetCityBlocks()
+    {
+        return _cityBlocks.ToArray();
     }
 }

@@ -2,28 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridRoadGraph : IRoadGraph
+public class RoadGraph
 {
     private Graph<Point2D> _graph = new Graph<Point2D>();
     
     private float _gridSize;
     
-    public GridRoadGraph(float gridSize)
+    public RoadGraph(float gridSize)
     {
         _gridSize = gridSize;
-    }
-    
-    public IEnumerable<RoadData> roads
-    {
-        get
-        {
-            var roads = new List<RoadData>();
-            foreach (var edge in _graph.edges)
-            {
-                roads.Add(new RoadData(ToVector3(edge.from), ToVector3(edge.to)));
-            }
-            return roads; 
-        }
     }
     
     public void AddIntersection(int x, int y)
@@ -49,6 +36,16 @@ public class GridRoadGraph : IRoadGraph
         }
     }
     
+    public IEnumerable<RoadData> GetRoads()
+    {
+        var roads = new List<RoadData>();
+        foreach (var edge in _graph.edges)
+        {
+            roads.Add(new RoadData(ToVector3(edge.from), ToVector3(edge.to)));
+        }
+        return roads; 
+    }
+        
     private Vector3 ToVector3(Point2D point)
     {
         return new Vector3(point.x, 0f, point.y) * _gridSize;
