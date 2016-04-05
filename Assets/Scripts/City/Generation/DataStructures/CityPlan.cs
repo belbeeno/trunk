@@ -6,58 +6,44 @@ using UnityEngine;
 
 public class CityPlan
 {
-    private float _blockSize;
-    private float _roadWidth;
-    private float _floorHeight;
+    private GenerationOptions _options;
     
     private IList<CityBlockData> _cityBlocks;
     
-    public CityPlan(float blockSize, float roadWidth, float floorHeight)
+    public CityPlan(GenerationOptions options)
     {
-        _blockSize = blockSize;
-        _roadWidth = roadWidth;
-        _floorHeight = floorHeight;
-        
+        _options = options;
         _cityBlocks = new List<CityBlockData>();
     }
         
-    public void AddCityBlock(int x, int y)
+    public void AddCityBlock(Vector3 cityBlockPos)
     {
-        var corners = GetCityBlockCorners(x, y);
+        var corners = GetCityBlockCorners(cityBlockPos);
         var numFloors = Random.Range(1, 6);
-        var cityBlock = new CityBlockData(corners, numFloors, _floorHeight);
+        var cityBlock = new CityBlockData(cityBlockPos, corners, numFloors, _options.floorHeight);
         _cityBlocks.Add(cityBlock);
     }
         
-    private Vector3[] GetCityBlockCorners(int x, int y)
-    {
-        var centerX = (x + 0.5f) * _blockSize;
-        var centerZ = (y + 0.5f) * _blockSize;
-        var center = new Vector3(centerX, 0f, centerZ);
-         
-        var offset = (_blockSize - _roadWidth) / 2;
+    private Vector3[] GetCityBlockCorners(Vector3 cityBlockPos)
+    {         
+        var offset = ((1f - _options.roadWidth) * _options.blockSize) / 2;
         var corners = new[] 
             {
-                center + new Vector3(offset, 0f, offset),
-                center + new Vector3(-offset, 0f, offset),
-                center + new Vector3(-offset, 0f, -offset),
-                center + new Vector3(offset, 0f, -offset),
+                cityBlockPos + new Vector3(offset, 0f, offset),
+                cityBlockPos + new Vector3(-offset, 0f, offset),
+                cityBlockPos + new Vector3(-offset, 0f, -offset),
+                cityBlockPos + new Vector3(offset, 0f, -offset),
             };
          
         return corners;
     }
     
-    public void Remove(Func<Vector3, bool> check)
+    public void RemoveCityBlockWhere(Func<CityBlockData, bool> check)
     {
         var cityBlocksCopy = new List<CityBlockData>(_cityBlocks);
-        foreach (var cityBlock in cityBlocksCopy)
-        foreach (var corner in cityBlock.corners)
+        foreach (var cityBlock in cityBlocksCopy.Where(check))
         {
-            if (check(corner))
-            {
-                _cityBlocks.Remove(cityBlock);
-                break;
-            }
+            _cityBlocks.Remove(cityBlock);
         }
     }
     

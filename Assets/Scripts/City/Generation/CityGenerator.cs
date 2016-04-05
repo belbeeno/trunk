@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class CityGenerator
 {    
@@ -7,15 +8,13 @@ public class CityGenerator
     {
         var steps = new IGenerationStep[] {
             new GenerateGridStep(),
-            new AddRiverStep()
+            new AddRiverStep(),
+            new ClearAreaNearRiverStep()
         };
         
-        var data = new GenerationData(); 
-        foreach (var step in steps)
-        {
-            data = step.Run(options, data);
-        }
-        var result = data.ToGenerationResult();
+        var initialData = new GenerationData(options); 
+        var finalData = steps.Aggregate(initialData, (data, step) => step.RunStep(options, data));
+        var result = finalData.ToGenerationResult();
             
         return result;
     }

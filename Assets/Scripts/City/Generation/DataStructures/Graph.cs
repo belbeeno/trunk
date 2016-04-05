@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Edge<TNode>
@@ -44,6 +45,15 @@ public class Graph<TNode>
             {
                 _neighbours[otherNode].Remove(node);
             }
+        }
+    }
+    
+    public void RemoveNodeWhere(Func<TNode, bool> check)
+    {
+        var nodesCopy = new List<TNode>(nodes);
+        foreach (var node in nodesCopy.Where(check))
+        {
+            RemoveNode(node);
         }
     }
     

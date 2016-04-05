@@ -4,13 +4,16 @@ using UnityEngine;
 [Serializable]
 public class GenerationOptions
 {
-    [Range(0, 32)] public int width;
-    [Range(0, 32)] public int height;
+    [Range(1, 32)] public int blocksWidth;
+    [Range(1, 32)] public int blocksHeight;
     
-    [Range(0f, 8f)] public float floorHeight;
     [Range(4f, 8f)] public float blockSize;
-    [Range(1f, 4f)] public float roadWidth;
+    public float cityWidth { get { return blocksWidth * blockSize; } }
+    public float cityHeight { get { return blocksHeight * blockSize; } }
     
-    [Range(0f, 8f)] public float riverWidth;
-    [Range(0, 64)] public int numRiverSegments;
+    [Range(0f, 1f)] public float roadWidth;
+    [Range(0f, 8f)] public float floorHeight;
+    
+    [Range(0.5f, 2f)] public float riverWidth;
+    [Range(1, 64)] public int numRiverSegments;
 }

@@ -4,31 +4,19 @@ using UnityEngine;
 
 public class RoadGraph
 {
-    private Graph<Point2D> _graph = new Graph<Point2D>();
-    
-    private float _gridSize;
-    
-    public RoadGraph(float gridSize)
-    {
-        _gridSize = gridSize;
-    }
-    
-    public void AddIntersection(int x, int y)
-    {
-        var node = new Point2D(x, y);
-        if (_graph.ContainsNode(node)) 
-        {
-            return;    
-        }
+    private Graph<Vector3> _graph = new Graph<Vector3>();
         
-        _graph.AddNode(node);
-        TryAddRoad(node, new Point2D(x, y - 1));
-        TryAddRoad(node, new Point2D(x, y + 1));
-        TryAddRoad(node, new Point2D(x - 1, y));
-        TryAddRoad(node, new Point2D(x + 1, y));
+    public void AddIntersection(Vector3 pos)
+    {       
+        _graph.AddNode(pos);
     }
         
-    private void TryAddRoad(Point2D from, Point2D to)
+    public void RemoveIntersectionWhere(Func<Vector3, bool> check)
+    {
+        _graph.RemoveNodeWhere(check);
+    }
+        
+    public void AddRoad(Vector3 from, Vector3 to)
     {
         if (_graph.ContainsNode(from) && _graph.ContainsNode(to))
         {
@@ -41,25 +29,8 @@ public class RoadGraph
         var roads = new List<RoadData>();
         foreach (var edge in _graph.edges)
         {
-            roads.Add(new RoadData(ToVector3(edge.from), ToVector3(edge.to)));
+            roads.Add(new RoadData(edge.from, edge.to));
         }
         return roads; 
-    }
-        
-    private Vector3 ToVector3(Point2D point)
-    {
-        return new Vector3(point.x, 0f, point.y) * _gridSize;
-    }
-    
-    public void Remove(Func<Vector3, bool> check)
-    {
-        var nodesCopy = new List<Point2D>(_graph.nodes);
-        foreach (var node in nodesCopy)
-        {
-            if (check(ToVector3(node)))
-            {
-                _graph.RemoveNode(node);
-            }
-        }
     }
 }
