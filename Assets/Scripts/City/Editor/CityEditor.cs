@@ -10,6 +10,7 @@ public class CityEditor : Editor
         DrawDefaultInspector();
         
         var cityScript = (City)target;
+        EditorGUILayout.Space();
         if (GUILayout.Button("Regenerate City"))
         {
             cityScript.Generate();
