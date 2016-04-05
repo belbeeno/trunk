@@ -15,7 +15,24 @@ public class RoadGraph
     {
         _graph.RemoveNodeWhere(check);
     }
+    
+    public Vector3 GetClosestIntersection(Vector3 point)
+    {
+        var bestNode = default(Vector3);
+        var bestDistance = float.MaxValue;
+        foreach (var node in _graph.nodes)
+        {
+            var distance = Vector3.Distance(node, point);
+            if (distance < bestDistance)
+            {
+                bestNode = node;
+                bestDistance = distance;
+            }
+        }
         
+        return bestNode;
+    }
+    
     public void AddRoad(Vector3 from, Vector3 to)
     {
         if (_graph.ContainsNode(from) && _graph.ContainsNode(to))

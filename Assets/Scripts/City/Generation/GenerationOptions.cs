@@ -18,4 +18,5 @@ public class GenerationOptions
     [Header("River")]
     [Range(0.5f, 2f)] public float riverWidth;
     [Range(1, 64)] public int numRiverSegments;
+    [Range(0, 5)] public int numBridges;
 }

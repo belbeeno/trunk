@@ -72,12 +72,12 @@ public class AddRiverStep : GenerationStepBase
         if (tossCoin())
         {
             var x = tossCoin() ? 0f : options.cityWidth;
-            var y = Random.Range(0.1f, 0.9f) * options.cityHeight;
+            var y = Random.Range(0.2f, 0.8f) * options.cityHeight;
             return new Vector3(x, 0f, y);
         }
         else
         {
-            var x = Random.Range(0.1f, 0.9f) * options.cityWidth;
+            var x = Random.Range(0.2f, 0.8f) * options.cityWidth;
             var y = tossCoin() ? 0f : options.cityHeight;
             return new Vector3(x, 0f, y);
         }

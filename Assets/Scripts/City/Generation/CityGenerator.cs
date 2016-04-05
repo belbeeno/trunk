@@ -9,7 +9,8 @@ public class CityGenerator
         var steps = new IGenerationStep[] {
             new GenerateGridStep(),
             new AddRiverStep(),
-            new ClearAreaNearRiverStep()
+            new ClearAreaNearRiverStep(),
+            new AddBridgesStep()
         };
         
         var initialData = new GenerationData(options); 
