@@ -1,28 +1,36 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour
 {
-    public HashSet<Interactable> _itemsToInteractWith;
-    public bool _isStationary;
-    public bool _isSelected;
-
-    public Color activeColor = Color.red;
-    public MeshRenderer _renderer = null;
+    public HashSet<Type> _itemsToInteractWith;
+    public bool _canBeHeld;
+    private bool _isSelected; 
+    
+    void Start()
+    {
+    }
 
     public abstract void InteractWith(Interactable itemToInteractWith);
 
-    public bool CanInteractWith(Interactable item)
+    public void addTypeToInteractWith(Type type)
     {
-        return _itemsToInteractWith.Contains(item); 
+        _itemsToInteractWith.Add(type);
     }
 
-    public void Interact()
+
+    public virtual bool CanInteractWith(Interactable item)
     {
-        
+        return _itemsToInteractWith.Contains(item.GetType()); 
     }
-    
+       
+    public bool IsSelected()
+    {
+        return _isSelected; 
+    }
+
     public void ItemSelected()
     {
         _isSelected = true; 
@@ -31,5 +39,10 @@ public abstract class Interactable : MonoBehaviour
     public void ItemDropped()
     {
         _isSelected = false;
+    }
+
+    internal bool CanBeHeld()
+    {
+        return _canBeHeld; 
     }
 }

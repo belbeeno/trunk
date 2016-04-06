@@ -56,7 +56,10 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
 
     // Position of the gaze
     [SerializeField]
-    private bool drawReticle = false; 
+    private bool drawReticle = false;
+
+    [SerializeField]
+    private Inventory inventory;
 
   void Start () {
     CreateReticleVertices();
@@ -95,7 +98,19 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// the user is looking at, and the intersectionPosition is the intersection
   /// point of the ray sent from the camera on the object.
   public virtual void OnGazeStart(Camera camera, GameObject targetObject, Vector3 intersectionPosition) {
-    drawReticle = targetObject.layer == LayerMask.NameToLayer("Interactable");
+        var hasItem = !inventory.isEmpty();
+        Debug.Log("hasItem: " + hasItem);
+        var targetItem = targetObject.GetComponent<Interactable>();
+        Debug.Log("targetItem: " + targetItem);
+        var itemsCanInteract = false; 
+        if (hasItem && targetItem != null)
+        {
+            var currentItem = inventory.GetCurrentObject().GetComponent<Interactable>();
+            Debug.Log("currentItem " + currentItem); 
+            itemsCanInteract = currentItem.CanInteractWith(targetItem);
+        }
+        var isTargetInteractable = targetObject.layer == LayerMask.NameToLayer("Interactable");
+    drawReticle = isTargetInteractable && ((!hasItem && targetItem.CanBeHeld()) || (hasItem && itemsCanInteract));
         if (drawReticle)
         {
             SetGazeTarget(intersectionPosition);

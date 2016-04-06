@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class Inventory : MonoBehaviour {
 
     [SerializeField]
-    private GameObject currentObject;
+    private GameObject currentObject=null;
     public int test = 0;
 
     [SerializeField]
@@ -13,21 +13,20 @@ public class Inventory : MonoBehaviour {
 
     [SerializeField]
     [Range(0, 1)]
-    private float scaleFactor=.75f;
+    private float scaleFactor=.5f;
 
     [SerializeField]
     [Range(0, 10)]
-    private float thrust; 
+    private float thrust = 6f; 
 
 	// Use this for initialization
 	void Start () {
-	
-	}
+        currentObject = null;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+    }
 
     public GameObject GetCurrentObject()
     {
@@ -35,24 +34,26 @@ public class Inventory : MonoBehaviour {
     }
 
     public void InteractWithItem(GameObject item)
-    {
-        // looking at item
-        if (item != null)
+    {            
+        // Pick up the item
+        if (isEmpty())
         {
-            // Pick up the item
-            if (isEmpty())
+            var interactable = item.GetComponent<Interactable>();
+            if (!interactable.CanBeHeld())
             {
-                // TODO: Check if item is pick-up able
-                var interactable = item.GetComponent<Interactable>();
-                interactable.ItemSelected();
-                HoldItem(item);
-            } else
+                return; 
+            }
+            interactable.ItemSelected();
+            HoldItem(item);
+        } else
+        {
+            var itemInteract = item.GetComponent<Interactable>(); 
+            var curObjInteract = currentObject.GetComponent<Interactable>();
+            if (curObjInteract.CanInteractWith(itemInteract))
             {
-                // check if current object can interact with item
-                // if it can, then do so
+                curObjInteract.InteractWith(itemInteract); 
             }
         }
-        
     }
 
     public void HoldItem(GameObject item)
@@ -63,7 +64,9 @@ public class Inventory : MonoBehaviour {
         var curScale = currentObject.transform.localScale;
         currentObject.transform.localScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
         currentObject.transform.localRotation = Quaternion.Euler(-90, 0,  0);
-        currentObject.GetComponent<Rigidbody>().useGravity = false; 
+        var rigidBody = currentObject.GetComponent<Rigidbody>();
+        rigidBody.useGravity = false;
+        rigidBody.isKinematic = true;
     }
 
     public void DropItem()
@@ -80,6 +83,7 @@ public class Inventory : MonoBehaviour {
         currentObject.transform.localScale = new Vector3(curScale.x / scaleFactor, curScale.y / scaleFactor, curScale.z / scaleFactor);
         var rigidBody = currentObject.GetComponent<Rigidbody>();
         rigidBody.useGravity = true;
+        rigidBody.isKinematic = false;
         rigidBody.AddForce(transform.forward * thrust, ForceMode.Impulse);
         currentObject.transform.parent = trunk.transform;
         currentObject = null;
