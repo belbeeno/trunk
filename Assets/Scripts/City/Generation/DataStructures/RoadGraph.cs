@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RoadGraph
@@ -15,7 +16,7 @@ public class RoadGraph
     {
         _graph.RemoveNodeWhere(check);
     }
-    
+
     public Vector3 GetClosestIntersection(Vector3 point)
     {
         var bestNode = default(Vector3);
@@ -49,5 +50,18 @@ public class RoadGraph
             roads.Add(new RoadData(edge.from, edge.to));
         }
         return roads; 
+    }
+    
+    public void RemoveDeadEnds()
+    {
+        var nodes = new List<Vector3>(_graph.nodes);
+        foreach (var node in nodes)
+        {
+            var neighbours = _graph.GetNeighbours(node);
+            if (neighbours.Count() <= 1)
+            {
+                _graph.RemoveNode(node);
+            }
+        }
     }
 }

@@ -62,6 +62,16 @@ public class Graph<TNode>
         return nodes.Contains(node);
     }
     
+    public IEnumerable<TNode> GetNeighbours(TNode node)
+    {
+        if (!nodes.Contains(node))
+        {
+            throw new ArgumentException("Cannot get neighbours of unknown node");
+        }
+                
+        return _neighbours[node];
+    }
+    
     public IList<Edge<TNode>> edges
     {
         get
