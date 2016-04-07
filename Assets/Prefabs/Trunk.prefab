@@ -1859,10 +1859,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcdfc900e1aaef849a6ee65a70e8aa2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentObject: {fileID: 0}
-  test: 0
+  currentItem: {fileID: 0}
   trunk: {fileID: 158444}
-  scaleFactor: 0.473
+  scaleFactor: 0.5
   thrust: 6
 --- !u!114 &11467724
 MonoBehaviour:
@@ -1876,8 +1875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canBeHeld: 0
-  trunkLid: {fileID: 192478}
-  _maxAmp: 45
+  cover: {fileID: 192478}
 --- !u!114 &11469812
 MonoBehaviour:
   m_ObjectHideFlags: 1

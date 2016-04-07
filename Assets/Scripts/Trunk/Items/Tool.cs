@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System;
 
+// All tools can be used to open a latch. 
+// This is to contain all shared functionalitys of tools
 public class Tool : Interactable {
 
    // Use this for initialization
     void Start () {
-        _itemsToInteractWith = new HashSet<Type>();
+        _itemsToInteractWith = new HashSet<Type>() { typeof(Latch) };
         _canBeHeld = true; 
-        addTypeToInteractWith(typeof(Latch));
 	}
 	
 	// Update is called once per frame
@@ -20,38 +21,27 @@ public class Tool : Interactable {
     {
         if (item.GetType() == typeof(Latch))
         {
-            return CanInteractWith((Latch) item);
+            return !((Latch) item)._isOpen;
         }
         return base.CanInteractWith(item);
     }
-
-    public bool CanInteractWith(Latch item)
-    {
-        return !item._isOpen;
-    }
-
+    
     public override void InteractWith(Interactable itemToInteractWith)
     {
-        if (IsSelected())
+        if (CanInteractWith(itemToInteractWith))
         {
-            if (CanInteractWith(itemToInteractWith))
+            if (itemToInteractWith.GetType() == typeof(Latch))
             {
-                if (itemToInteractWith.GetType() == typeof(Latch))
+                var latch = (Latch)itemToInteractWith;
+                if (!latch._isOpen)
                 {
-                    var latch = (Latch)itemToInteractWith;
-                    if (latch._isOpen)
-                    {
-                        return;
-                    }
                     latch.Open();
                 }
-
-                return;
-            } else
-            {
-                Debug.Log("Nope");
-                return;
             }
+        }
+        else
+        {
+            Debug.Log("Nope");
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.EventSystems;
 
+// Keeps track of what item is currently being held and uses it on other items if possible
 public class Inventory : MonoBehaviour {
 
     [SerializeField]
-    private GameObject currentObject=null;
-    public int test = 0;
+    private GameObject currentItem;
 
     [SerializeField]
     private GameObject trunk;
@@ -21,16 +19,16 @@ public class Inventory : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        currentObject = null;
+        currentItem = null;
     }
 	
 	// Update is called once per frame
 	void Update () {
     }
 
-    public GameObject GetCurrentObject()
+    public GameObject GetCurrentItem()
     {
-        return currentObject; 
+        return currentItem; 
     }
 
     public void InteractWithItem(GameObject item)
@@ -38,17 +36,17 @@ public class Inventory : MonoBehaviour {
         // Pick up the item
         if (isEmpty())
         {
-            var interactable = item.GetComponent<Interactable>();
-            if (!interactable.CanBeHeld())
+            var otherItem = item.GetComponent<Interactable>();
+            if (!otherItem.CanBeHeld())
             {
                 return; 
             }
-            interactable.ItemSelected();
+            otherItem.ItemSelected();
             HoldItem(item);
         } else
         {
             var itemInteract = item.GetComponent<Interactable>(); 
-            var curObjInteract = currentObject.GetComponent<Interactable>();
+            var curObjInteract = currentItem.GetComponent<Interactable>();
             if (curObjInteract.CanInteractWith(itemInteract))
             {
                 curObjInteract.InteractWith(itemInteract); 
@@ -58,13 +56,15 @@ public class Inventory : MonoBehaviour {
 
     public void HoldItem(GameObject item)
     {
-        currentObject = item;
-        currentObject.transform.parent = gameObject.transform; 
-        currentObject.transform.localPosition = new Vector3(0, 0, 0);
-        var curScale = currentObject.transform.localScale;
-        currentObject.transform.localScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
-        currentObject.transform.localRotation = Quaternion.Euler(-90, 0,  0);
-        var rigidBody = currentObject.GetComponent<Rigidbody>();
+        currentItem = item;
+
+        // moves item to left side of the screen, the place for all items being held
+        currentItem.transform.parent = gameObject.transform; 
+        currentItem.transform.localPosition = new Vector3(0, 0, 0);
+        var curScale = currentItem.transform.localScale;
+        currentItem.transform.localScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
+        currentItem.transform.localRotation = Quaternion.Euler(-90, 0,  0);
+        var rigidBody = currentItem.GetComponent<Rigidbody>();
         rigidBody.useGravity = false;
         rigidBody.isKinematic = true;
     }
@@ -75,23 +75,24 @@ public class Inventory : MonoBehaviour {
         {
             return;
         }
-        // Drop the item
-        var interactable = currentObject.GetComponent<Interactable>();
+        
+        var interactable = currentItem.GetComponent<Interactable>();
         interactable.ItemDropped();
 
-        var curScale = currentObject.transform.localScale;
-        currentObject.transform.localScale = new Vector3(curScale.x / scaleFactor, curScale.y / scaleFactor, curScale.z / scaleFactor);
-        var rigidBody = currentObject.GetComponent<Rigidbody>();
+        // throws item in the direction currently facing
+        var curScale = currentItem.transform.localScale;
+        currentItem.transform.localScale = new Vector3(curScale.x / scaleFactor, curScale.y / scaleFactor, curScale.z / scaleFactor);
+        var rigidBody = currentItem.GetComponent<Rigidbody>();
         rigidBody.useGravity = true;
         rigidBody.isKinematic = false;
         rigidBody.AddForce(transform.forward * thrust, ForceMode.Impulse);
-        currentObject.transform.parent = trunk.transform;
-        currentObject = null;
+        currentItem.transform.parent = trunk.transform;
+        currentItem = null;
     }
 
     public bool isEmpty()
     {
-        return currentObject == null; 
+        return currentItem == null; 
     }
    
 }

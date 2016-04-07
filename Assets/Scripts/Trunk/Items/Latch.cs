@@ -3,27 +3,25 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
+// Latches are used to prevent something with a hinge to open. 
 public class Latch : Interactable
 {
     public bool _isOpen { get; set; }
 
-    public GameObject trunkLid;
+    private float _final = 2;
+    public GameObject cover;
     private bool _isOpening;
     float _timer = 0f;
     float _duration = 2f;
 
-    [Range(10, 110)]
-    public float _maxAmp = 45f;
-
     void Start()
     {
         _isOpen = false;
-        _itemsToInteractWith = new HashSet<Type>();
+        _itemsToInteractWith = new HashSet<Type>() { typeof(Tool) };
         _canBeHeld = false;
-        addTypeToInteractWith(typeof(Tool));
     }
 
-    // Update is called once per frame
+    // Used to animated the cover opening 
     void Update () {
         if (!_isOpening)
         {
@@ -35,9 +33,9 @@ public class Latch : Interactable
 
         var y = 0f;
         
-        y = Ease.ElasticEaseOut(t, 0, 2, 1);
+        y = Ease.ElasticEaseOut(t, 0, _final, _duration);
         
-        trunkLid.transform.localRotation = Quaternion.Euler(0, 360 - y, 0);
+        cover.transform.localRotation = Quaternion.Euler(0, 360 - y, 0);
 
         if (_timer > _duration)
         {
@@ -47,15 +45,14 @@ public class Latch : Interactable
         }
     }
 
-
+    // Latches aren't an interacter but an interactee
     public override void InteractWith(Interactable itemToInteractWith)
     {
-        throw new NotImplementedException();
+        return;
     }
 
     public void Open()
     {
-        trunkLid.transform.localRotation = Quaternion.Euler(0, -2, 0);
         _isOpening = true;
         _isOpen = true; 
     }

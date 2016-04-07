@@ -98,19 +98,32 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// the user is looking at, and the intersectionPosition is the intersection
   /// point of the ray sent from the camera on the object.
   public virtual void OnGazeStart(Camera camera, GameObject targetObject, Vector3 intersectionPosition) {
+
+        // check if what we're looking at is interactable
+        var isTargetInteractable = targetObject.layer == LayerMask.NameToLayer("Interactable");
+        if (!isTargetInteractable)
+        { 
+            // do nothing if we can't interact with whatever we're looking at
+            return;
+        }
+        // at this point, whatever we're looking at should be interactable
+        // Check if we're holding anything
         var hasItem = !inventory.isEmpty();
-        Debug.Log("hasItem: " + hasItem);
         var targetItem = targetObject.GetComponent<Interactable>();
-        Debug.Log("targetItem: " + targetItem);
+
         var itemsCanInteract = false; 
         if (hasItem && targetItem != null)
         {
-            var currentItem = inventory.GetCurrentObject().GetComponent<Interactable>();
+            // check if what we're holding can interact with what we're looking at
+            var currentItem = inventory.GetCurrentItem().GetComponent<Interactable>();
             Debug.Log("currentItem " + currentItem); 
             itemsCanInteract = currentItem.CanInteractWith(targetItem);
         }
-        var isTargetInteractable = targetObject.layer == LayerMask.NameToLayer("Interactable");
-    drawReticle = isTargetInteractable && ((!hasItem && targetItem.CanBeHeld()) || (hasItem && itemsCanInteract));
+        
+        // only set as target if: 
+        // we're not holding anything and the item we're looking at can be held
+        // we are holding something and we're looking at something that our current item can interact with
+    drawReticle = (!hasItem && targetItem.CanBeHeld()) || (hasItem && itemsCanInteract);
         if (drawReticle)
         {
             SetGazeTarget(intersectionPosition);
