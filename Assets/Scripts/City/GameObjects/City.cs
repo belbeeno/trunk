@@ -16,15 +16,18 @@ public class City : MonoBehaviour
     
     public void Generate()
     {
-        // Clear children
         while (transform.childCount > 0) 
         {
             GameObject.DestroyImmediate(transform.GetChild(0).gameObject);
         }
         
-        // Data generation
         var result = _generator.Generate(generationOptions);
-        
+        CreateGameObjects(result);
+        RepositionCamera();
+    }
+    
+    public void CreateGameObjects(GenerationResult result)
+    {     
         // Roads
         var roadsObj = new GameObject("Roads");
         roadsObj.transform.parent = this.transform;
@@ -54,5 +57,14 @@ public class City : MonoBehaviour
         riverObj.transform.parent = this.transform;
         var riverScript = riverObj.AddComponent<River>();
         riverScript.data = result.river;
+    }
+    
+    public void RepositionCamera()
+    {
+        var cameraX =  generationOptions.cityWidth / 2f;
+        var cameraZ = generationOptions.cityHeight / 2f; 
+        Camera.main.transform.position = new Vector3(cameraX, 300f, cameraZ);
+        Camera.main.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
+        Camera.main.orthographicSize = generationOptions.cityHeight / 2f;
     }
 }
