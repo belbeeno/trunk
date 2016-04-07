@@ -134,10 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c5ddc4d5d262c945961c4a5591b6508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isStationary: 0
-  _isSelected: 0
-  activeColor: {r: 1, g: 0, b: 0, a: 1}
-  _renderer: {fileID: 0}
+  _canBeHeld: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -3,6 +3,7 @@ using System.Collections;
 
 [ExecuteInEditMode]
 public class Banking : MonoBehaviour {
+    [SerializeField]
     GameObject _rotationLayer;
 
     [Range(0, 1)]
@@ -13,7 +14,7 @@ public class Banking : MonoBehaviour {
     float _duration; 
 
     public bool _isBanking = false;
-
+    
     float _timer = 0f;
 
 
@@ -30,13 +31,18 @@ public class Banking : MonoBehaviour {
             return; 
         }
         _timer += Time.deltaTime;
-        _t = _timer / _duration; 
+        _t = _timer / _duration;
 
-        var t1 = (2 * _t - 1);
-        var t2 = t1 * t1 * t1 * t1;
-        var t3 = Mathf.Max(-t2 + 1, 0);
+        var y = 0f; 
+        if (_t < 0.5)
+        {
+            y = Ease.QuartEaseOut(_t, 0, _maxAngle, _duration / 2);
+        } else
+        {
+            y = Ease.QuartEaseOut(1 - _t, 0, _maxAngle, _duration / 2);
+        }
 
-        var angles = t3*_maxAngle * _direction; 
+        var angles = y * _direction; 
 
         _rotationLayer.transform.localRotation = Quaternion.Euler(angles);
 
