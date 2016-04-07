@@ -18,15 +18,21 @@ public class AddBridgesStep : GenerationStepBase
     private void CreateAllBridges()
     {
         _bridges = new List<BridgeData>();
-        var currentPoint = data.riverPath.First();
-        foreach (var point in data.riverPath.Skip(1))
+        
+        var numToSkip = data.riverPath.Count / 10;
+        var numToTake = data.riverPath.Count - 2 * numToSkip;
+        
+        var currentPoint = data.riverPath[numToSkip];
+        foreach (var point in data.riverPath.Skip(numToSkip + 1).Take(numToTake))
         {
             var bridge = new BridgeData();
-            var riverCenter = (point + currentPoint) / 2f;
-            var perpendicular = new Vector3(-riverCenter.z, 0f, riverCenter.x);
+            
+            var riverDir = (currentPoint - point);
+            var perpendicular = new Vector3(-riverDir.z, 0f, riverDir.x);
             perpendicular.Normalize();
             perpendicular *= (options.riverWidth * options.blockSize) / 2f;
             
+            var riverCenter = (point + currentPoint) / 2f;
             bridge.intersection1 = data.roadGraph.GetClosestIntersection(riverCenter + perpendicular);
             bridge.intersection2 = data.roadGraph.GetClosestIntersection(riverCenter - perpendicular);
             bridge.center = (bridge.intersection1 + bridge.intersection2) / 2f;
