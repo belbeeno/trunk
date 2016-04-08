@@ -20,21 +20,18 @@ public class AddRiverStep : GenerationStepBase
     private void PickBezierPoints()
     {
         do
-        {
-            _startPoint = GetRandomPointOnEdge();
-            _endPoint = GetRandomPointOnEdge();
-            _controlPoint1 = GetRandomPoint();
-            _controlPoint2 = GetRandomPoint();
-        } 
-        while (PointsAreUnsatisfactory());
-    }
-    
-    private bool PointsAreUnsatisfactory()
-    {
-        var sameEdge = _startPoint.x == _endPoint.x || _startPoint.z == _endPoint.z;
-        var tooClose = Vector3.Distance(_startPoint, _endPoint) < (0.4 * Mathf.Max(options.cityHeight, options.cityWidth));
+        {   
+            _startPoint = GetPointInUnitCircle();
+            _endPoint = GetPointInUnitCircle();
+        }
+        while (Vector3.Angle(_startPoint, _endPoint) < 90);
         
-        return sameEdge || tooClose;
+        var offset = new Vector3(options.cityWidth / 2f, 0f, options.cityHeight / 2f);
+        _startPoint = _startPoint * offset.magnitude + offset;
+        _endPoint = _endPoint * offset.magnitude + offset;
+
+        _controlPoint1 = GetRandomPoint();
+        _controlPoint2 = GetRandomPoint();
     }
     
     private void CalculateSegmentPoints()
@@ -62,22 +59,10 @@ public class AddRiverStep : GenerationStepBase
         return result;
     }
     
-    private Vector3 GetRandomPointOnEdge()
+    private Vector3 GetPointInUnitCircle()
     {
-        Func<bool> tossCoin = () => (Random.Range(0f, 1f) > 0.5f);
-        
-        if (tossCoin())
-        {
-            var x = tossCoin() ? 0f : options.cityWidth;
-            var y = Random.Range(0.2f, 0.8f) * options.cityHeight;
-            return new Vector3(x, 0f, y);
-        }
-        else
-        {
-            var x = Random.Range(0.2f, 0.8f) * options.cityWidth;
-            var y = tossCoin() ? 0f : options.cityHeight;
-            return new Vector3(x, 0f, y);
-        }
+        var point = Random.insideUnitCircle.normalized;
+        return new Vector3(point.x, 0f, point.y);
     }
     
     private Vector3 GetRandomPoint()
