@@ -20,7 +20,8 @@ public class CityPlan
     {
         var corners = GetCityBlockCorners(cityBlockPos);
         var numFloors = Random.Range(1, 6);
-        var cityBlock = new CityBlockData(cityBlockPos, corners, numFloors, _options.floorHeight);
+        var scaledHeight = _options.floorHeight * _options.blockSize;
+        var cityBlock = new CityBlockData(cityBlockPos, corners, numFloors, scaledHeight);
         _cityBlocks.Add(cityBlock);
     }
         
