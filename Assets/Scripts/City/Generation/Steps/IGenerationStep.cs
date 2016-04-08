@@ -1,4 +1,4 @@
 public interface IGenerationStep
 {
-    GenerationData RunStep(GenerationOptions options, GenerationData data);
+    void RunStep(GenerationOptions options, GenerationData data);
 }

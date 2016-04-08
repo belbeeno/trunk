@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,12 +6,10 @@ public class AddBridgesStep : GenerationStepBase
 {
     private IList<BridgeData> _bridges;
     
-    public override GenerationData Run()
+    public override void Run()
     {
         CreateAllBridges();
         PickBestBridges();
-        
-        return data;
     }
         
     private void CreateAllBridges()
@@ -33,8 +30,8 @@ public class AddBridgesStep : GenerationStepBase
             perpendicular *= (options.riverWidth * options.blockSize) / 2f;
             
             var riverCenter = (point + currentPoint) / 2f;
-            bridge.intersection1 = data.roadGraph.GetClosestIntersection(riverCenter + perpendicular);
-            bridge.intersection2 = data.roadGraph.GetClosestIntersection(riverCenter - perpendicular);
+            bridge.intersection1 = data.roadGraph.GetClosestIntersection(riverCenter + perpendicular).pos;
+            bridge.intersection2 = data.roadGraph.GetClosestIntersection(riverCenter - perpendicular).pos;
             bridge.center = (bridge.intersection1 + bridge.intersection2) / 2f;
             
             var bridgeDir = bridge.intersection2 - bridge.intersection1;
@@ -51,7 +48,7 @@ public class AddBridgesStep : GenerationStepBase
         while (numPicked < options.numBridges && _bridges.Count > 0)
         {
             var bestBridge = _bridges.OrderBy(b => b.angle).First();
-            data.roadGraph.AddRoad(bestBridge.intersection1, bestBridge.intersection2);
+            data.roadGraph.AddRoad(bestBridge.intersection1, bestBridge.intersection2, isBridge: true);
             RemoveNearbyBridges(bestBridge);
             numPicked++;
         }

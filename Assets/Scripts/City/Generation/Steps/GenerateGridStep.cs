@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class GenerateGridStep : GenerationStepBase
 {    
-    public override GenerationData Run()
-    {                
+    public override void Run()
+    {
+        data.roadGraph = new RoadGraph();
+        data.cityPlan = new CityPlan(options);
+        
         for (var x = 0; x <= options.blocksWidth; x++)
         for (var y = 0; y <= options.blocksHeight; y++)
         {
@@ -14,16 +17,14 @@ public class GenerateGridStep : GenerationStepBase
                 AddCityBlock(x, y);
             }
         }
-        
-        return data;
     }
     
     private void AddIntersection(int x, int y)
     {
         var pos = ToVector3(x, y);
-        data.roadGraph.AddIntersection(pos);
-        data.roadGraph.AddRoad(pos, ToVector3(x, y - 1));
-        data.roadGraph.AddRoad(pos, ToVector3(x - 1, y));
+        data.roadGraph.AddIntersectionNode(pos);
+        data.roadGraph.AddRoad(pos, ToVector3(x, y - 1), isBridge: false);
+        data.roadGraph.AddRoad(pos, ToVector3(x - 1, y), isBridge: false);
     }
     
     private void AddCityBlock(int x, int y)

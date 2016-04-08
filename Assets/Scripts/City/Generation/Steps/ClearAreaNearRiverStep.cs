@@ -1,24 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Random = UnityEngine.Random;
 using UnityEngine;
 
 public class ClearAreaNearRiverStep : GenerationStepBase
 {               
-    public override GenerationData Run()
+    public override void Run()
     {
         data.roadGraph.RemoveIntersectionWhere(IsInRiver);
         data.roadGraph.RemoveDeadEnds();
         data.cityPlan.RemoveCityBlockWhere(IsInRiver);
-                
-        return data;
     }
     
-    private bool IsInRiver(Vector3 point)
+    private bool IsInRiver(Node<RoadNodeData> node)
     {
         var minDistFromRiver = (options.riverWidth * options.blockSize) / 2f;
-        Func<Vector3, bool> tooClose = (p) => Vector3.Distance(point, p) < minDistFromRiver;
+        Func<Vector3, bool> tooClose = (p) => Vector3.Distance(node.pos, p) < minDistFromRiver;
         var result = data.riverPath.Any(tooClose);
         
         return result;

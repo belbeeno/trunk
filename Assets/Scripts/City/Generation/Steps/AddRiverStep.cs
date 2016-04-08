@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Random = UnityEngine.Random;
 using UnityEngine;
 
@@ -12,12 +11,10 @@ public class AddRiverStep : GenerationStepBase
     private Vector3 _controlPoint2;
     private Vector3 _endPoint;
     
-    public override GenerationData Run()
+    public override void Run()
     {        
         PickBezierPoints();
         CalculateSegmentPoints();
-        
-        return data;
     }
     
     private void PickBezierPoints()

@@ -3,12 +3,13 @@ public abstract class GenerationStepBase : IGenerationStep
     protected GenerationOptions options;
     protected GenerationData data;
         
-    public GenerationData RunStep(GenerationOptions options, GenerationData data)
+    public void RunStep(GenerationOptions options, GenerationData data)
     {
         this.options = options;
         this.data = data;
-        return Run();
+        
+        Run();
     }
         
-    public abstract GenerationData Run();
+    public abstract void Run();
 }
