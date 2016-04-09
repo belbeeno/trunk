@@ -20,6 +20,19 @@ public sealed class Graph<TNodeData, TEdgeData>
         _adjacentEdges = new Dictionary<Node<TNodeData>, IList<Edge<TNodeData, TEdgeData>>>();
     }
     
+    public Graph(Graph<TNodeData, TEdgeData> other)
+        : this()
+    {
+        foreach (var node in other.GetNodes())
+        {
+            AddNode(node);
+        }
+        foreach (var edge in other.GetEdges())
+        {
+            AddDirectedEdge(edge);
+        }
+    }
+    
     public Node<TNodeData>[] GetNodes()
     {
         return _nodes.ToArray();
@@ -159,10 +172,15 @@ public sealed class Graph<TNodeData, TEdgeData>
         
     public void AddDirectedEdge(Node<TNodeData> from, Node<TNodeData> to, TEdgeData data)
     {
-        if (ContainsNode(from) && ContainsNode(to) && !ContainsEdge(from, to))
+        var edge = new Edge<TNodeData, TEdgeData>(from, to, data);
+        AddDirectedEdge(edge);
+    }
+    
+    public void AddDirectedEdge(Edge<TNodeData, TEdgeData> edge)
+    {
+        if (ContainsNode(edge.from) && ContainsNode(edge.to) && !ContainsEdge(edge))
         {
-            var edge = new Edge<TNodeData, TEdgeData>(from, to, data);
-            _edgeMap[from.pos].Add(to.pos, edge);
+            _edgeMap[edge.from.pos].Add(edge.to.pos, edge);
             _adjacentEdges[edge.from].Add(edge);
         }
     }

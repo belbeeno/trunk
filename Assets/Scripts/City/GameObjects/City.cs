@@ -22,11 +22,20 @@ public class City : MonoBehaviour
         }
         
         var result = _generator.Generate(generationOptions);
+        InitializeRoutePlanner(result);
         CreateGameObjects(result);
         RepositionCamera();
+        StartCar();
     }
     
-    public void CreateGameObjects(GenerationResult result)
+    private void InitializeRoutePlanner(GenerationResult result)
+    {
+        var gameObj = GameObject.Find("RoutePlanner");
+        var routePlanner = gameObj.GetComponent<RoutePlanner>();
+        routePlanner.graph = result.roadGraph;
+    }
+    
+    private void CreateGameObjects(GenerationResult result)
     {     
         // Roads
         var roadsObj = new GameObject("Roads");
@@ -59,12 +68,19 @@ public class City : MonoBehaviour
         riverScript.data = result.river;
     }
     
-    public void RepositionCamera()
+    private void RepositionCamera()
     {
         var cameraX =  generationOptions.cityWidth / 2f;
         var cameraZ = generationOptions.cityHeight / 2f; 
         Camera.main.transform.position = new Vector3(cameraX, 300f, cameraZ);
         Camera.main.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
         Camera.main.orthographicSize = generationOptions.cityHeight / 2f;
+    }
+    
+    private void StartCar()
+    {
+        var gameObj = GameObject.Find("Car");
+        var car = gameObj.GetComponent<TrunkMover>();
+        car.canMove = true;
     }
 }

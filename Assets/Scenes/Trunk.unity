@@ -955,7 +955,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 300
+  orthographic size: 1200
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -990,8 +990,8 @@ Transform:
   m_PrefabParentObject: {fileID: 488832, guid: 5cbdcfd40c3b34e428b162b5905fee5c, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 486029789}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 15, y: 300, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 1200, y: 300, z: 1200}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 898733340}
@@ -1050,22 +1050,49 @@ MonoBehaviour:
   sourceMaxDistance: 77.5
   sourceMinDistance: 0
   hrtfEnabled: 1
+--- !u!1 &802354508
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 802354510}
+  - 114: {fileID: 802354509}
+  m_Layer: 0
+  m_Name: RoutePlanner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &802354509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 802354508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b15c4f1e1f3047918b5c7d2697174ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &802354510
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 802354508}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1338.6097, y: 3018.3684, z: 32.09659}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
 --- !u!4 &804693279 stripped
 Transform:
   m_PrefabParentObject: {fileID: 420906, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
   m_PrefabInternal: {fileID: 961126481}
---- !u!114 &804693281 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11424180, guid: 1af3a40eecd3bee40939e0d9122826d9,
-    type: 2}
-  m_PrefabInternal: {fileID: 961126481}
-  m_Script: {fileID: 11500000, guid: d11c1ef457e58004dbe45e8c94d013bd, type: 3}
---- !u!114 &804693282 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11498538, guid: 1af3a40eecd3bee40939e0d9122826d9,
-    type: 2}
-  m_PrefabInternal: {fileID: 961126481}
-  m_Script: {fileID: 11500000, guid: 588346f7197757f499b081cebde3fa8e, type: 3}
 --- !u!1 &881470860
 GameObject:
   m_ObjectHideFlags: 0
@@ -2208,8 +2235,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1406049024}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -20, y: 0.1, z: -20}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 150, y: 0, z: 1650}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 804693279}
@@ -2221,16 +2248,13 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1406049024}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0703f1806d1c6654bb304da8e6b43583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathParent: {fileID: 0}
-  carBanking: {fileID: 804693281}
-  carBouncing: {fileID: 804693282}
-  bankMaxAngle: 5
-  bounceDuration: 0.5
+  speed: 30
+  canMove: 1
 --- !u!1 &1415197815
 GameObject:
   m_ObjectHideFlags: 0
@@ -2465,11 +2489,12 @@ MonoBehaviour:
   generationOptions:
     blocksWidth: 16
     blocksHeight: 16
-    blockSize: 8
+    blockSize: 150
     roadWidth: 0.35
-    floorHeight: 3
-    riverWidth: 1
+    floorHeight: 0.1
+    riverWidth: 1.5
     numRiverSegments: 32
+    numBridges: 4
 --- !u!4 &1463518615
 Transform:
   m_ObjectHideFlags: 0
