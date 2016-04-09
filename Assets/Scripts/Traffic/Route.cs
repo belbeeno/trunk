@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using System.Linq;
 
+using Edge = Edge<RoadNodeData, RoadEdgeData>;
+
 public class Route
 {
     private RoutePlanner _routePlanner;
 
-    private Node<RoadNodeData>[] _path;
+    private Edge _currentEdge;
+    private Edge[] _upcomingEdges;
+    
     private float _t = 0f;
+    private float _cornerT = 0.1f;
     
     public Route()
     {
@@ -17,32 +22,53 @@ public class Route
     public void Update(Transform transform, float speed, float deltaTime)
     {
         CheckPath();
-        
-        var segmentDir = (_path[1].pos - _path[0].pos);
-        var dist = (_path[1].pos - _path[0].pos).magnitude;
-        _t += deltaTime / (dist / speed);
-        
-        transform.rotation = Quaternion.LookRotation(segmentDir, Vector3.up);
-        transform.position = Vector3.Lerp(_path[0].pos, _path[1].pos, _t);
-        
+                
+        if (_t > (1f - _cornerT) && _upcomingEdges.Any())
+        {
+             _t += deltaTime / (_currentEdge.length / (speed / 2f));
+            LerpCorner(transform, _currentEdge, _upcomingEdges.First(), _t);
+        }
+        else
+        {
+             _t += deltaTime / (_currentEdge.length / (speed));
+            transform.position = Vector3.Lerp(_currentEdge.from.pos, _currentEdge.to.pos, _t);
+            transform.rotation = Quaternion.LookRotation(_currentEdge.direction, Vector3.up);
+        }
+                
         if (_t > 1f)
         {
-            _t = 0f;
-            _path = _path.Skip(1).ToArray();
+            _t = _cornerT;
+            _currentEdge = _upcomingEdges.First();
+            _upcomingEdges = _upcomingEdges.Skip(1).ToArray();
         }
+    }
+    
+    public void LerpCorner(Transform transform, Edge current, Edge next, float t)
+    {
+        var nextEdgeLerpT = (t + _cornerT) - 1f;
+        var transitionLerpT = nextEdgeLerpT / _cornerT;
+
+        var currentPos = Vector3.Lerp(current.from.pos, current.to.pos, t);
+        var nextPos = Vector3.Lerp(next.from.pos, next.to.pos, nextEdgeLerpT);
+        transform.position = Vector3.Lerp(currentPos, nextPos, transitionLerpT);
+        
+        var currentDirRot = Quaternion.LookRotation(current.direction, Vector3.up);
+        var nextDirRot = Quaternion.LookRotation(next.direction, Vector3.up);
+        transform.rotation = Quaternion.Lerp(currentDirRot, nextDirRot, transitionLerpT);
     }
     
     private void CheckPath()
     {
-        if (_path == null || _path.Count() < 2)
+        if (_currentEdge == null)
         {
-            _path = _routePlanner.GetRandomPath();
-            Debug.Log("New random path");
+            var newPath = _routePlanner.GetRandomPath();
+            _currentEdge = newPath.First();
+            _upcomingEdges = newPath.Skip(1).ToArray();
         }
-        if (_path.Count() == 2)
+        else if (_upcomingEdges == null || !_upcomingEdges.Any())
         {
-            _path = _routePlanner.GetRandomPathStartingWith(_path[0], _path[1]);
-            Debug.Log("New extension path");
+            var newPath = _routePlanner.GetRandomPath(_currentEdge);
+            _upcomingEdges = newPath.Skip(1).ToArray();
         }
     }
 }

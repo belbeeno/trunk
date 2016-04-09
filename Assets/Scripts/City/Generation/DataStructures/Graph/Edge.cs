@@ -1,9 +1,14 @@
+using UnityEngine;
+
 public class Edge<TNodeData, TEdgeData>
 {
     public Edge(Node<TNodeData> from, Node<TNodeData> to, TEdgeData data)
     {
         this.from = from;
         this.to = to;
+        this.direction = (to.pos - from.pos).normalized;
+        this.center = (from.pos + to.pos) / 2f;
+        this.length = Vector3.Distance(from.pos, to.pos);
         this.data = data;
     }
     
@@ -12,9 +17,13 @@ public class Edge<TNodeData, TEdgeData>
         return new Edge<TNodeData, TEdgeData>(to, from, data);
     }
     
-    public Node<TNodeData> from;
-    public Node<TNodeData> to;
-    public TEdgeData data;
+    public readonly Node<TNodeData> from;
+    public readonly Node<TNodeData> to;
+    public readonly TEdgeData data;
+    
+    public readonly Vector3 direction;
+    public readonly Vector3 center;
+    public readonly float length;
     
     public static bool operator ==(Edge<TNodeData, TEdgeData> e1, Edge<TNodeData, TEdgeData> e2)
     {
