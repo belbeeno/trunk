@@ -2,6 +2,22 @@ using System;
 using System.Linq;
 using UnityEngine;
 
+public class RoadNode : Node<RoadNodeData>
+{
+    public RoadNode(Vector3 pos, RoadNodeData data)
+        : base(pos, data)
+    {
+    }
+}
+
+public class RoadEdge : Edge<RoadNodeData, RoadEdgeData>
+{
+    public RoadEdge(RoadNode from, RoadNode to, RoadEdgeData data)
+        : base(from, to, data)
+    {
+    }
+}
+
 public class RoadGraph
 {
     public Graph<RoadNodeData, RoadEdgeData> graph = new Graph<RoadNodeData, RoadEdgeData>();
@@ -11,7 +27,7 @@ public class RoadGraph
         graph.AddNode(pos, new RoadNodeData());
     }
         
-    public void RemoveIntersectionWhere(Func<Node<RoadNodeData>, bool> check)
+    public void RemoveIntersectionWhere(Func<RoadNode, bool> check)
     {
         foreach (var node in graph.GetNodes().Where(check))
         {
@@ -19,14 +35,14 @@ public class RoadGraph
         }
     }
     
-    public Node<RoadNodeData>[] GetIntersections()
+    public RoadNode[] GetIntersections()
     {
         return graph.GetNodes();
     }
 
-    public Node<RoadNodeData> GetClosestIntersection(Vector3 point)
+    public RoadNode GetClosestIntersection(Vector3 point)
     {
-        var bestNode = default(Node<RoadNodeData>);
+        var bestNode = default(RoadNode);
         var bestDistance = float.MaxValue;
         foreach (var node in graph.GetNodes())
         {

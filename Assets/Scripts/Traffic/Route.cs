@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-using Edge = Edge<RoadNodeData, RoadEdgeData>;
-
 public class Route
 {
     private RoutePlanner _routePlanner;
 
-    private Edge _currentEdge;
-    private Edge[] _upcomingEdges;
+    private RoadEdge _currentEdge;
+    private RoadEdge[] _upcomingEdges;
     
     private float _t = 0f;
     private float _cornerT = 0.1f;
@@ -43,7 +41,7 @@ public class Route
         }
     }
     
-    public void LerpCorner(Transform transform, Edge current, Edge next, float t)
+    public void LerpCorner(Transform transform, RoadEdge current, RoadEdge next, float t)
     {
         var nextEdgeLerpT = (t + _cornerT) - 1f;
         var transitionLerpT = nextEdgeLerpT / _cornerT;

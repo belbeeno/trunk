@@ -11,7 +11,7 @@ public class ClearAreaNearRiverStep : GenerationStepBase
         data.cityPlan.RemoveCityBlockWhere(IsInRiver);
     }
     
-    private bool IsInRiver(Node<RoadNodeData> node)
+    private bool IsInRiver(RoadNode node)
     {
         var minDistFromRiver = (options.riverWidth * options.blockSize) / 2f;
         Func<Vector3, bool> tooClose = (p) => Vector3.Distance(node.pos, p) < minDistFromRiver;
