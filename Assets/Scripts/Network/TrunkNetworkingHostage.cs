@@ -36,14 +36,16 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     public void Connect(string ip)
     {
         network = new NetworkClient();
-        network.RegisterHandler(MsgType.Connect, OnConnect);
-        network.RegisterHandler(MsgType.Disconnect, OnDisconnect);
-        network.RegisterHandler(NetMessage.ID.Ping, OnPing);
-        network.RegisterHandler(NetMessage.ID.APB, OnAPBRequest);
+        network.RegisterHandler(MsgType.Connect, OnConnectMsg);
+        network.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
+        network.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
+        network.RegisterHandler(NetMessage.ID.APB, OnAPBRequestMsg);
+        network.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
+
         network.Connect(ip, TrunkNetworkingOperator.GAME_PORT);
     }
 
-    public void OnConnect(NetworkMessage msg)
+    public void OnConnectMsg(NetworkMessage msg)
     {
         Log("Connected to server! " + msg.ToString());
         NetMessage.PingMsg ping = new NetMessage.PingMsg();
@@ -53,12 +55,12 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         broadcaster.StopBroadcast();
     }
 
-    public void OnDisconnect(NetworkMessage msg)
+    public void OnDisconnectMsg(NetworkMessage msg)
     {
         Restart("Disconnect detected!");
     }
 
-    public void OnPing(NetworkMessage msg)
+    public void OnPingMsg(NetworkMessage msg)
     {
         NetMessage.PingMsg castedMsg = msg.ReadMessage<NetMessage.PingMsg>();
         Log("Ping! " + castedMsg.msg);
@@ -71,7 +73,16 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         StartCoroutine(SetUpSession(initMsg.citySeed, initMsg.pathSeed));
     }
 
-    public void OnAPBRequest(NetworkMessage msg)
+    public void OnGameOverMsg(NetworkMessage msg)
+    {
+        // If we're getting this at the hostage end, then the operator found us!
+
+        Log("Hostage found!  You win!");
+        OnGameWin.Invoke();
+        Restart();
+    }
+
+    public void OnAPBRequestMsg(NetworkMessage msg)
     {
         NetMessage.APBRequest castedMsg = msg.ReadMessage<NetMessage.APBRequest>();
         Log("APB requested at position " + castedMsg.position.ToString());

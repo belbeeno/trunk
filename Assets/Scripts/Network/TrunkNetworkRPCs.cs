@@ -39,6 +39,7 @@ namespace NetMessage
         public const short InitSession      = 100;
         public const short Ping             = 101;
         public const short APB              = 102;
+        public const short GameOver         = 200;
     }
 
     public class InitSessionMsg : MessageBase
@@ -114,5 +115,8 @@ namespace NetMessage
         }
     }
 
-
+    public class GameOverMsg : MessageBase
+    {
+        public double timestamp;
+    }
 }
