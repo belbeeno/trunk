@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingHostage : TrunkNetworkingBase
@@ -16,6 +17,9 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
 
     TrunkNetworkDiscovery broadcaster = null;
     NetworkClient network = null;
+
+    [SerializeField]
+    TrunkMover mover = null;
     
     public override void Begin()
     {
@@ -77,16 +81,20 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
 
         NetMessage.APBResponse response = new NetMessage.APBResponse();
         response.origin = castedMsg.position;
+#if UNITY_EDITOR
         Debug.DrawLine(Camera.main.transform.position, response.origin, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
+#endif
         float distFromOrigin = (Camera.main.transform.position - response.origin).sqrMagnitude;
         if (distFromOrigin <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
         {
-            response.hints.Add(new NetMessage.APBResponse.Hint(Camera.main.transform.position, NetMessage.APBResponse.Hint.HintType.Hostage));
+            response.hints.Add(new NetMessage.APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), NetMessage.APBResponse.Hint.HintType.Hostage));
         }
+
+
         msg.conn.Send(NetMessage.ID.APB, response);
     }
 
