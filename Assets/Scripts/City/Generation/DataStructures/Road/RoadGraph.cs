@@ -1,21 +1,5 @@
 using UnityEngine;
 
-public class RoadNode : Node<RoadNodeData>
-{
-    public RoadNode(Vector3 pos, RoadNodeData data)
-        : base(pos, data)
-    {
-    }
-}
-
-public class RoadEdge : Edge<RoadNode, RoadNodeData, RoadEdgeData>
-{
-    public RoadEdge(RoadNode from, RoadNode to, RoadEdgeData data)
-        : base(from, to, data)
-    {
-    }
-}
-
 public class RoadGraph : Graph<RoadNode, RoadNodeData, RoadEdge, RoadEdgeData>
 {
     public RoadGraph()

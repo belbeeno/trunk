@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class River : MonoBehaviour
 {
-    public IList<Vector3> data;
+    public RiverGraph riverGraph;
     
     public void Start()
     {
@@ -16,15 +14,11 @@ public class River : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        if (data != null)
+        if (riverGraph != null)
         {
             Gizmos.color = Color.blue;
-            var currentPoint = data[0];
-            foreach (var point in data.Skip(1))
-            {
-                Gizmos.DrawLine(currentPoint, point);
-                currentPoint = point;
-            }
+            riverGraph.GetEdges()
+                .ForEach(e => Gizmos.DrawLine(e.from.pos, e.to.pos));
         }
     }
 }

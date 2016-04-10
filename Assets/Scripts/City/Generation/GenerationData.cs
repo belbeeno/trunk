@@ -5,7 +5,7 @@ public class GenerationData
 {    
     public RoadGraph roadGraph { get; set; }
     public CityPlan cityPlan { get; set; }
-    public IList<Vector3> riverPath { get; set; }
+    public RiverGraph riverGraph { get; set; }
     
     public GenerationResult ToGenerationResult()
     {
@@ -13,7 +13,7 @@ public class GenerationData
             {
                 roadGraph = roadGraph,
                 cityBlocks = cityPlan.GetCityBlocks(),
-                river = riverPath
+                riverGraph = riverGraph
             };
             
         return result;

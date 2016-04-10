@@ -10,7 +10,6 @@ public class TrunkMover : MonoBehaviour
 
     public void Start()
     {
-        Debug.Log("start!");
         canMove = false;
         _route = new Route();
     }

@@ -23,7 +23,10 @@ public class ClearAreaNearRiverStep : GenerationStepBase
     {
         var minDistFromRiver = (options.riverWidth * options.blockSize) / 2f;
         Func<Vector3, bool> tooClose = (p) => Vector3.Distance(node.pos, p) < minDistFromRiver;
-        var result = data.riverPath.Any(tooClose);
+        var result = data.riverGraph
+            .GetNodes()
+            .Select(n => n.pos)
+            .Any(tooClose);
         
         return result;
     }
@@ -32,7 +35,10 @@ public class ClearAreaNearRiverStep : GenerationStepBase
     {
         var minDistFromRiver = (1.41 * options.riverWidth * options.blockSize) / 2f;
         Func<Vector3, bool> tooClose = (p) => Vector3.Distance(cityBlock.center, p) < minDistFromRiver;
-        var result = data.riverPath.Any(tooClose);
+        var result = data.riverGraph
+            .GetNodes()
+            .Select(n => n.pos)
+            .Any(tooClose);
         
         return result;
     }

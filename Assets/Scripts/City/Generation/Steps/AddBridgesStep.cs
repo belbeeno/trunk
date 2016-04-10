@@ -15,30 +15,22 @@ public class AddBridgesStep : GenerationStepBase
     private void CreateAllBridges()
     {
         _bridges = new List<BridgeData>();
-        
-        var numToSkip = data.riverPath.Count / 10;
-        var numToTake = data.riverPath.Count - 2 * numToSkip;
-        
-        var currentPoint = data.riverPath[numToSkip];
-        foreach (var point in data.riverPath.Skip(numToSkip + 1).Take(numToTake))
+                
+        foreach (var edge in data.riverGraph.GetEdges())
         {
             var bridge = new BridgeData();
             
-            var riverDir = (currentPoint - point);
-            var perpendicular = new Vector3(-riverDir.z, 0f, riverDir.x);
-            perpendicular.Normalize();
+            var perpendicular = new Vector3(-edge.direction.z, 0f, edge.direction.x).normalized;
             perpendicular *= (options.riverWidth * options.blockSize) / 2f;
             
-            var riverCenter = (point + currentPoint) / 2f;
-            bridge.intersection1 = GetClosestIntersection(riverCenter + perpendicular).pos;
-            bridge.intersection2 = GetClosestIntersection(riverCenter - perpendicular).pos;
+            bridge.intersection1 = GetClosestIntersection(edge.center + perpendicular).pos;
+            bridge.intersection2 = GetClosestIntersection(edge.center - perpendicular).pos;
             bridge.center = (bridge.intersection1 + bridge.intersection2) / 2f;
             
             var bridgeDir = bridge.intersection2 - bridge.intersection1;
             bridge.angle = Mathf.Min(Vector3.Angle(perpendicular, bridgeDir), Vector3.Angle(-perpendicular, bridgeDir));
             
             _bridges.Add(bridge);
-            currentPoint = point;
         }
     }
     

@@ -65,7 +65,7 @@ public class City : MonoBehaviour
         var riverObj = new GameObject("River");
         riverObj.transform.parent = this.transform;
         var riverScript = riverObj.AddComponent<River>();
-        riverScript.data = result.river;
+        riverScript.riverGraph = result.riverGraph;
     }
     
     private void RepositionCamera()

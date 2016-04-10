@@ -36,15 +36,24 @@ public class AddRiverStep : GenerationStepBase
     
     private void CalculateSegmentPoints()
     {
-        var points = new List<Vector3>();
-        var step = 1f / (options.numRiverSegments);
-        while (points.Count <= options.numRiverSegments)
-        {
-            var t = step * points.Count;
-            points.Add(Bezier(t));
-        }
+        data.riverGraph = new RiverGraph();
         
-        data.riverPath = points;
+        var step = 1f / (options.numRiverSegments);
+        
+        var currentPoint = _startPoint;
+        data.riverGraph.AddNode(currentPoint);
+        var pointsPicked = 1;
+        
+        while (pointsPicked <= options.numRiverSegments)
+        {
+            var t = step * pointsPicked;
+            var nextPoint = Bezier(t);
+            data.riverGraph.AddNode(nextPoint);
+            data.riverGraph.AddDirectedEdge(currentPoint, nextPoint);
+            
+            currentPoint = nextPoint;
+            pointsPicked++;
+        }
     }
     
     private Vector3 Bezier(float t)
