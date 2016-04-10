@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class River : MonoBehaviour
 {
-    public RiverData data;
+    public IList<Vector3> data;
     
     public void Start()
     {
@@ -18,8 +19,8 @@ public class River : MonoBehaviour
         if (data != null)
         {
             Gizmos.color = Color.blue;
-            var currentPoint = data.points[0];
-            foreach (var point in data.points.Skip(1))
+            var currentPoint = data[0];
+            foreach (var point in data.Skip(1))
             {
                 Gizmos.DrawLine(currentPoint, point);
                 currentPoint = point;

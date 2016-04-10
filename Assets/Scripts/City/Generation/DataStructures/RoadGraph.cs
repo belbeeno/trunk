@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using UnityEngine;
 
 public class RoadNode : Node<RoadNodeData>
@@ -10,7 +8,7 @@ public class RoadNode : Node<RoadNodeData>
     }
 }
 
-public class RoadEdge : Edge<RoadNodeData, RoadEdgeData>
+public class RoadEdge : Edge<RoadNode, RoadNodeData, RoadEdgeData>
 {
     public RoadEdge(RoadNode from, RoadNode to, RoadEdgeData data)
         : base(from, to, data)
@@ -18,71 +16,27 @@ public class RoadEdge : Edge<RoadNodeData, RoadEdgeData>
     }
 }
 
-public class RoadGraph
+public class RoadGraph : Graph<RoadNode, RoadNodeData, RoadEdge, RoadEdgeData>
 {
-    public Graph<RoadNodeData, RoadEdgeData> graph = new Graph<RoadNodeData, RoadEdgeData>();
-        
-    public void AddIntersectionNode(Vector3 pos)
-    {       
-        graph.AddNode(pos, new RoadNodeData());
-    }
-        
-    public void RemoveIntersectionWhere(Func<RoadNode, bool> check)
+    public RoadGraph()
+        : base((p,d) => new RoadNode(p,d), (f,t,d) => new RoadEdge(f,t,d))
     {
-        foreach (var node in graph.GetNodes().Where(check))
-        {
-            graph.RemoveNode(node);
-        }
     }
     
-    public RoadNode[] GetIntersections()
+    public RoadGraph(RoadGraph other)
+        : base(other)
     {
-        return graph.GetNodes();
-    }
-
-    public RoadNode GetClosestIntersection(Vector3 point)
-    {
-        var bestNode = default(RoadNode);
-        var bestDistance = float.MaxValue;
-        foreach (var node in graph.GetNodes())
-        {
-            var distance = Vector3.Distance(node.pos, point);
-            if (distance < bestDistance)
-            {
-                bestNode = node;
-                bestDistance = distance;
-            }
-        }
-        
-        return bestNode;
     }
     
-    public void AddRoad(Vector3 from, Vector3 to, bool isBridge)
+    public void AddNode(Vector3 pos)
     {
-        if (graph.ContainsNode(from) && graph.ContainsNode(to))
-        {
-            graph.AddUndirectedEdge(from, to, new RoadEdgeData(isBridge));
-        }
+        AddNode(pos, new RoadNodeData());
     }
     
-    public RoadData[] GetRoads()
+    public void AddUndirectedEdge(Vector3 from, Vector3 to, bool isBridge)
     {
-        var roads = graph.GetEdges()
-            .Select(e => new RoadData(e.from.pos, e.to.pos))
-            .ToArray();
-            
-        return roads; 
-    }
-    
-    public void RemoveDeadEnds()
-    {
-        foreach (var node in graph.GetNodes())
-        {
-            var numNeighbours = graph.GetOutEdges(node).Count();
-            if (numNeighbours <= 1)
-            {
-                graph.RemoveNode(node);
-            }
-        }
+        var fromNode = new RoadNode(from, new RoadNodeData());
+        var toNode = new RoadNode(to, new RoadNodeData());
+        AddUndirectedEdge(fromNode, toNode, new RoadEdgeData(isBridge));
     }
 }

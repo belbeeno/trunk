@@ -22,9 +22,9 @@ public class GenerateGridStep : GenerationStepBase
     private void AddIntersection(int x, int y)
     {
         var pos = ToVector3(x, y);
-        data.roadGraph.AddIntersectionNode(pos);
-        data.roadGraph.AddRoad(pos, ToVector3(x, y - 1), isBridge: false);
-        data.roadGraph.AddRoad(pos, ToVector3(x - 1, y), isBridge: false);
+        data.roadGraph.AddNode(pos);
+        data.roadGraph.AddUndirectedEdge(pos, ToVector3(x, y - 1), isBridge: false);
+        data.roadGraph.AddUndirectedEdge(pos, ToVector3(x - 1, y), isBridge: false);
     }
     
     private void AddCityBlock(int x, int y)

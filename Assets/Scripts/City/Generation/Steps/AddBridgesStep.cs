@@ -30,8 +30,8 @@ public class AddBridgesStep : GenerationStepBase
             perpendicular *= (options.riverWidth * options.blockSize) / 2f;
             
             var riverCenter = (point + currentPoint) / 2f;
-            bridge.intersection1 = data.roadGraph.GetClosestIntersection(riverCenter + perpendicular).pos;
-            bridge.intersection2 = data.roadGraph.GetClosestIntersection(riverCenter - perpendicular).pos;
+            bridge.intersection1 = GetClosestIntersection(riverCenter + perpendicular).pos;
+            bridge.intersection2 = GetClosestIntersection(riverCenter - perpendicular).pos;
             bridge.center = (bridge.intersection1 + bridge.intersection2) / 2f;
             
             var bridgeDir = bridge.intersection2 - bridge.intersection1;
@@ -48,7 +48,8 @@ public class AddBridgesStep : GenerationStepBase
         while (numPicked < options.numBridges && _bridges.Count > 0)
         {
             var bestBridge = _bridges.OrderBy(b => b.angle).First();
-            data.roadGraph.AddRoad(bestBridge.intersection1, bestBridge.intersection2, isBridge: true);
+            var edgeData = new RoadEdgeData(isBridge: true);
+            data.roadGraph.AddUndirectedEdge(bestBridge.intersection1, bestBridge.intersection2, edgeData);
             RemoveNearbyBridges(bestBridge);
             numPicked++;
         }
@@ -70,6 +71,23 @@ public class AddBridgesStep : GenerationStepBase
                 _bridges.Remove(other);
             }
         }
+    }
+    
+    public RoadNode GetClosestIntersection(Vector3 point)
+    {
+        var bestNode = default(RoadNode);
+        var bestDistance = float.MaxValue;
+        foreach (var node in data.roadGraph.GetNodes())
+        {
+            var distance = Vector3.Distance(node.pos, point);
+            if (distance < bestDistance)
+            {
+                bestNode = node;
+                bestDistance = distance;
+            }
+        }
+        
+        return bestNode;
     }
     
     private class BridgeData

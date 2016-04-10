@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class Node<TData>
+public abstract class Node<TData>
 {
-    public Vector3 pos;
-    public TData data;
+    public readonly Vector3 pos;
+    public readonly TData data;
     
     public Node(Vector3 pos, TData data)
     {

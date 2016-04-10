@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Road : MonoBehaviour
 {
-    public RoadData data;
+    public RoadEdge road;
     
     public void Start()
     {
@@ -14,10 +14,13 @@ public class Road : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        if (data != null)
+        if (road != null)
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(data.from, data.to);
+            Gizmos.color = (road.data.isBridge)
+                ? Color.green
+                : Color.yellow;
+            
+            Gizmos.DrawLine(road.from.pos, road.to.pos);
         }
     }
 }

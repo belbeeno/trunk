@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class GenerationResult
 {
-    public Graph<RoadNodeData, RoadEdgeData> roadGraph { get; set; }
-    public IEnumerable<RoadData> roads { get; set; }
+    public RoadGraph roadGraph { get; set; }
     public IEnumerable<CityBlockData> cityBlocks { get; set; }
-    public RiverData river { get; set; }
+    public IList<Vector3> river { get; set; }
 }

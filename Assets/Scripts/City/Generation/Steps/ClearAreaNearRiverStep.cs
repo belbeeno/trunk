@@ -6,8 +6,16 @@ public class ClearAreaNearRiverStep : GenerationStepBase
 {               
     public override void Run()
     {
-        data.roadGraph.RemoveIntersectionWhere(IsInRiver);
-        data.roadGraph.RemoveDeadEnds();
+        data.roadGraph
+            .GetNodes()
+            .Where(IsInRiver)
+            .ForEach(n => data.roadGraph.RemoveNode(n));        
+        
+        data.roadGraph
+            .GetNodes()
+            .Where(n => data.roadGraph.GetOutEdges(n).Count() <= 1)
+            .ForEach(n => data.roadGraph.RemoveNode(n));
+        
         data.cityPlan.RemoveCityBlockWhere(IsInRiver);
     }
     

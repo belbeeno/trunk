@@ -3,37 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class Graph<TNodeData, TEdgeData>
+public abstract class Graph<TNode, TNodeData, TEdge, TEdgeData>
+    where TNode : Node<TNodeData>
+    where TEdge : Edge<TNode, TNodeData, TEdgeData>
 {
-    private IDictionary<Vector3, Node<TNodeData>> _nodeMap { get; set; }
-    private IDictionary<Vector3, IDictionary<Vector3, Edge<TNodeData, TEdgeData>>> _edgeMap { get; set; }
+    private Func<Vector3, TNodeData, TNode> _nodeFactory;
+    private Func<TNode, TNode, TEdgeData, TEdge> _edgeFactory;
+    
+    private IDictionary<Vector3, TNode> _nodeMap { get; set; }
+    private IDictionary<Vector3, IDictionary<Vector3, TEdge>> _edgeMap { get; set; }
 
-    private ICollection<Node<TNodeData>> _nodes { get; set; }    
-    private IDictionary<Node<TNodeData>, IList<Edge<TNodeData, TEdgeData>>> _adjacentEdges { get; set; }
+    private ICollection<TNode> _nodes { get; set; }    
+    private IDictionary<TNode, IList<TEdge>> _adjacentEdges { get; set; }
         
-    public Graph()
+    public Graph(Func<Vector3, TNodeData, TNode> nodeFactory, Func<TNode, TNode, TEdgeData, TEdge> edgeFactory)
     {
-        _nodeMap = new Dictionary<Vector3, Node<TNodeData>>();
-        _edgeMap = new Dictionary<Vector3, IDictionary<Vector3, Edge<TNodeData, TEdgeData>>>();
+        _nodeFactory = nodeFactory;
+        _edgeFactory = edgeFactory;
+        
+        _nodeMap = new Dictionary<Vector3, TNode>();
+        _edgeMap = new Dictionary<Vector3, IDictionary<Vector3, TEdge>>();
 
-        _nodes = new List<Node<TNodeData>>();        
-        _adjacentEdges = new Dictionary<Node<TNodeData>, IList<Edge<TNodeData, TEdgeData>>>();
+        _nodes = new List<TNode>();        
+        _adjacentEdges = new Dictionary<TNode, IList<TEdge>>();
     }
     
-    public Graph(Graph<TNodeData, TEdgeData> other)
-        : this()
+    public Graph(Graph<TNode, TNodeData, TEdge, TEdgeData> other)
+        : this(other._nodeFactory, other._edgeFactory)
     {
-        foreach (var node in other.GetNodes())
-        {
-            AddNode(node);
-        }
-        foreach (var edge in other.GetEdges())
-        {
-            AddDirectedEdge(edge);
-        }
+        _nodeMap = new Dictionary<Vector3, TNode>(other._nodeMap);
+        _edgeMap = new Dictionary<Vector3, IDictionary<Vector3, TEdge>>(other._edgeMap);
+        
+        _nodes = new List<TNode>(other._nodes);
+        _adjacentEdges = new Dictionary<TNode, IList<TEdge>>(other._adjacentEdges);        
     }
     
-    public Node<TNodeData>[] GetNodes()
+    public TNode[] GetNodes()
     {
         return _nodes.ToArray();
     }
@@ -43,26 +48,26 @@ public sealed class Graph<TNodeData, TEdgeData>
         return _nodeMap.ContainsKey(pos);
     }
     
-    public bool ContainsNode(Node<TNodeData> node)
+    public bool ContainsNode(TNode node)
     {
         return _nodes.Contains(node);
     }
     
     public void AddNode(Vector3 pos, TNodeData data)
     {
-        var node = new Node<TNodeData>(pos, data);
+        var node = _nodeFactory(pos, data);
         AddNode(node);
     }
     
-    public void AddNode(Node<TNodeData> node)
+    public void AddNode(TNode node)
     {
         if (!ContainsNode(node))
         {
             _nodeMap.Add(node.pos, node);
-            _edgeMap.Add(node.pos, new Dictionary<Vector3, Edge<TNodeData, TEdgeData>>());
+            _edgeMap.Add(node.pos, new Dictionary<Vector3, TEdge>());
             
             _nodes.Add(node);
-            _adjacentEdges.Add(node, new List<Edge<TNodeData, TEdgeData>>());
+            _adjacentEdges.Add(node, new List<TEdge>());
         }
     }
     
@@ -74,7 +79,7 @@ public sealed class Graph<TNodeData, TEdgeData>
         }
     }
     
-    public void RemoveNode(Node<TNodeData> node)
+    public void RemoveNode(TNode node)
     {
         if (ContainsNode(node))
         {
@@ -95,17 +100,17 @@ public sealed class Graph<TNodeData, TEdgeData>
         }
     }
     
-    public Edge<TNodeData, TEdgeData>[] GetEdges()
+    public TEdge[] GetEdges()
     {
         return _adjacentEdges.Values.SelectMany(e => e).ToArray();
     }
     
-    public Edge<TNodeData, TEdgeData> GetEdge(Node<TNodeData> from, Node<TNodeData> to)
+    public TEdge GetEdge(Node<TNodeData> from, Node<TNodeData> to)
     {        
         return GetEdge(from.pos, to.pos);
     }
     
-    public Edge<TNodeData, TEdgeData> GetEdge(Vector3 from, Vector3 to)
+    public TEdge GetEdge(Vector3 from, Vector3 to)
     {
         if (!_edgeMap.ContainsKey(from) || !_edgeMap[from].ContainsKey(to))
         {
@@ -115,12 +120,12 @@ public sealed class Graph<TNodeData, TEdgeData>
         return _edgeMap[from][to];
     }
         
-    public bool ContainsEdge(Edge<TNodeData, TEdgeData> edge)
+    public bool ContainsEdge(TEdge edge)
     {
         return ContainsEdge(edge.from, edge.to);
     }
     
-    public bool ContainsEdge(Node<TNodeData> from, Node<TNodeData> to)
+    public bool ContainsEdge(TNode from, TNode to)
     {
         return ContainsEdge(from.pos, to.pos);
     }
@@ -130,12 +135,12 @@ public sealed class Graph<TNodeData, TEdgeData>
         return _edgeMap.ContainsKey(from) && _edgeMap[from].ContainsKey(to);
     }
     
-    public void AddUndirectedEdge(Edge<TNodeData, TEdgeData> edge)
+    public void AddUndirectedEdge(TEdge edge)
     {
         AddUndirectedEdge(edge.from, edge.to, edge.data);
     }
     
-    public void AddUndirectedEdge(Node<TNodeData> first, Node<TNodeData> second, TEdgeData data)
+    public void AddUndirectedEdge(TNode first, TNode second, TEdgeData data)
     {
         AddUndirectedEdge(first.pos, second.pos, data);
     }
@@ -146,12 +151,12 @@ public sealed class Graph<TNodeData, TEdgeData>
         AddDirectedEdge(second, first, data);      
     }
     
-    public void RemoveUndirectedEdge(Edge<TNodeData, TEdgeData> edge)
+    public void RemoveUndirectedEdge(TEdge edge)
     {
         RemoveUndirectedEdge(edge.from, edge.to);
     }
         
-    public void RemoveUndirectedEdge(Node<TNodeData> first, Node<TNodeData> second)
+    public void RemoveUndirectedEdge(TNode first, TNode second)
     {
         RemoveUndirectedEdge(first.pos, second.pos);
     }
@@ -170,13 +175,13 @@ public sealed class Graph<TNodeData, TEdgeData>
         }
     }
         
-    public void AddDirectedEdge(Node<TNodeData> from, Node<TNodeData> to, TEdgeData data)
+    public void AddDirectedEdge(TNode from, TNode to, TEdgeData data)
     {
-        var edge = new Edge<TNodeData, TEdgeData>(from, to, data);
+        var edge = _edgeFactory(from, to, data);
         AddDirectedEdge(edge);
     }
     
-    public void AddDirectedEdge(Edge<TNodeData, TEdgeData> edge)
+    public void AddDirectedEdge(TEdge edge)
     {
         if (ContainsNode(edge.from) && ContainsNode(edge.to) && !ContainsEdge(edge))
         {
@@ -185,7 +190,7 @@ public sealed class Graph<TNodeData, TEdgeData>
         }
     }
     
-    public void RemoveDirectedEdge(Node<TNodeData> from, Node<TNodeData> to)
+    public void RemoveDirectedEdge(TNode from, TNode to)
     {
         if (ContainsEdge(from, to))
         {
@@ -201,7 +206,7 @@ public sealed class Graph<TNodeData, TEdgeData>
         }
     }
     
-    public void RemoveDirectedEdge(Edge<TNodeData, TEdgeData> edge)
+    public void RemoveDirectedEdge(TEdge edge)
     {
         if (ContainsEdge(edge))
         {
@@ -210,7 +215,7 @@ public sealed class Graph<TNodeData, TEdgeData>
         }
     }
     
-    public Node<TNodeData>[] GetAdjacentNodes(Node<TNodeData> node)
+    public TNode[] GetAdjacentNodes(TNode node)
     {
         if (!ContainsNode(node))
         {
@@ -222,7 +227,7 @@ public sealed class Graph<TNodeData, TEdgeData>
         return adjacentNodes;
     }
     
-    public Edge<TNodeData, TEdgeData>[] GetOutEdges(Node<TNodeData> node)
+    public TEdge[] GetOutEdges(TNode node)
     {
         if (!ContainsNode(node))
         {

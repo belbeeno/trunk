@@ -11,10 +11,9 @@ public class GenerationData
     {
         var result = new GenerationResult
             {
-                roadGraph = roadGraph.graph,
-                roads = roadGraph.GetRoads(),
+                roadGraph = roadGraph,
                 cityBlocks = cityPlan.GetCityBlocks(),
-                river = new RiverData(riverPath)
+                river = riverPath
             };
             
         return result;

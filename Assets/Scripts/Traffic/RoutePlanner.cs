@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-using Graph = Graph<RoadNodeData, RoadRoadEdgeData>;
 using Random = UnityEngine.Random;
 
 public class RoutePlanner : MonoBehaviour
 {
-    public Graph graph;
+    public RoadGraph graph;
     
     public RoadEdge[] GetRandomPath()
     {
-        var RoadNodes = graph.GetRoadNodes();
+        var RoadNodes = graph.GetNodes();
         while (true)
         {
             var from = RoadNodes[Random.Range(0, RoadNodes.Length)];
@@ -26,20 +25,20 @@ public class RoutePlanner : MonoBehaviour
         };
     }
     
-    public RoadEdge[] GetRandomPath(RoadEdge firstRoadEdge)
+    public RoadEdge[] GetRandomPath(RoadEdge firstEdge)
     {
-        var graphCopy = new Graph<RoadRoadNodeData, RoadRoadEdgeData>(graph);
-        graphCopy.RemoveDirectedRoadEdge(firstRoadEdge.to, firstRoadEdge.from);
-        var RoadNodes = graphCopy.GetRoadNodes();
+        var graphCopy = new RoadGraph(graph);
+        graphCopy.RemoveDirectedEdge(firstEdge.to, firstEdge.from);
+        var RoadNodes = graphCopy.GetNodes();
         
         while (true)
         {
             var to = RoadNodes[Random.Range(0, RoadNodes.Length)];
-            var path = GetPath(graphCopy, firstRoadEdge.to, to);
+            var path = GetPath(graphCopy, firstEdge.to, to);
             
             if (path.Count() > 2)
             {
-                path.Insert(0, firstRoadEdge);
+                path.Insert(0, firstEdge);
                 return path.ToArray();
             }
         };
@@ -50,7 +49,7 @@ public class RoutePlanner : MonoBehaviour
         return GetPath(graph, from, to).ToArray();
     }
     
-    private IList<RoadEdge> GetPath(Graph roadGraph, RoadNode start, RoadNode goal)
+    private IList<RoadEdge> GetPath(RoadGraph roadGraph, RoadNode start, RoadNode goal)
     {
         var closedSet = new List<RoadNode>();
         var openSet = new List<RoadNode>();
@@ -75,7 +74,7 @@ public class RoutePlanner : MonoBehaviour
             openSet.Remove(current);
             closedSet.Add(current);
             
-            var neighbours = roadGraph.GetAdjacentRoadNodes(current)
+            var neighbours = roadGraph.GetAdjacentNodes(current)
                 .Where(n => !closedSet.Contains(n));
             
             foreach (var neighbour in neighbours)
@@ -99,15 +98,15 @@ public class RoutePlanner : MonoBehaviour
         return null;
     }
     
-    private IList<RoadEdge> ReconstructGoal(Graph roadGraph, IDictionary<RoadNode, RoadNode> cameFrom, RoadNode goal)
+    private IList<RoadEdge> ReconstructGoal(RoadGraph roadGraph, IDictionary<RoadNode, RoadNode> cameFrom, RoadNode goal)
     {
         var current = goal;
         var path = new List<RoadEdge>();
         while (cameFrom.ContainsKey(current))
         {
             var previous = cameFrom[current];
-            var RoadEdge = roadGraph.GetEdge(previous, current);
-            path.Insert(0, RoadEdge);
+            var edge = roadGraph.GetEdge(previous, current);
+            path.Insert(0, edge);
             current = previous;
         }
         

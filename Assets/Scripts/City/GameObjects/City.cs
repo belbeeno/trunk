@@ -40,12 +40,12 @@ public class City : MonoBehaviour
         // Roads
         var roadsObj = new GameObject("Roads");
         roadsObj.transform.parent = this.transform;
-        foreach (var roadData in result.roads)
+        foreach (var edge in result.roadGraph.GetEdges())
         {
             var roadObj = new GameObject("Road");
             roadObj.transform.parent = roadsObj.transform;
             var roadScript = roadObj.AddComponent<Road>();
-            roadScript.data = roadData;
+            roadScript.road = edge;
         }
         
         // City blocks
