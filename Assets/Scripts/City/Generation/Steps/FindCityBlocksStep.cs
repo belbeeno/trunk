@@ -6,15 +6,15 @@ public class FindCityBlocksStep : GenerationStepBase
 {    
     public override void Run()
     {
-        data.cityPlan = new CityPlan();
+        data.cityBlocks = new List<CityBlockData>();
         
         var graphCopy = new RoadGraph(data.roadGraph);
         while (graphCopy.GetEdges().Any())
         {
             var cityBlock = GetPlot(graphCopy);
-            if (cityBlock.corners.Count() < (options.blocksHeight + options.blocksWidth))
+            if (cityBlock.boundingRoads.Count() < (options.blocksHeight + options.blocksWidth))
             {
-                data.cityPlan.AddCityBlock(cityBlock);
+                data.cityBlocks.Add(cityBlock);
             }
         }
     }
@@ -24,31 +24,16 @@ public class FindCityBlocksStep : GenerationStepBase
         var currentEdge = graph.GetEdges().First();
         graph.RemoveDirectedEdge(currentEdge);
         var startPoint = currentEdge.from;
-        var isWaterPlot = false;
         
-        var plotPoints = new List<Vector3> { startPoint.pos }; 
+        var boundingRoads = new List<RoadEdge> { currentEdge }; 
         while (currentEdge.to != startPoint)
         {
             currentEdge = GetCCWAdjacentEdge(graph, currentEdge);
             graph.RemoveDirectedEdge(currentEdge);
-            plotPoints.Add(currentEdge.from.pos);
-            
-            if (currentEdge.data.isBridge) 
-            {
-                isWaterPlot = true;
-            }
+            boundingRoads.Add(currentEdge);
         }
         
-        var cityBlock = GetCityBlock(plotPoints, isWaterPlot);
-        
-        return cityBlock;
-    }
-    
-    private CityBlockData GetCityBlock(IList<Vector3> corners, bool isWaterPlot)
-    {
-        var numFloors = Random.Range(1, 6);
-        var scaledHeight = options.floorHeight * options.blockSize;
-        var cityBlock = new CityBlockData(corners.ToArray(), numFloors, scaledHeight, isWaterPlot);
+        var cityBlock = new CityBlockData(boundingRoads.ToArray());
         
         return cityBlock;
     }

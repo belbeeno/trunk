@@ -1,19 +1,16 @@
-using UnityEngine;
+using System.Linq;
 
 public class CityBlockData
 {
-    public CityBlockData(Vector3[] corners, int numFloors, float floorHeight, bool isWaterPlot)
+    public CityBlockData(RoadEdge[] boundingRoads)
     {
-        this.center = corners.Average();
-        this.corners = corners;
-        this.numFloors = numFloors;
-        this.floorHeight = floorHeight;
-        this.isWaterPlot = isWaterPlot;
+        this.boundingRoads = boundingRoads;
     }
     
-    public readonly Vector3 center;
-    public readonly Vector3[] corners;
-    public readonly int numFloors;
-    public readonly float floorHeight;
-    public readonly bool isWaterPlot;
+    public readonly RoadEdge[] boundingRoads;
+    
+    public bool ContainsRiver()
+    {
+        return boundingRoads.Any(r => r.data.isBridge);
+    }
 }

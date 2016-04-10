@@ -7,7 +7,8 @@ public class CityGenerator
             new ClearAreaNearRiverStep(),
             new RemoveDeadEndsStep(),
             new AddBridgesStep(),
-            new FindCityBlocksStep()
+            new FindCityBlocksStep(),
+            new CreateBuildingPlotsStep()
         };
     
     public GenerationResult Generate(GenerationOptions options)

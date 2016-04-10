@@ -1,10 +1,11 @@
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 
 public class GenerationData
 {    
     public RoadGraph roadGraph { get; set; }
-    public CityPlan cityPlan { get; set; }
+    public ICollection<CityBlockData> cityBlocks { get; set; }
+    public ICollection<BuildingPlotData> buildingPlots { get; set; }
     public RiverGraph riverGraph { get; set; }
     
     public GenerationResult ToGenerationResult()
@@ -12,7 +13,8 @@ public class GenerationData
         var result = new GenerationResult
             {
                 roadGraph = roadGraph,
-                cityBlocks = cityPlan.GetCityBlocks(),
+                cityBlocks = cityBlocks.ToArray(),
+                buildingPlots = buildingPlots.ToArray(),
                 riverGraph = riverGraph
             };
             

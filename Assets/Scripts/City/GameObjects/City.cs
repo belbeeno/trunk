@@ -49,13 +49,13 @@ public class City : MonoBehaviour
             roadScript.road = edge;
         }
         
-        // City blocks
-        var cityBlocksObj = new GameObject("City Blocks");
-        cityBlocksObj.transform.parent = this.transform;
-        foreach (var plotData in result.cityBlocks.Where(b => !b.isWaterPlot))
+        // Buildings
+        var buildingsObj = new GameObject("Buildings");
+        buildingsObj.transform.parent = this.transform;
+        foreach (var plotData in result.buildingPlots)
         {
-            var plotObj = new GameObject("City Block");
-            plotObj.transform.parent = cityBlocksObj.transform;
+            var plotObj = new GameObject("Building");
+            plotObj.transform.parent = buildingsObj.transform;
             plotObj.AddComponent<MeshFilter>();
             plotObj.AddComponent<MeshRenderer>();
             var cityBlockScript = plotObj.AddComponent<CityBlock>();

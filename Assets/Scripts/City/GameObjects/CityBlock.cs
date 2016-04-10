@@ -8,7 +8,7 @@ public class CityBlock : MonoBehaviour
     private MeshRenderer _renderer;
     private MeshFilter _filter;
     
-    public CityBlockData data;
+    public BuildingPlotData data;
     
     private Color _buildingColor = Color.white;
 
