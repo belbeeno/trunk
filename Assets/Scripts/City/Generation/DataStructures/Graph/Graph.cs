@@ -31,11 +31,14 @@ public abstract class Graph<TNode, TNodeData, TEdge, TEdgeData>
     public Graph(Graph<TNode, TNodeData, TEdge, TEdgeData> other)
         : this(other._nodeFactory, other._edgeFactory)
     {
-        _nodeMap = new Dictionary<Vector3, TNode>(other._nodeMap);
-        _edgeMap = new Dictionary<Vector3, IDictionary<Vector3, TEdge>>(other._edgeMap);
-        
-        _nodes = new List<TNode>(other._nodes);
-        _adjacentEdges = new Dictionary<TNode, IList<TEdge>>(other._adjacentEdges);        
+        foreach (var node in other.GetNodes())
+        {
+            AddNode(node);
+        }
+        foreach (var edge in other.GetEdges())
+        {
+            AddDirectedEdge(edge);
+        }
     }
     
     public TNode[] GetNodes()
