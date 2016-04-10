@@ -17,8 +17,8 @@ TagManager:
   - 
   - ClientOnly
   - HostOnly
-  - 
-  - 
+  - Interactable
+  - TrunkWalls
   - 
   - 
   - 
