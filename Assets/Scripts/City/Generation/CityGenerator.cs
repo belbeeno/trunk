@@ -5,7 +5,9 @@ public class CityGenerator
             new GenerateGridStep(),
             new AddRiverStep(),
             new ClearAreaNearRiverStep(),
-            new AddBridgesStep()
+            new RemoveDeadEndsStep(),
+            new AddBridgesStep(),
+            new FindCityBlocksStep()
         };
     
     public GenerationResult Generate(GenerationOptions options)

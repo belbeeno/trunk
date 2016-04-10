@@ -1,51 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Random = UnityEngine.Random;
-using UnityEngine;
 
 public class CityPlan
 {
-    private GenerationOptions _options;
-    
     private IList<CityBlockData> _cityBlocks;
     
-    public CityPlan(GenerationOptions options)
+    public CityPlan()
     {
-        _options = options;
         _cityBlocks = new List<CityBlockData>();
     }
-        
-    public void AddCityBlock(Vector3 cityBlockPos)
-    {
-        var corners = GetCityBlockCorners(cityBlockPos);
-        var numFloors = Random.Range(1, 6);
-        var scaledHeight = _options.floorHeight * _options.blockSize;
-        var cityBlock = new CityBlockData(cityBlockPos, corners, numFloors, scaledHeight);
-        _cityBlocks.Add(cityBlock);
-    }
-        
-    private Vector3[] GetCityBlockCorners(Vector3 cityBlockPos)
-    {         
-        var offset = ((1f - _options.roadWidth) * _options.blockSize) / 2;
-        var corners = new[] 
-            {
-                cityBlockPos + new Vector3(offset, 0f, offset),
-                cityBlockPos + new Vector3(-offset, 0f, offset),
-                cityBlockPos + new Vector3(-offset, 0f, -offset),
-                cityBlockPos + new Vector3(offset, 0f, -offset),
-            };
-         
-        return corners;
-    }
     
-    public void RemoveCityBlockWhere(Func<CityBlockData, bool> check)
+    public void AddCityBlock(CityBlockData cityBlock)
     {
-        var cityBlocksCopy = new List<CityBlockData>(_cityBlocks);
-        foreach (var cityBlock in cityBlocksCopy.Where(check))
-        {
-            _cityBlocks.Remove(cityBlock);
-        }
+        _cityBlocks.Add(cityBlock);
     }
     
     public CityBlockData[] GetCityBlocks()

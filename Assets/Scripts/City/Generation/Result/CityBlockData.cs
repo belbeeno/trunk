@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class CityBlockData
 {
-    public CityBlockData(Vector3 center, Vector3[] corners, int numFloors, float floorHeight)
+    public CityBlockData(Vector3[] corners, int numFloors, float floorHeight, bool isWaterPlot)
     {
-        this.center = center;
+        this.center = corners.Average();
         this.corners = corners;
         this.numFloors = numFloors;
         this.floorHeight = floorHeight;
+        this.isWaterPlot = isWaterPlot;
     }
     
-    public Vector3 center;
-    public Vector3[] corners;
-    public int numFloors;
-    public float floorHeight;
+    public readonly Vector3 center;
+    public readonly Vector3[] corners;
+    public readonly int numFloors;
+    public readonly float floorHeight;
+    public readonly bool isWaterPlot;
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class City : MonoBehaviour 
@@ -51,7 +52,7 @@ public class City : MonoBehaviour
         // City blocks
         var cityBlocksObj = new GameObject("City Blocks");
         cityBlocksObj.transform.parent = this.transform;
-        foreach (var plotData in result.cityBlocks)
+        foreach (var plotData in result.cityBlocks.Where(b => !b.isWaterPlot))
         {
             var plotObj = new GameObject("City Block");
             plotObj.transform.parent = cityBlocksObj.transform;
