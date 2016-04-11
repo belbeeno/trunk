@@ -32,29 +32,23 @@ public class OperatorActionBar : MonoBehaviour
             var actives = toggles.ActiveToggles().GetEnumerator();
             if (actives.MoveNext())
             {
-                bool useUpToggle = false;
                 OperatorToggle opToggle = actives.Current.GetComponent<OperatorToggle>();
-                switch (opToggle.action)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hitInfo;
+                if (Physics.Raycast(ray, out hitInfo, 1000f, HostOnlyLayerMask))
                 {
-                    case OperatorToggle.OperatorAction.APB:
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit hitInfo;
-                        if (Physics.Raycast(ray, out hitInfo, 1000f, HostOnlyLayerMask))
-                        {
-                            useUpToggle = true;
+                    switch (opToggle.action)
+                    {
+                        case OperatorToggle.OperatorAction.APB:
                             TrunkNetworkingOperator.Get().RequestAPB(hitInfo.point);
-
                             Debug.DrawLine(ray.origin, hitInfo.point, Color.green, 10f);
-                        }
-                        else if (Physics.Raycast(ray, out hitInfo, 1000f))
-                        {
-                            Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 10f);
-                        }
-                        break;
-                }
+                            break;
+                        case OperatorToggle.OperatorAction.Siren:
+                            //TrunkNetworkingOperator.Get().BroadcastSirens(hitInfo.point);
+                            Debug.DrawLine(ray.origin, hitInfo.point, Color.blue, 10f);
+                            break;
+                    }
 
-                if (useUpToggle)
-                {
                     opToggle.OnUse();
                 }
             }

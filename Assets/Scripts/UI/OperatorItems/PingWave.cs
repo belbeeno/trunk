@@ -26,6 +26,10 @@ public class PingWave : MonoBehaviour
     RectTransform parentRect = null;
     RectTransform rect = null;
 
+    public PID.InitParams pidParams;
+    PID pidX = null;
+    PID pidY = null;
+
     // Use this for initialization
     void Start()
     {
@@ -43,6 +47,35 @@ public class PingWave : MonoBehaviour
         rect = GetComponent<RectTransform>();
 
         UpdateStatus();
+
+        pidX = new PID(pidParams, GetVisibleProgressX, GetTargetProgressX, SetVisibleProgressX);
+        pidY = new PID(pidParams, GetVisibleProgressY, GetTargetProgressY, SetVisibleProgressY);
+    }
+
+    private Vector2 target = new Vector2();
+    public float GetVisibleProgressX()
+    {
+        return rect.anchoredPosition.x;
+    }
+    public float GetVisibleProgressY()
+    {
+        return rect.anchoredPosition.y;
+    }
+
+    public float GetTargetProgressX() { return target.x; }
+    public float GetTargetProgressY() { return target.y; }
+
+    public void SetVisibleProgressX(float val)
+    {
+        Vector2 pos = rect.anchoredPosition;
+        pos.x = val;
+        rect.anchoredPosition = pos;
+    }
+    public void SetVisibleProgressY(float val)
+    {
+        Vector2 pos = rect.anchoredPosition;
+        pos.y = val;
+        rect.anchoredPosition = pos;
     }
 
     private void UpdateStatus()
@@ -54,6 +87,11 @@ public class PingWave : MonoBehaviour
         }
         else
         {
+            if (prevState == PingState.Invalid)
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out target);
+                rect.anchoredPosition = target;
+            }
             // Why are aniations structured like this lol
             if (animController.isPlaying)
             {
@@ -101,16 +139,26 @@ public class PingWave : MonoBehaviour
         if (prevState != currentState)
         {
             UpdateStatus();
+            pidX.Reset();
+            pidY.Reset();
             prevState = currentState;
         }
 
-        if (currentState == PingState.Preview)
+        if (currentState != PingState.Invalid)
         {
-            Vector2 outPos;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out outPos))
+            if (currentState == PingState.Preview)
             {
-                rect.anchoredPosition = Vector2.MoveTowards(parentRect.anchoredPosition, outPos, 10f);
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out target))
+                {
+#if UNITY_EDITOR
+                    pidX.AssignInit(pidParams);
+                    pidY.AssignInit(pidParams);
+#endif
+                }
             }
+
+            pidX.Compute();
+            pidY.Compute();
         }
 
         if (!animController.isPlaying)

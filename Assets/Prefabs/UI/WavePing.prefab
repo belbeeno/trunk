@@ -141,6 +141,13 @@ MonoBehaviour:
   animController: {fileID: 11124396}
   group: {fileID: 22580962}
   currentState: -1
+  actionToggles: {fileID: 0}
+  pidParams:
+    pG: 7.5
+    iG: 0.5
+    dG: 0.1
+    oMin: -1000
+    oMax: 1000
 --- !u!222 &22247978
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -160,8 +167,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 126934}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10.000012}
+  m_LocalScale: {x: 1.1494253, y: 1.1494253, z: 1.1494253}
   m_Children:
   - {fileID: 22447534}
   m_Father: {fileID: 0}
