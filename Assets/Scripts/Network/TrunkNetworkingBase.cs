@@ -9,6 +9,7 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
 {
     public UnityEvent OnSessionEstablished;
     public UnityEvent OnResetImminent;
+    public UnityEvent OnGameWin;
 
     public abstract void Begin();
     public virtual IEnumerator SetUpSession(int citySeed, int pathSeed)
@@ -31,21 +32,30 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
         DebugConsole.SetText("NetworkStatus", msg);
     }
 
-    public void Restart(string msg)
+    public void Restart(string msg = null)
     {
         OnResetImminent.Invoke();
 
         StopAllCoroutines();
         StartCoroutine(RestartingIn(msg));
     }
-    public IEnumerator RestartingIn(string msg)
+    private IEnumerator RestartingIn(string msg)
     {
-        Log(msg + "  Resetting in...", true);
+        if (!string.IsNullOrEmpty(msg))
+        {
+            Log(msg + "  Resetting in...", true);
+        }
+        else
+        {
+            Log("Resetting in...");
+        }
+
         for (int sec = 5; sec > 0; sec--)
         {
             Log(sec + "...");
             yield return new WaitForSeconds(1f);
         }
+
         SceneManager.LoadScene("Trunk", LoadSceneMode.Single);
     }
 }

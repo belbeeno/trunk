@@ -26,11 +26,13 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         server = new TrunkNetworkingServer();
         //server.Configure(topology);
         server.Initialize();
-        server.RegisterHandler(MsgType.Connect, OnConnect);
-        server.RegisterHandler(MsgType.Disconnect, OnDisconnect);
-        server.RegisterHandler(NetMessage.ID.InitSession, OnInitSession);
-        server.RegisterHandler(NetMessage.ID.Ping, OnPing);
-        server.RegisterHandler(NetMessage.ID.APB, OnAPBResponse);
+        server.RegisterHandler(MsgType.Connect, OnConnectMsg);
+        server.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
+        server.RegisterHandler(NetMessage.ID.InitSession, OnInitSessionMsg);
+        server.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
+        server.RegisterHandler(NetMessage.ID.APB, OnAPBResponseMsg);
+        server.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
+
         if (!server.Listen(GAME_PORT))
         {
             Restart("Unable to start a host!");
@@ -68,7 +70,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         }
     }
 
-    public void OnAPBResponse(NetworkMessage msg)
+    public void OnAPBResponseMsg(NetworkMessage msg)
     {
         NetMessage.APBResponse castedMsg = msg.ReadMessage<NetMessage.APBResponse>();
         Log("Attempting to find hostage at position " + castedMsg.origin);
@@ -76,7 +78,13 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         {
             if (castedMsg.hints[i].type == NetMessage.APBResponse.Hint.HintType.Hostage)
             {
-                Log("Hostage found!  You win!  You can stop playing now.");
+                Log("Hostage found!  You win!");
+                OnGameWin.Invoke();
+                Restart();
+
+                NetMessage.GameOverMsg gameOverMsg = new NetMessage.GameOverMsg();
+                gameOverMsg.timestamp = Network.time;
+                msg.conn.Send(NetMessage.ID.GameOver, gameOverMsg);
             }
         }
     }
@@ -89,26 +97,26 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         }
     }
 
-    public void OnConnect(NetworkMessage msg)
+    public void OnConnectMsg(NetworkMessage msg)
     {
         Log("New player connected!");
         broadcaster.StopBroadcast();
         clientId = msg.conn.connectionId;
     }
 
-    public void OnDisconnect(NetworkMessage msg)
+    public void OnDisconnectMsg(NetworkMessage msg)
     {
         Restart("Disconnect detected!");
     }
 
-    public void OnInitSession(NetworkMessage msg)
+    public void OnInitSessionMsg(NetworkMessage msg)
     {
         // Don't really do anything with this yet.  Just for visual purposes.
         NetMessage.InitSessionMsg castedMsg = msg.ReadMessage<NetMessage.InitSessionMsg>();
         StartCoroutine(SetUpSession(castedMsg.citySeed, castedMsg.pathSeed));
     }
 
-    public void OnPing(NetworkMessage msg)
+    public void OnPingMsg(NetworkMessage msg)
     {
         NetMessage.PingMsg castedMsg = msg.ReadMessage<NetMessage.PingMsg>();
         Log("Ping! " + castedMsg.msg);
@@ -116,6 +124,13 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         NetMessage.PingMsg response = new NetMessage.PingMsg();
         response.msg = "Hello to you too!";
         msg.conn.Send(NetMessage.ID.Ping, response);
+    }
+
+    public void OnGameOverMsg(NetworkMessage msg)
+    {
+        // If we're getting this from the client, the captors are out of range and we lost.
+        Log("You took too long, the captors won!");
+        Restart();
     }
 
     public void Start()

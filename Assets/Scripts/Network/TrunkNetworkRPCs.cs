@@ -39,6 +39,7 @@ namespace NetMessage
         public const short InitSession      = 100;
         public const short Ping             = 101;
         public const short APB              = 102;
+        public const short GameOver         = 200;
     }
 
     public class InitSessionMsg : MessageBase
@@ -59,22 +60,6 @@ namespace NetMessage
     }
     public class APBResponse : MessageBase
     {
-        public class Trail : MessageBase
-        {
-            public Vector3 start;
-            public Vector3 end;
-
-            public Trail()
-            {
-                this.start = new Vector2(float.MaxValue, float.MaxValue);
-                this.end = new Vector2(float.MaxValue, float.MaxValue);
-            }
-            public Trail(Vector2 start, Vector2 end)
-            {
-                this.start = start;
-                this.end = end;
-            }
-        }
         public class Hint : MessageBase
         {
             public enum HintType : short
@@ -113,25 +98,25 @@ namespace NetMessage
                 type = (HintType)reader.ReadUInt16();
             }
         }
-
-        public List<Trail> trails = new List<Trail>();
         public List<Hint> hints = new List<Hint>();
 
         public Vector3 origin;
 
         public override void Serialize(NetworkWriter writer)
         {
-            Helpers.SerializeList(writer, ref trails);
             Helpers.SerializeList(writer, ref hints);
             writer.Write(origin);
         }
 
         public override void Deserialize(NetworkReader reader)
         {
-            Helpers.DeserializeList(reader, ref trails);
             Helpers.DeserializeList(reader, ref hints);
+            origin = reader.ReadVector3();
         }
     }
 
-
+    public class GameOverMsg : MessageBase
+    {
+        public double timestamp;
+    }
 }
