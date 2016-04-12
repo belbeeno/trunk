@@ -9,6 +9,7 @@ public class AddBridgesStep : GenerationStepBase
     public override void Run()
     {
         CreateAllBridges();
+        RemoveBridgesNearEdge();
         PickBestBridges();
     }
         
@@ -32,6 +33,24 @@ public class AddBridgesStep : GenerationStepBase
             
             _bridges.Add(bridge);
         }
+    }
+    
+    private void RemoveBridgesNearEdge()
+    {
+        _bridges = _bridges
+            .RemoveWhere((b) => PointIsOnEdge(b.intersection1))
+            .RemoveWhere((b) => PointIsOnEdge(b.intersection2))
+            .ToList();
+    }
+    
+    private bool PointIsOnEdge(Vector3 point)
+    {
+        var result = point.x == 0f
+            || point.z == 0f
+            || point.x == options.cityWidth
+            || point.z == options.cityHeight;
+            
+        return result;
     }
     
     private void PickBestBridges()
