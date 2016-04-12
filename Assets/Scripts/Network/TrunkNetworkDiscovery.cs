@@ -31,7 +31,7 @@ public class TrunkNetworkDiscovery : NetworkDiscovery
         OnConnectionFoundCB = null;
     }
 
-    public void OnApplicationQuit()
+    public void OnDestroy()
     {
         if (running)
         {

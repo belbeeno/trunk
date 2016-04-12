@@ -54,6 +54,13 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   private float reticleInnerDiameter = 0.0f;
   private float reticleOuterDiameter = 0.0f;
 
+    // Position of the gaze
+    [SerializeField]
+    private bool drawReticle = false;
+
+    [SerializeField]
+    private Inventory inventory;
+
   void Start () {
     CreateReticleVertices();
 
@@ -91,7 +98,37 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// the user is looking at, and the intersectionPosition is the intersection
   /// point of the ray sent from the camera on the object.
   public virtual void OnGazeStart(Camera camera, GameObject targetObject, Vector3 intersectionPosition) {
-    SetGazeTarget(intersectionPosition);
+
+        // check if what we're looking at is interactable
+        var isTargetInteractable = targetObject.layer == LayerMask.NameToLayer("Interactable");
+        if (!isTargetInteractable)
+        { 
+            // do nothing if we can't interact with whatever we're looking at
+            return;
+        }
+        // at this point, whatever we're looking at should be interactable
+        // Check if we're holding anything
+        var hasItem = !inventory.isEmpty();
+        var targetItem = targetObject.GetComponent<Interactable>();
+
+        var itemsCanInteract = false; 
+        if (hasItem && targetItem != null)
+        {
+            // check if what we're holding can interact with what we're looking at
+            var currentItem = inventory.GetCurrentItem().GetComponent<Interactable>();
+            Debug.Log("currentItem " + currentItem); 
+            itemsCanInteract = currentItem.CanInteractWith(targetItem);
+        }
+        
+        // only set as target if: 
+        // we're not holding anything and the item we're looking at can be held
+        // we are holding something and we're looking at something that our current item can interact with
+    drawReticle = (!hasItem && targetItem.CanBeHeld()) || (hasItem && itemsCanInteract);
+        if (drawReticle)
+        {
+            SetGazeTarget(intersectionPosition);
+        }
+
   }
 
   /// Called every frame the user is still looking at a valid GameObject. This
@@ -101,8 +138,11 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// looking at, and the intersectionPosition is the intersection point of the
   /// ray sent from the camera on the object.
   public virtual void OnGazeStay(Camera camera, GameObject targetObject, Vector3 intersectionPosition) {
-    SetGazeTarget(intersectionPosition);
-  }
+        if (drawReticle)
+        {
+            SetGazeTarget(intersectionPosition);
+        }
+    }
 
   /// Called when the user's look no longer intersects an object previously
   /// intersected with a ray projected from the camera.
@@ -112,6 +152,7 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// The camera is the event camera and the target is the object the user
   /// previously looked at.
   public void OnGazeExit(Camera camera, GameObject targetObject) {
+    drawReticle = false;
     reticleDistanceInMeters = kReticleDistanceMax;
     reticleInnerAngle = kReticleMinInnerAngle;
     reticleOuterAngle = kReticleMinOuterAngle;
@@ -126,7 +167,6 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// Called when the Cardboard trigger is finished. This is practically when
   /// the user releases the trigger.
   public void OnGazeTriggerEnd(Camera camera) {
-    // Put your reticle trigger end logic here :)
   }
 
   private void CreateReticleVertices() {
@@ -210,7 +250,7 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   }
 
   private void SetGazeTarget(Vector3 target) {
-    Vector3 targetLocalPosition = transform.parent.InverseTransformPoint(target);
+    var targetLocalPosition = transform.parent.InverseTransformPoint(target);
 
     reticleDistanceInMeters =
         Mathf.Clamp(targetLocalPosition.z, kReticleDistanceMin, kReticleDistanceMax);

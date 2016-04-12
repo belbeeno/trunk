@@ -12,7 +12,7 @@ public class ChooseMode : MonoBehaviour
 
     public void OnHostSelected()
     {
-        screenFader.OnFadeComplete.AddListener(OnFadeComplete);
+        screenFader.OnFadeOutComplete.AddListener(OnFadeComplete);
         screenFader.FadeOut();
         hostNetwork.enabled = true;
         hostNetwork.Begin();
@@ -20,7 +20,7 @@ public class ChooseMode : MonoBehaviour
 
     public void OnClientSelected()
     {
-        screenFader.OnFadeComplete.AddListener(OnFadeComplete);
+        screenFader.OnFadeOutComplete.AddListener(OnFadeComplete);
         screenFader.FadeOut();
         clientNetwork.enabled = true;
         clientNetwork.Begin();
@@ -28,7 +28,7 @@ public class ChooseMode : MonoBehaviour
 
     public void OnFadeComplete()
     {
-        screenFader.OnFadeComplete.RemoveListener(OnFadeComplete);
+        screenFader.OnFadeOutComplete.RemoveListener(OnFadeComplete);
         networkStatus.FadeIn();
     }
 }

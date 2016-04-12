@@ -256,12 +256,6 @@ public class StereoController : MonoBehaviour {
   /// Helper routine for creation of a stereo rig.  Used by the
   /// custom editor for this class, or to build the rig at runtime.
   public void AddStereoRig() {
-#if UNITY_EDITOR
-    // Member variable 'cam' not always initialized when this method called in Editor.
-    // So, we'll just make a local of the same name.
-    var cam = GetComponent<Camera>();
-#endif
-
     // Simplistic test if rig already exists.
     // Note: Do not use Eyes property, because it caches the result before we have created the rig.
     var eyes = GetComponentsInChildren<CardboardEye>(true).Where(eye => eye.Controller == this);
@@ -277,6 +271,11 @@ public class StereoController : MonoBehaviour {
       head.trackPosition = false;
     }
 #if !UNITY_5
+#if UNITY_EDITOR
+    // Member variable 'cam' not always initialized when this method called in Editor.
+    // So, we'll just make a local of the same name.
+    var cam = GetComponent<Camera>();
+#endif
     if (cam.tag == "MainCamera" && GetComponent<SkyboxMesh>() == null) {
       gameObject.AddComponent<SkyboxMesh>();
     }
