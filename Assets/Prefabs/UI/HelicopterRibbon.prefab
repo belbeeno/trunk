@@ -11,7 +11,7 @@ GameObject:
   - 114: {fileID: 11447204}
   - 225: {fileID: 22520698}
   m_Layer: 5
-  m_Name: HelicoptorRibbon
+  m_Name: HelicopterRibbon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,8 +63,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animNames:
-  - HelicoptorPreviewAnimation
-  - HelicoptorActiveAnimation
+  - HelicopterPreviewAnimation
+  - HelicopterActiveAnimation
   animController: {fileID: 11163478}
   group: {fileID: 22520698}
   currentState: -1
