@@ -6,6 +6,8 @@ using UnityEngine;
 // This marks a gameobject as something that the player can interact with
 public abstract class Interactable : MonoBehaviour
 {
+    public ScritableInteractable itemData; 
+
     // The type of items this current item can be used with/on
     public HashSet<Type> itemsToInteractWith;
 
@@ -27,11 +29,20 @@ public abstract class Interactable : MonoBehaviour
         {
             return; 
         }
+        if (itemToInteractWith.GetType() == typeof(Outside))
+        {
+            var itemName = itemData.name;
+            var position = transform.position;
+            ((Outside)itemToInteractWith).DropItem(itemName);
+            Destroy(gameObject); 
+            Debug.Log(string.Format("itemName {0}, position {1}", itemName, position));
+        }
     }
     
     public virtual bool CanInteractWith(Interactable item)
     {
-        return canBeHeld;
+        
+        return (item.GetType() == typeof(Outside));
     }
        
     public bool IsSelected()

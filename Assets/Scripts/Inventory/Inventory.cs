@@ -20,6 +20,7 @@ public class Inventory : MonoBehaviour {
     private bool hasPhone;
 
     private Transform start;
+    [SerializeField]
     private bool isAnimating;
     private float animationLength = 1f;
     private float time;
@@ -39,9 +40,9 @@ public class Inventory : MonoBehaviour {
             time += Time.deltaTime;
             var t = Mathf.Min(time / animationLength, 1);
             currentItem.transform.localPosition = Vector3.Lerp(start.localPosition, new Vector3(0, 0, 0), t);
-            currentItem.transform.localScale = Vector3.Lerp(start.localScale, targetScale, t);
+            //currentItem.transform.localScale = Vector3.Lerp(start.localScale, targetScale, t);
             currentItem.transform.localRotation = Quaternion.Slerp(start.localRotation, targetRotation, t);
-            if (t == 1)
+            if (t >= 1)
             {
                 isAnimating = false; 
             }
@@ -59,6 +60,10 @@ public class Inventory : MonoBehaviour {
     // currently holding something and the two items can interact 
     public bool CanInteractWith(GameObject item)
     {
+        if (isAnimating)
+        {
+            return false; 
+        }
         if (!HasPhone())
         {
             return item.GetComponent<CellPhone>() != null;
@@ -81,6 +86,10 @@ public class Inventory : MonoBehaviour {
 
     public void InteractWithItem(GameObject item)
     {            
+        if (!hasPhone)
+        {
+            return; 
+        }
         // Pick up the item
         if (!IsHoldingItem())
         {
@@ -97,7 +106,11 @@ public class Inventory : MonoBehaviour {
             var curObjInteract = currentItem.GetComponent<Interactable>();
             if (curObjInteract.CanInteractWith(itemInteract))
             {
-                curObjInteract.InteractWith(itemInteract); 
+                curObjInteract.InteractWith(itemInteract);
+                if (itemInteract.GetType() == typeof(Outside))
+                {
+                    currentItem = null; 
+                }
             }
         }
     }
@@ -131,14 +144,14 @@ public class Inventory : MonoBehaviour {
         interactable.ItemDropped();
 
         // throws item in the direction currently facing
-        var curScale = currentItem.transform.localScale;
-        currentItem.transform.localScale = new Vector3(curScale.x / scaleFactor, curScale.y / scaleFactor, curScale.z / scaleFactor);
+        //currentItem.transform.localScale = start.localScale;
         var rigidBody = currentItem.GetComponent<Rigidbody>();
         rigidBody.useGravity = true;
         rigidBody.isKinematic = false;
         rigidBody.AddForce(transform.forward * thrust, ForceMode.Impulse);
         currentItem.transform.parent = trunk.transform;
         currentItem = null;
+        isAnimating = false; 
     }
 
     public void PickUpPhone(GameObject item)

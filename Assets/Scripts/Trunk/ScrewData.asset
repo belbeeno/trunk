@@ -17,3 +17,5 @@ MonoBehaviour:
   disposeOnUse: 0
   type: 0
   unfastenDuration: 2
+  fastenerLength: 0.067
+  startPosition: {x: 3.009, y: 1.388, z: 0}

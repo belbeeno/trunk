@@ -5,11 +5,12 @@ using System;
 // All tools can be used to open a latch. 
 // This is to contain all shared functionalitys of tools
 public class Tool : Interactable {
-    [SerializeField]
-    public ScriptableTools toolData; 
+
+    private ScriptableTools toolData; 
 
    // Use this for initialization
     void Start () {
+        toolData = (ScriptableTools)itemData; 
         canBeHeld = toolData.canBeHeld; 
     }
 	
@@ -29,22 +30,25 @@ public class Tool : Interactable {
             var fastenerType = ((Fasteners)item).GetFastenerType();
             return (toolData.interactableFastenerList.Contains(fastenerType));
         }
-        return false; 
+        return base.CanInteractWith(item); 
     }
     
     public override void InteractWith(Interactable itemToInteractWith)
     {
         // Check if it's a tool specific item
-        if (CanInteractWith(itemToInteractWith))
+
+        if (toolData.canOpenLatch && itemToInteractWith.GetType() == typeof(Latch))
         {
-            if (toolData.canOpenLatch && itemToInteractWith.GetType() == typeof(Latch))
+            var latch = (Latch)itemToInteractWith;
+            if (!latch.isOpen)
             {
-                var latch = (Latch)itemToInteractWith;
-                if (!latch.isOpen)
-                {
-                    latch.Open();
-                }
+                latch.Open();
             }
+        }
+        else if (toolData.canUnfastenFasteners && itemToInteractWith.GetType() == typeof(Fasteners))
+        {
+            ((Fasteners)itemToInteractWith).Unfasten(); 
+            
         }
         else
         {
