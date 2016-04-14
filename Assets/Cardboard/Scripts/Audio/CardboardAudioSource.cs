@@ -332,7 +332,6 @@ public class CardboardAudioSource : MonoBehaviour {
   void OnDrawGizmosSelected () {
     Gizmos.color = new Color(0.75f, 0.75f, 1.0f, 0.5f);
     DrawDirectivityGizmo(180);
-    Gizmos.DrawWireSphere(transform.position, maxDistance);
   }
 
   // Draws a 3D gizmo in the Scene View that shows the selected directivity pattern.
