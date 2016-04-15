@@ -22,8 +22,11 @@ ModelImporter:
     400012: //RootNode
     400014: trunk_hatch
     2300000: trunk_hatch
+    2300002: //RootNode
     3300000: trunk_hatch
+    3300002: //RootNode
     4300000: trunk_hatch
+    4300002: trunkHatch
     9500000: //RootNode
   materials:
     importMaterials: 1

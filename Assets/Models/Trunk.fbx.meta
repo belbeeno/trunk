@@ -11,15 +11,132 @@ ModelImporter:
     100006: transform9
     100008: //RootNode
     100010: trunk
+    100012: group27
+    100014: pCube3
+    100016: pCube9
+    100018: pCylinder11
+    100020: polySurface31
+    100022: polySurface32
+    100024: polySurface33
+    100026: polySurface34
+    100028: polySurface51
+    100030: polySurface52
+    100032: polySurface53
+    100034: pTorus10
+    100036: pTorus11
+    100038: pTorus12
+    100040: pTorus13
+    100042: pTorus14
+    100044: pTorus2
+    100046: pTorus4
+    100048: pTorus5
+    100050: pTorus6
+    100052: pTorus7
+    100054: pTorus8
+    100056: pTorus9
+    100058: pTorus9 1
+    100060: pTorus9 2
+    100062: pTorus9 3
+    100064: pTorus9 4
+    100066: pTorus9 5
+    100068: Swivelthing
+    100070: Swivelthing1
+    100072: transform11
+    100074: transform12
+    100076: transform13
+    100078: transform14
+    100080: transform15
+    100082: transform16
+    100084: transform17
+    100086: transform18
+    100088: transform19
+    100090: transform20
+    100092: transform21
+    100094: transform22
+    100096: transform23
+    100098: transform24
+    100100: transform25
+    100102: transform26
+    100104: transform27
+    100106: transform28
+    100108: transform29
+    100110: transform30
+    100112: transform31
+    100114: transform32
+    100116: transform33
+    100118: transform34
+    100120: transform35
+    100122: transform36
+    100124: transform37
     400000: CarTrunk
     400002: polySurface49
     400004: transform10
     400006: transform9
     400008: //RootNode
     400010: trunk
+    400012: group27
+    400014: pCube3
+    400016: pCube9
+    400018: pCylinder11
+    400020: polySurface31
+    400022: polySurface32
+    400024: polySurface33
+    400026: polySurface34
+    400028: polySurface51
+    400030: polySurface52
+    400032: polySurface53
+    400034: pTorus10
+    400036: pTorus11
+    400038: pTorus12
+    400040: pTorus13
+    400042: pTorus14
+    400044: pTorus2
+    400046: pTorus4
+    400048: pTorus5
+    400050: pTorus6
+    400052: pTorus7
+    400054: pTorus8
+    400056: pTorus9
+    400058: pTorus9 1
+    400060: pTorus9 2
+    400062: pTorus9 3
+    400064: pTorus9 4
+    400066: pTorus9 5
+    400068: Swivelthing
+    400070: Swivelthing1
+    400072: transform11
+    400074: transform12
+    400076: transform13
+    400078: transform14
+    400080: transform15
+    400082: transform16
+    400084: transform17
+    400086: transform18
+    400088: transform19
+    400090: transform20
+    400092: transform21
+    400094: transform22
+    400096: transform23
+    400098: transform24
+    400100: transform25
+    400102: transform26
+    400104: transform27
+    400106: transform28
+    400108: transform29
+    400110: transform30
+    400112: transform31
+    400114: transform32
+    400116: transform33
+    400118: transform34
+    400120: transform35
+    400122: transform36
+    400124: transform37
     2300000: trunk
+    2300002: polySurface53
     3300000: trunk
+    3300002: polySurface53
     4300000: trunk
+    4300002: polySurface53
     9500000: //RootNode
   materials:
     importMaterials: 1
