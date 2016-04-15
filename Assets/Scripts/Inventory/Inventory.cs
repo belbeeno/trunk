@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 // Keeps track of what item is currently being held and uses it on other items if possible
 public class Inventory : MonoBehaviour {
@@ -19,6 +20,7 @@ public class Inventory : MonoBehaviour {
 
     private bool hasPhone;
 
+    public Transform possessionTarget = null;
     private Transform start;
     [SerializeField]
     private bool isAnimating;
@@ -84,10 +86,48 @@ public class Inventory : MonoBehaviour {
         }
     }
 
+    protected delegate void OnAnimationComplete(GameObject phoneGO);
+    protected IEnumerator AnimateIntoPosession(Transform target
+                                            , Transform newParent
+                                            , float duration
+                                            , OnAnimationComplete cb = null)
+    {
+        Vector3 startPos = target.position;
+        Quaternion startRot = target.localRotation;
+        Quaternion randoRot = Random.rotation;
+        float timer = 0f;
+        while (timer < duration)
+        {
+            target.position = Vector3.Lerp(target.position, newParent.position, Mathf.Clamp01(timer / duration));
+            
+            if (timer < duration / 2f)
+            {
+                target.localRotation = Quaternion.SlerpUnclamped(startRot, randoRot, Ease.CircEaseInOut(timer, 0f, 1f, duration / 2f));
+            }
+            else
+            {
+                target.localRotation = Quaternion.SlerpUnclamped(randoRot, newParent.localRotation, Ease.CircEaseOutIn(timer - duration / 2f, 0f, 1f, duration / 2f));
+            }
+            timer += Time.deltaTime;
+            yield return 0;
+        }
+        target.SetParent(newParent, false);
+
+        if (cb != null) cb.Invoke(target.gameObject);
+    }
+
     public void InteractWithItem(GameObject item)
     {            
         if (!hasPhone)
         {
+            if (item.GetComponent<CellPhone>())
+            {
+                Collider col = item.GetComponent<Collider>();
+                col.attachedRigidbody.useGravity = false;
+                col.enabled = false;
+                StopAllCoroutines();
+                StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), 2f, PickUpPhone));
+            }
             return; 
         }
         // Pick up the item
@@ -154,9 +194,11 @@ public class Inventory : MonoBehaviour {
         isAnimating = false; 
     }
 
-    public void PickUpPhone(GameObject item)
+    public void PickUpPhone(GameObject phone)
     {
-        hasPhone = true; 
+        hasPhone = true;
+        phone.SetActive(false);
+        // Should we just destroy here?
     }
 
     public bool IsHoldingItem()
