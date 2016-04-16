@@ -7,3 +7,5 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Trunk.unity
+  - enabled: 0
+    path: C:/Users/Christy/Documents/unity/hostage/Assets/Scenes/Trunk.unity
