@@ -10,7 +10,7 @@ public class OperatorToggle : MonoBehaviour
     {
         APB,
         Siren,
-        Helicoptor
+        Helicopter
     }
 
     public OperatorAction action;
