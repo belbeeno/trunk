@@ -9,18 +9,20 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
 {
     public UnityEvent OnSessionEstablished;
     public UnityEvent OnResetImminent;
+    public UnityEvent OnGameWin;
 
     public abstract void Begin();
-    public virtual IEnumerator SetUpSession(int citySeed, int pathSeed)
+    public virtual void SetUpSession(int citySeed, int pathSeed, bool asHost)
     {
-        // We have nothing to set up / syncronize, so just do nothing for now.
-        var wfs = new WaitForSeconds(1f);
-        for (int i = 0; i < 10; i++)
-        {
-            yield return wfs;
-            Log("Setting up game: " + i * 10f + "% complete");
-        }
-        Log("Setting up game: Done!");
+        var gameObj = GameObject.Find("GameManager");
+        var manager = gameObj.GetComponent<GameManager>();
+        
+        Log("Setting up game");
+        manager.SetUpGame(asHost, citySeed);
+        
+        Log("Starting game!");
+        manager.StartGame();
+        
         OnSessionEstablished.Invoke();
     }
 
@@ -31,21 +33,30 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
         DebugConsole.SetText("NetworkStatus", msg);
     }
 
-    public void Restart(string msg)
+    public void Restart(string msg = null)
     {
         OnResetImminent.Invoke();
 
         StopAllCoroutines();
         StartCoroutine(RestartingIn(msg));
     }
-    public IEnumerator RestartingIn(string msg)
+    private IEnumerator RestartingIn(string msg)
     {
-        Log(msg + "  Resetting in...", true);
+        if (!string.IsNullOrEmpty(msg))
+        {
+            Log(msg + "  Resetting in...", true);
+        }
+        else
+        {
+            Log("Resetting in...");
+        }
+
         for (int sec = 5; sec > 0; sec--)
         {
             Log(sec + "...");
             yield return new WaitForSeconds(1f);
         }
+
         SceneManager.LoadScene("Trunk", LoadSceneMode.Single);
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingHostage : TrunkNetworkingBase
@@ -16,6 +17,9 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
 
     TrunkNetworkDiscovery broadcaster = null;
     NetworkClient network = null;
+
+    [SerializeField]
+    TrunkMover mover = null;
     
     public override void Begin()
     {
@@ -32,14 +36,16 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     public void Connect(string ip)
     {
         network = new NetworkClient();
-        network.RegisterHandler(MsgType.Connect, OnConnect);
-        network.RegisterHandler(MsgType.Disconnect, OnDisconnect);
-        network.RegisterHandler(NetMessage.ID.Ping, OnPing);
-        network.RegisterHandler(NetMessage.ID.APB, OnAPBRequest);
+        network.RegisterHandler(MsgType.Connect, OnConnectMsg);
+        network.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
+        network.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
+        network.RegisterHandler(NetMessage.ID.APB, OnAPBRequestMsg);
+        network.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
+
         network.Connect(ip, TrunkNetworkingOperator.GAME_PORT);
     }
 
-    public void OnConnect(NetworkMessage msg)
+    public void OnConnectMsg(NetworkMessage msg)
     {
         Log("Connected to server! " + msg.ToString());
         NetMessage.PingMsg ping = new NetMessage.PingMsg();
@@ -49,12 +55,12 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         broadcaster.StopBroadcast();
     }
 
-    public void OnDisconnect(NetworkMessage msg)
+    public void OnDisconnectMsg(NetworkMessage msg)
     {
         Restart("Disconnect detected!");
     }
 
-    public void OnPing(NetworkMessage msg)
+    public void OnPingMsg(NetworkMessage msg)
     {
         NetMessage.PingMsg castedMsg = msg.ReadMessage<NetMessage.PingMsg>();
         Log("Ping! " + castedMsg.msg);
@@ -64,10 +70,19 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         initMsg.pathSeed = Random.Range(int.MinValue, int.MaxValue);
         msg.conn.Send(NetMessage.ID.InitSession, initMsg);
 
-        StartCoroutine(SetUpSession(initMsg.citySeed, initMsg.pathSeed));
+        SetUpSession(initMsg.citySeed, initMsg.pathSeed, asHost: false);
     }
 
-    public void OnAPBRequest(NetworkMessage msg)
+    public void OnGameOverMsg(NetworkMessage msg)
+    {
+        // If we're getting this at the hostage end, then the operator found us!
+
+        Log("Hostage found!  You win!");
+        OnGameWin.Invoke();
+        Restart();
+    }
+
+    public void OnAPBRequestMsg(NetworkMessage msg)
     {
         NetMessage.APBRequest castedMsg = msg.ReadMessage<NetMessage.APBRequest>();
         Log("APB requested at position " + castedMsg.position.ToString());
@@ -77,22 +92,34 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
 
         NetMessage.APBResponse response = new NetMessage.APBResponse();
         response.origin = castedMsg.position;
+#if UNITY_EDITOR
         Debug.DrawLine(Camera.main.transform.position, response.origin, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
+#endif
         float distFromOrigin = (Camera.main.transform.position - response.origin).sqrMagnitude;
         if (distFromOrigin <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
         {
-            response.hints.Add(new NetMessage.APBResponse.Hint(Camera.main.transform.position, NetMessage.APBResponse.Hint.HintType.Hostage));
+            response.hints.Add(new NetMessage.APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), NetMessage.APBResponse.Hint.HintType.Hostage));
         }
+
+
         msg.conn.Send(NetMessage.ID.APB, response);
     }
 
     public void Start()
     {
         _instance = this;
+    }
+
+    public void Update()
+    {
+        if (Input.GetButtonUp("Back"))
+        {
+            Application.Quit();
+        }
     }
 
     public void OnDestroy()

@@ -76,7 +76,7 @@ public class DebugConsole : MonoBehaviour
             }
             return;
         }
-
+        /*
         if ((Input.touchSupported 
                 && Input.touchCount > 0 
                 && Input.touches[0].phase == TouchPhase.Ended)
@@ -95,7 +95,8 @@ public class DebugConsole : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
 #endif
-
+        
+        //*/
         if (consolePanel.activeSelf)
         {
             consoleText.text = "";
