@@ -18,6 +18,10 @@ public class OperatorToggle : MonoBehaviour
     public bool startAtFull = true;
     float timer = 5f;
 
+    [System.Serializable]
+    public class OnOperatorActionCB : UnityEvent<OperatorAction> { }
+
+    public OnOperatorActionCB OnOperatorAction = null;
     public UnityEvent OnFilled = null;
 
     public void Start()
@@ -39,7 +43,10 @@ public class OperatorToggle : MonoBehaviour
     {
         timer = 0f;
         toggle.isOn = false;
+        toggle.group.SetAllTogglesOff();
         UpdateBars();
+
+        OnOperatorAction.Invoke(action);
     }
 
     public void Update()
