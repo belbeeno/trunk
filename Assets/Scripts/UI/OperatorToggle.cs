@@ -10,6 +10,7 @@ public class OperatorToggle : MonoBehaviour
     {
         APB,
         Siren,
+        Helicopter
     }
 
     public OperatorAction action;
@@ -17,6 +18,8 @@ public class OperatorToggle : MonoBehaviour
     public float cooldown = 5f;
     public bool startAtFull = true;
     float timer = 5f;
+
+    public Image cooldownClock = null;
 
     [System.Serializable]
     public class OnOperatorActionCB : UnityEvent<OperatorAction> { }
@@ -35,7 +38,14 @@ public class OperatorToggle : MonoBehaviour
 
     private void UpdateBars()
     {
-        toggle.image.fillAmount = Mathf.Clamp01(timer / cooldown);
+        if (cooldownClock)
+        {
+            cooldownClock.fillAmount = 1f - Mathf.Clamp01(timer / cooldown);
+        }
+        else
+        {
+            toggle.image.fillAmount = Mathf.Clamp01(timer / cooldown);
+        }
         toggle.interactable = timer >= cooldown;
     }
 

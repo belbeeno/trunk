@@ -1,65 +1,57 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PingWave : MonoBehaviour
+public class PingWave : OperatorItemBase
 {
     public enum PingState : int
     {
         Invalid = -1,
 
         Preview = 0,
-        Wave,
-        Siren,
+        Action,
     }
-
-    // Why are aniations structured like this lol
-    public string[] animNames = new string[3];
-
-    public Animation animController = null;
-    public CanvasGroup group = null;
-
-    public PingState currentState = PingState.Invalid;
-    private PingState prevState = PingState.Invalid;
-
-    public UnityEngine.UI.ToggleGroup actionToggles = null;
-
-    RectTransform parentRect = null;
-    RectTransform rect = null;
 
     public PID.InitParams pidParams;
     PID pidX = null;
     PID pidY = null;
 
-    // Use this for initialization
-    void Start()
+    protected override void Start()
     {
-        if (animController == null)
-        {
-            Debug.LogWarning("Potentially optimization in go " + gameObject.name, gameObject);
-            animController = GetComponentInChildren<Animation>();
-        }
-        if (group == null)
-        {
-            group = GetComponent<CanvasGroup>();
-        }
-        
-        parentRect = transform.parent.GetComponent<RectTransform>();
-        rect = GetComponent<RectTransform>();
-
-        UpdateStatus();
-
         pidX = new PID(pidParams, GetVisibleProgressX, GetTargetProgressX, SetVisibleProgressX);
         pidY = new PID(pidParams, GetVisibleProgressY, GetTargetProgressY, SetVisibleProgressY);
+        base.Start();
     }
 
-    private Vector2 target = new Vector2();
+    protected override Vector2 AnchoredPosition
+    {
+        get
+        {
+            return rect.anchoredPosition;
+        }
+        set
+        {
+            rect.anchoredPosition = value;
+        }
+    }
+
+    protected override int PreviewState
+    {
+        get { return (int)PingState.Preview; }
+    }
+
+    protected override void InitPositions()
+    {
+        pidX.AssignInit(pidParams);
+        pidY.AssignInit(pidParams);        
+    }
+
     public float GetVisibleProgressX()
     {
-        return rect.anchoredPosition.x;
+        return AnchoredPosition.x;
     }
     public float GetVisibleProgressY()
     {
-        return rect.anchoredPosition.y;
+        return AnchoredPosition.y;
     }
 
     public float GetTargetProgressX() { return target.x; }
@@ -67,103 +59,31 @@ public class PingWave : MonoBehaviour
 
     public void SetVisibleProgressX(float val)
     {
-        Vector2 pos = rect.anchoredPosition;
+        Vector2 pos = AnchoredPosition;
         pos.x = val;
-        rect.anchoredPosition = pos;
+        AnchoredPosition = pos;
     }
     public void SetVisibleProgressY(float val)
     {
-        Vector2 pos = rect.anchoredPosition;
+        Vector2 pos = AnchoredPosition;
         pos.y = val;
-        rect.anchoredPosition = pos;
+        AnchoredPosition = pos;
     }
 
-    private void UpdateStatus()
+    public override void OperatorAction(OperatorToggle.OperatorAction action)
     {
-        if (currentState == PingState.Invalid)
-        {
-            animController.Stop();
-            group.alpha = 0f;
-        }
-        else
-        {
-            if (prevState == PingState.Invalid)
-            {
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out target);
-                rect.anchoredPosition = target;
-            }
-            // Why are aniations structured like this lol
-            if (animController.isPlaying)
-            {
-                animController.CrossFade(animNames[(int)currentState],0.25f);
-            }
-            else
-            {
-                animController.Play(animNames[(int)currentState], PlayMode.StopAll);
-            }
-            group.alpha = 1f;
-        }
+        currentState = (int)PingState.Action;
     }
 
-    public void OnToggleChanged(bool isOn)
+    protected override void ResetPositions()
     {
-        if (isOn)
-        {
-            currentState = PingState.Preview;
-        }
-        else
-        {
-            if (!actionToggles.AnyTogglesOn())
-            {
-                currentState = PingState.Invalid;
-            }
-        }
+        pidX.Reset();
+        pidY.Reset();
     }
 
-    public void OperatorAction(OperatorToggle.OperatorAction action)
+    protected override void UpdatePositions()
     {
-        switch (action)
-        {
-            case OperatorToggle.OperatorAction.APB:
-                currentState = PingState.Wave;
-                break;
-            case OperatorToggle.OperatorAction.Siren:
-                currentState = PingState.Siren;
-                break;
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (prevState != currentState)
-        {
-            UpdateStatus();
-            pidX.Reset();
-            pidY.Reset();
-            prevState = currentState;
-        }
-
-        if (currentState != PingState.Invalid)
-        {
-            if (currentState == PingState.Preview)
-            {
-                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out target))
-                {
-#if UNITY_EDITOR
-                    pidX.AssignInit(pidParams);
-                    pidY.AssignInit(pidParams);
-#endif
-                }
-            }
-
-            pidX.Compute();
-            pidY.Compute();
-        }
-
-        if (!animController.isPlaying)
-        {
-            currentState = PingState.Invalid;
-        }
+        pidX.Compute();
+        pidY.Compute();
     }
 }

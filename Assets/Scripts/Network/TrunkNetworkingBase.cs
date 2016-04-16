@@ -12,16 +12,17 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     public UnityEvent OnGameWin;
 
     public abstract void Begin();
-    public virtual IEnumerator SetUpSession(int citySeed, int pathSeed)
+    public virtual void SetUpSession(int citySeed, int pathSeed)
     {
-        // We have nothing to set up / syncronize, so just do nothing for now.
-        var wfs = new WaitForSeconds(1f);
-        for (int i = 0; i < 10; i++)
-        {
-            yield return wfs;
-            Log("Setting up game: " + i * 10f + "% complete");
-        }
-        Log("Setting up game: Done!");
+        var gameObj = GameObject.Find("GameManager");
+        var manager = gameObj.GetComponent<GameManager>();
+        
+        Log("Setting up game");
+        manager.SetUpGame(citySeed);
+        
+        Log("Starting game!");
+        manager.StartGame();
+        
         OnSessionEstablished.Invoke();
     }
 
