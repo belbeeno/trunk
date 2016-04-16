@@ -10,13 +10,9 @@ public class GameManagerEditor : Editor
         
         var gameManager = (GameManager)target;
         EditorGUILayout.Space();
-        if (GUILayout.Button("Regenerate City"))
+        if (GUILayout.Button("Start Debug Game"))
         {
-            gameManager.SetUpGame(false);
-        }
-        if (GUILayout.Button("Start Car"))
-        {
-            gameManager.StartGame();
+            gameManager.SetUpDebugGame();
         }
     }
 }

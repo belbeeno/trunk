@@ -12,13 +12,13 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     public UnityEvent OnGameWin;
 
     public abstract void Begin();
-    public virtual void SetUpSession(int citySeed, int pathSeed, bool asHost)
+    public virtual void SetUpSession(int citySeed, int pathSeed)
     {
         var gameObj = GameObject.Find("GameManager");
         var manager = gameObj.GetComponent<GameManager>();
         
         Log("Setting up game");
-        manager.SetUpGame(asHost, citySeed);
+        manager.SetUpGame(citySeed);
         
         Log("Starting game!");
         manager.StartGame();

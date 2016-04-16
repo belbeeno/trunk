@@ -70,7 +70,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         initMsg.pathSeed = Random.Range(int.MinValue, int.MaxValue);
         msg.conn.Send(NetMessage.ID.InitSession, initMsg);
 
-        SetUpSession(initMsg.citySeed, initMsg.pathSeed, asHost: false);
+        SetUpSession(initMsg.citySeed, initMsg.pathSeed);
     }
 
     public void OnGameOverMsg(NetworkMessage msg)
