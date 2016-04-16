@@ -6,23 +6,20 @@ public class GameManager : MonoBehaviour
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
-    public void SetUpGame(bool isHost)
+    public void SetUpDebugGame()
     {
-        SetUpGame(isHost, Random.Range(int.MinValue, int.MaxValue));
+        SetUpGame(Random.Range(int.MinValue, int.MaxValue));
+        StartGame();
     }
     
-    public void SetUpGame(bool isHost, int seed)
+    public void SetUpGame(int seed)
     {
         Random.seed = seed;
         
         var city = _generator.Generate(generationOptions);
         GenerateCity(city);
         InitializeRoutePlanner(city);
-        
-        if (isHost)
-        {
-            RepositionCamera();
-        }
+        RepositionProxyCamera();
     }
     
     public void StartGame()
@@ -44,7 +41,7 @@ public class GameManager : MonoBehaviour
         routePlanner.graph = result.roadGraph;
     }
     
-    private void RepositionCamera()
+    private void RepositionProxyCamera()
     {
         var cameraX =  generationOptions.cityWidth / 2f;
         var cameraZ = generationOptions.cityHeight / 2f; 
