@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GenerationOptions generationOptions;    
+    public Camera operatorProxyCamera;
+    public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
     public void SetUpGame(bool isHost)
@@ -47,9 +48,9 @@ public class GameManager : MonoBehaviour
     {
         var cameraX =  generationOptions.cityWidth / 2f;
         var cameraZ = generationOptions.cityHeight / 2f; 
-        Camera.main.transform.position = new Vector3(cameraX, 300f, cameraZ);
-        Camera.main.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
-        Camera.main.orthographicSize = generationOptions.cityHeight / 2f;
+        operatorProxyCamera.transform.position = new Vector3(cameraX, 300f, cameraZ);
+        operatorProxyCamera.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
+        operatorProxyCamera.orthographicSize = generationOptions.cityHeight / 2f;
     }
     
     private static void StartCar()
