@@ -8,7 +8,9 @@ public class CityGenerator
             new RemoveDeadEndsStep(),
             new AddBridgesStep(),
             new FindCityBlocksStep(),
-            new CreateBuildingPlotsStep()
+            new CreateBuildingPlotsStep(),
+            new AddSidewalksStep(),
+            new AddRoadMeshesStep()
         };
     
     public GenerationResult Generate(GenerationOptions options)

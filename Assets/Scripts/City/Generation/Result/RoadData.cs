@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class BuildingPlotData
+public class RoadData
 {
-    public BuildingPlotData(Vector3[] corners, Mesh mesh, Material material)
+    public RoadData(Vector3[] corners, Mesh mesh, Material material)
     {
         this.corners = corners;
         this.mesh = mesh;

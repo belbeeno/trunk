@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class CreateBuildingPlotsStep : GenerationStepBase
-{               
+{
+    private readonly Color _buildingColor = Color.grey;
+    
     public override void Run()
     {
         var plots = data.cityBlocks
@@ -16,30 +19,75 @@ public class CreateBuildingPlotsStep : GenerationStepBase
     
     private BuildingPlotData CreateBuildingPlot(CityBlockData city)
     {
-        var corners = GetInsetCorners(city.boundingRoads);
-        var numFloors = Random.Range(1, 6);
-        var floorHeight = options.blockSize * options.floorHeight;
-        var buildingPlot = new BuildingPlotData(corners, numFloors, floorHeight);
+        var insetAmount = ((options.roadWidth / 2f) + options.sidewalkWidth) * options.blockSize;
+        var corners = city.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
+        var mesh = GetMesh(corners);
+        var material = GetMaterial();
+        var buildingPlot = new BuildingPlotData(corners, mesh, material);
         
         return buildingPlot;
     }
     
-    private Vector3[] GetInsetCorners(RoadEdge[] edges)
+    private Material GetMaterial()
     {
-        // Inset boundaries
-        var insetAmount = (options.roadWidth / 2f) * options.blockSize;
-        var lines = edges.Select(e => Line.CreateThroughPoints(e.from.pos, e.to.pos));
-        var insetLines = lines.Select(l => l.Offset(l.Perpendicular() * insetAmount));
+        string[] guids = AssetDatabase.FindAssets("BuildingMat");
+        string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+        var material = AssetDatabase.LoadAssetAtPath<Material>(path);
         
-        // Find intersections
-        var corners = new List<Vector3>();
-        var prevLine = insetLines.Last();
-        foreach (var line in insetLines)
-        {
-            corners.Add(Line.Intersection(prevLine, line));
-            prevLine = line;    
-        }
+        return material;
+    }
+    
+    private Mesh GetMesh(Vector3[] corners)
+    {
+        var numFloors = Random.Range(1, 6);
+        var floorHeight = options.floorHeight * options.blockSize;
+        
+        Mesh generatedMesh = new Mesh();
+        List<Vector3> points = new List<Vector3>();
+        List<Color> colors = new List<Color>();
+        List<Vector2> uvs = new List<Vector2>();
+        List<int> tris = new List<int>();
 
-        return corners.ToArray();
+        for (int floor = 0; floor <= numFloors; floor++)
+        {
+            for (int corner = 0; corner < corners.Length; corner++)
+            {
+                points.Add(corners[corner] + Vector3.up * floorHeight * floor);
+                colors.Add(_buildingColor);
+                uvs.Add(new Vector2((float)corner, (float)floor));
+                if (floor > 0)
+                {
+                    tris.Add((corner + 0) + (floor - 1) * corners.Length);
+                    tris.Add((corner + 0) + (floor - 0) * corners.Length);
+                    tris.Add((corner + 1) % corners.Length + (floor - 1) * corners.Length);
+
+                    tris.Add((corner + 0) + (floor - 0) * corners.Length);
+                    tris.Add((corner + 1) % corners.Length + (floor - 0) * corners.Length);
+                    tris.Add((corner + 1) % corners.Length + (floor - 1) * corners.Length);
+                }
+            }
+        }
+        
+        Vector3 averagePointsOnRoof = new Vector3();
+        int lastIdx = points.Count;
+        for (int i = 0; i < corners.Length; ++i)
+        {
+            averagePointsOnRoof += corners[i];
+            tris.Add(lastIdx - (corners.Length - i));
+            tris.Add(lastIdx);
+            tris.Add(lastIdx - (corners.Length - (i + 1) % corners.Length));
+        }
+        averagePointsOnRoof *= 1f / corners.Length;
+        averagePointsOnRoof.y = ((float)numFloors + 0.5f) * floorHeight;
+        points.Add(averagePointsOnRoof);
+        colors.Add(_buildingColor);
+        uvs.Add(new Vector2(1f, Mathf.Max((float)numFloors - 1f, 0f)));
+        
+        generatedMesh.SetVertices(points);
+        generatedMesh.SetColors(colors);
+        generatedMesh.SetUVs(0, uvs);
+        generatedMesh.SetIndices(tris.ToArray(), MeshTopology.Triangles, 0);
+
+        return generatedMesh;
     }
 }

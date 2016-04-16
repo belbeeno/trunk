@@ -13,6 +13,7 @@ public class GenerationOptions
     
     [Header("Building Size")]
     [Range(0f, 1f)] public float roadWidth;
+    [Range(0f, 1f)] public float sidewalkWidth;
     [Range(0f, 2f)] public float floorHeight;
     
     [Header("River")]
