@@ -2,58 +2,64 @@ using UnityEngine;
 
 public class City : MonoBehaviour 
 {
-    public void GenerateGeometry(GenerationResult result)
-    {    
+    public void GenerateGeometry(GenerationData result)
+    {
+        ClearChildren();
+        AddMeshes(result);
+        AddColliders(result);
+        AddDebugObjs(result);
+    }
+    
+    private void ClearChildren()
+    {
         while (transform.childCount > 0) 
         {
             GameObject.DestroyImmediate(transform.GetChild(0).gameObject);
         }
-                         
+    }
+    
+    private void AddMeshes(GenerationData result)
+    {                         
         // Buildings
-        var buildingsObj = new GameObject("Buildings");
-        buildingsObj.transform.parent = this.transform;
+        var buildingsObj = CreateGameObject("Buildings");
         foreach (var plot in result.buildingPlots)
         {
-            var plotObj = new GameObject("Building");
-            plotObj.transform.parent = buildingsObj.transform;
-            var meshFilter = plotObj.AddComponent<MeshFilter>();
-            meshFilter.mesh = plot.mesh;
-            var meshRenderer = plotObj.AddComponent<MeshRenderer>();
-            meshRenderer.material = plot.material;
+            var plotObj = CreateGameObject(buildingsObj, "Building");
+            AddMesh(plotObj, plot.mesh, plot.material);
         }
         
         // Sidewalks
-        var sidewalksObj = new GameObject("Sidewalks");
-        sidewalksObj.transform.parent = this.transform;
+        var sidewalksObj = CreateGameObject("Sidewalks");
         foreach (var sidewalk in result.sidewalks)
         {
-            var sidewalkObj = new GameObject("Sidewalk");
-            sidewalkObj.transform.parent = sidewalksObj.transform;
-            var meshFilter = sidewalkObj.AddComponent<MeshFilter>();
-            meshFilter.mesh = sidewalk.mesh;
-            var meshRenderer = sidewalkObj.AddComponent<MeshRenderer>();
-            meshRenderer.material = sidewalk.material;
+            var sidewalkObj = CreateGameObject(sidewalksObj, "Sidewalk");
+            AddMesh(sidewalkObj, sidewalk.mesh, sidewalk.material);
         }
         
         // Road meshes
-        var roadMeshesObj = new GameObject("Road Meshes");
-        roadMeshesObj.transform.parent = this.transform;
+        var roadMeshesObj = CreateGameObject("Road Meshes");
         foreach (var roadMesh in result.roadMeshes)
         {
-            var roadMeshObj = new GameObject("Road Mesh");
-            roadMeshObj.transform.parent = roadMeshesObj.transform;
-            var meshFilter = roadMeshObj.AddComponent<MeshFilter>();
-            meshFilter.mesh = roadMesh.mesh;
-            var meshRenderer = roadMeshObj.AddComponent<MeshRenderer>();
-            meshRenderer.material = roadMesh.material;
+            var roadMeshObj = CreateGameObject(roadMeshesObj, "Road Mesh");
+            AddMesh(roadMeshObj, roadMesh.mesh, roadMesh.material);
         }
-        
+    }
+    
+    private void AddColliders(GenerationData result)
+    {   
+        // Click collider
+        var clickCollider = new GameObject("Click Collider");
+        var meshCollider = clickCollider.AddComponent<MeshCollider>();
+        meshCollider.sharedMesh = result.clickColliderMesh;
+    }
+    
+    private void AddDebugObjs(GenerationData result)
+    {
         // Roads
-        var roadsObj = new GameObject("Roads");
-        roadsObj.transform.parent = this.transform;
+        var roadsObj = CreateGameObject("Roads");
         foreach (var edge in result.roadGraph.GetEdges())
         {
-            var roadObj = new GameObject("Road");
+            var roadObj = CreateGameObject("Road");
             roadObj.transform.parent = roadsObj.transform;
             var roadScript = roadObj.AddComponent<Road>();
             roadScript.road = edge;
@@ -64,5 +70,27 @@ public class City : MonoBehaviour
         riverObj.transform.parent = this.transform;
         var riverScript = riverObj.AddComponent<River>();
         riverScript.riverGraph = result.riverGraph;
+    }
+    
+    private GameObject CreateGameObject(string name)
+    {
+        return CreateGameObject(this.gameObject, name);
+    }
+    
+    private GameObject CreateGameObject(GameObject parent, string name)
+    {
+        var newObj = new GameObject(name);
+        newObj.transform.parent = parent.transform;
+        
+        return newObj;
+    }
+    
+    private void AddMesh(GameObject gameObj, Mesh mesh, Material material)
+    {
+        var filter = gameObj.AddComponent<MeshFilter>();
+        filter.mesh = mesh;
+        
+        var renderer = gameObj.AddComponent<MeshRenderer>();
+        renderer.material = material;
     }
 }

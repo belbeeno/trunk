@@ -27,14 +27,14 @@ public class GameManager : MonoBehaviour
         StartCar();
     }
     
-    private void GenerateCity(GenerationResult result)
+    private void GenerateCity(GenerationData result)
     {
         var gameObj = GameObject.Find("City");
         var city = gameObj.GetComponent<City>();
         city.GenerateGeometry(result);
     }
     
-    private void InitializeRoutePlanner(GenerationResult result)
+    private void InitializeRoutePlanner(GenerationData result)
     {
         var gameObj = GameObject.Find("RoutePlanner");
         var routePlanner = gameObj.GetComponent<RoutePlanner>();
