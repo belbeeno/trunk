@@ -114,6 +114,14 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         _instance = this;
     }
 
+    public void Update()
+    {
+        if (Input.GetButtonUp("Back"))
+        {
+            Application.Quit();
+        }
+    }
+
     public void OnDestroy()
     {
         if (network != null)
