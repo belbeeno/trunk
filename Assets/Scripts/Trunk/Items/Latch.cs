@@ -8,7 +8,7 @@ public class Latch : Interactable
 {
     public bool isOpen { get; set; }
 
-    private float degreeTrunkLeftOpen = 2;
+    private float degreeTrunkLeftOpen = 3f;
     public GameObject cover;
     private bool isOpening;
     float timer = 0f;
