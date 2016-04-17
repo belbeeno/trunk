@@ -48,7 +48,7 @@ public class City : MonoBehaviour
     private void AddColliders(GenerationData result)
     {   
         // Click collider
-        var clickCollider = new GameObject("Click Collider");
+        var clickCollider = CreateGameObject("Click Collider");
         var meshCollider = clickCollider.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = result.clickColliderMesh;
     }
@@ -59,15 +59,13 @@ public class City : MonoBehaviour
         var roadsObj = CreateGameObject("Roads");
         foreach (var edge in result.roadGraph.GetEdges())
         {
-            var roadObj = CreateGameObject("Road");
-            roadObj.transform.parent = roadsObj.transform;
+            var roadObj = CreateGameObject(roadsObj, "Road");
             var roadScript = roadObj.AddComponent<Road>();
             roadScript.road = edge;
         }
         
         // River
-        var riverObj = new GameObject("River");
-        riverObj.transform.parent = this.transform;
+        var riverObj = CreateGameObject("River");
         var riverScript = riverObj.AddComponent<River>();
         riverScript.riverGraph = result.riverGraph;
     }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class AddRoadMeshesStep : GenerationStepBase
@@ -20,7 +19,7 @@ public class AddRoadMeshesStep : GenerationStepBase
     {
         var corners = GetCorners(roadEdge.from.pos, roadEdge.to.pos);
         var mesh = GetMesh(corners.ToArray());
-        var material = GetMaterial();
+        var material = MaterialsStore.instance.buildings;
         var roadData = new RoadData(corners.ToArray(), mesh, material);
         
         return roadData;
@@ -39,15 +38,6 @@ public class AddRoadMeshesStep : GenerationStepBase
         corners.Add(newTo + perpendicular);
         corners.Add(newTo);
         return corners.ToArray();
-    }
-    
-    private Material GetMaterial()
-    {
-        string[] guids = AssetDatabase.FindAssets("BuildingMat");
-        string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-        var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-        
-        return material;
     }
     
     private Mesh GetMesh(Vector3[] corners)
