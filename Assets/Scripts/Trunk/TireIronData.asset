@@ -8,14 +8,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28eb96a3a5539bf408e45cfa16d79225, type: 3}
-  m_Name: ScrewData
+  m_Script: {fileID: 11500000, guid: 86a6ea89988e9ed43a32dc9c8bc75bf1, type: 3}
+  m_Name: TireIronData
   m_EditorClassIdentifier: 
-  canBeHeld: 0
-  itemName: Screw
+  canBeHeld: 1
+  itemName: TireIron
   mesh: {fileID: 0}
   disposeOnUse: 0
-  type: 0
-  unfastenDuration: 2
-  fastenerLength: 0.067
-  startPosition: {x: 3.009, y: 1.388, z: 0}
+  interactableFastenerList: 01000000
+  canUnfastenFasteners: 1
+  canOpenLatch: 1
+  canWedgeOpenTrunk: 1
+  currentAnimation: 0

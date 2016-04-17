@@ -23,11 +23,6 @@ public class Outside : Interactable {
         canBeHeld = false;
         droppedItems = new List<droppedItem>(); 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     public void DropItem(string name, Vector3 position)
     {

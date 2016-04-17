@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: ScrewdriverData
   m_EditorClassIdentifier: 
   canBeHeld: 1
-  name: Screwdriver
+  itemName: Screwdriver
   mesh: {fileID: 0}
   disposeOnUse: 0
   interactableFastenerList: 00000000
