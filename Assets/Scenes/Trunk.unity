@@ -5012,12 +5012,23 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1814474566}
-        m_MethodName: SetUpDebugGame
-        m_Mode: 1
+      - m_Target: {fileID: 1571645526}
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -6717,36 +6728,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11421296, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: allSources.Array.data[0]
-      value: 
-      objectReference: {fileID: 1465032089}
-    - target: {fileID: 11421296, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: allSources.Array.data[1]
-      value: 
-      objectReference: {fileID: 1861892072}
-    - target: {fileID: 11421296, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: allSources.Array.data[2]
-      value: 
-      objectReference: {fileID: 20164874}
-    - target: {fileID: 11421296, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: allSources.Array.data[3]
-      value: 
-      objectReference: {fileID: 1970156597}
-    - target: {fileID: 163810, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 435088, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.452
-      objectReference: {fileID: 0}
-    - target: {fileID: 435088, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 2.601
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 11471634, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1843888836

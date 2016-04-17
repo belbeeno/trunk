@@ -22,11 +22,6 @@ public class Outside : Interactable {
 	void Start () {
         canBeHeld = false;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     public void DropItem(string name, Vector3 position)
     {
