@@ -4630,48 +4630,6 @@ GameObject:
 Transform:
   m_PrefabParentObject: {fileID: 462686, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
   m_PrefabInternal: {fileID: 1823260066}
---- !u!114 &1424076265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1424076263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1665e991c690ea8468bb23d572a26096, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  allSources:
-  - {fileID: 1465032089}
-  - {fileID: 1861892072}
-  - {fileID: 20164874}
-  - {fileID: 1970156597}
-  enableOnStart: 1
---- !u!114 &1424076267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1424076263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a40b544b8c3553c40852ae7ad35a9343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vrModeEnabled: 1
-  distortionCorrection: 2
-  enableAlignmentMarker: 1
-  enableSettingsButton: 1
-  backButtonMode: 1
-  tapIsTrigger: 0
-  neckModelScale: 0
-  autoDriftCorrection: 1
-  electronicDisplayStabilization: 0
-  autoUntiltHead: 1
-  UseUnityRemoteInput: 0
-  screenSize: 0
-  deviceType: 1
-  stereoScreenScale: 1
 --- !u!1 &1434044823
 GameObject:
   m_ObjectHideFlags: 0
@@ -4874,12 +4832,23 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1814474566}
-        m_MethodName: SetUpDebugGame
-        m_Mode: 1
+      - m_Target: {fileID: 1571645526}
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5392,6 +5361,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1571645525}
   - 114: {fileID: 1571645524}
+  - 114: {fileID: 1571645526}
   - 114: {fileID: 1571645523}
   m_Layer: 0
   m_Name: EventSystem
@@ -5444,6 +5414,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
+--- !u!114 &1571645526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1571645522}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1bb4e1b2a0a04d2ea3b96ff7e05685c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vrModeOnly: 0
+  clickTime: 0.1
+  hotspot: {x: 0.5, y: 0.5}
 --- !u!1 &1578801230
 GameObject:
   m_ObjectHideFlags: 0
@@ -6604,26 +6588,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 420906, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
       propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 163810, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 435088, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 2.376
-      objectReference: {fileID: 0}
-    - target: {fileID: 462686, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2366852, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2388886, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

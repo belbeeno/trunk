@@ -6,43 +6,62 @@ using UnityEngine;
 // This marks a gameobject as something that the player can interact with
 public abstract class Interactable : MonoBehaviour
 {
+    public ScritableInteractable itemData; 
+
     // The type of items this current item can be used with/on
-    public HashSet<Type> _itemsToInteractWith;
+    public HashSet<Type> itemsToInteractWith;
 
     // Whether this is an item that can be put into the inventory
-    public bool _canBeHeld;
+    protected bool canBeHeld;
 
     // Whether the object is currently in the inventory or not
-    private bool _isSelected; 
-    
+    private bool isSelected;
+
+    public Vector3 inHandOrientation;
+
     void Start()
     {
     }
 
-    public abstract void InteractWith(Interactable itemToInteractWith);
+    public virtual void InteractWith(Interactable itemToInteractWith)
+    {
+        if (!canBeHeld)
+        {
+            return; 
+        }
+        if (itemToInteractWith.GetType() == typeof(Outside))
+        {
+            var itemName = itemData.itemName;
+            var position = transform.position;
+            ((Outside)itemToInteractWith).DropItem(itemName);
+            Destroy(gameObject); 
+            Debug.Log(string.Format("itemName {0}, position {1}", itemName, position));
+        }
+    }
     
     public virtual bool CanInteractWith(Interactable item)
     {
-        return _itemsToInteractWith.Contains(item.GetType()); 
+        
+        return (item.GetType() == typeof(Outside));
     }
        
     public bool IsSelected()
     {
-        return _isSelected; 
+        return isSelected; 
     }
 
     public void ItemSelected()
     {
-        _isSelected = true; 
+        isSelected = true; 
     }
 
     public void ItemDropped()
     {
-        _isSelected = false;
+        isSelected = false;
     }
 
     internal bool CanBeHeld()
     {
-        return _canBeHeld; 
+        return canBeHeld; 
     }
 }
