@@ -10,18 +10,18 @@ public class CityGenerator
             new FindCityBlocksStep(),
             new CreateBuildingPlotsStep(),
             new AddSidewalksStep(),
-            new AddRoadMeshesStep()
+            new AddRoadMeshesStep(),
+            new AddClickColliderStep()
         };
     
-    public GenerationResult Generate(GenerationOptions options)
+    public GenerationData Generate(GenerationOptions options)
     {
         var data = new GenerationData(); 
         foreach (var step in _steps)
         {
             step.RunStep(options, data);
         }
-        var result = data.ToGenerationResult();
-            
-        return result;
+        
+        return data;
     }
 }
