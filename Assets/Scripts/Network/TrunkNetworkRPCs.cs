@@ -38,15 +38,14 @@ namespace NetMessage
     {
         public const short InitSession      = 100;
         public const short Ping             = 101;
-        public const short APB              = 102;
-        public const short GameOver         = 200;
+        public const short Ready            = 102;
+        public const short APB              = 200;
+        public const short GameOver         = 300;
     }
 
     public class InitSessionMsg : MessageBase
     {
-        // Don't really do anything yet, but...
-        public int citySeed = -1;
-        public int pathSeed = -1;
+        public int seed = -1;
     }
     
     public class PingMsg : MessageBase
@@ -54,10 +53,16 @@ namespace NetMessage
         public string msg;
     }
 
+    public class ReadyMsg : MessageBase
+    {
+        public int seed = -1;
+    }
+
     public class APBRequest : MessageBase
     {
         public Vector3 position;
     }
+    
     public class APBResponse : MessageBase
     {
         public class Hint : MessageBase
@@ -81,6 +86,7 @@ namespace NetMessage
                 this.pos = new Vector2(float.MaxValue, float.MaxValue);
                 this.type = HintType.INVALID;
             }
+            
             public Hint(Vector2 pos, HintType type)
             {
                 this.pos = pos;
@@ -98,6 +104,7 @@ namespace NetMessage
                 type = (HintType)reader.ReadUInt16();
             }
         }
+        
         public List<Hint> hints = new List<Hint>();
 
         public Vector3 origin;

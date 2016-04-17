@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Networking;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
-using System.Collections;
 
 public abstract class TrunkNetworkingBase : MonoBehaviour
 {
@@ -12,16 +11,13 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     public UnityEvent OnGameWin;
 
     public abstract void Begin();
-    public virtual void SetUpSession(int citySeed, int pathSeed)
+    public virtual void SetUpSession(int citySeed, Action callback)
     {
         var gameObj = GameObject.Find("GameManager");
         var manager = gameObj.GetComponent<GameManager>();
         
         Log("Setting up game");
-        manager.SetUpGame(citySeed);
-        
-        Log("Starting game!");
-        manager.StartGame();
+        manager.SetUpGame(citySeed, callback);
         
         OnSessionEstablished.Invoke();
     }
