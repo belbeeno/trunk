@@ -113,7 +113,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
     {
         // Don't really do anything with this yet.  Just for visual purposes.
         NetMessage.InitSessionMsg castedMsg = msg.ReadMessage<NetMessage.InitSessionMsg>();
-        SetUpSession(castedMsg.citySeed, castedMsg.pathSeed, asHost: true);
+        SetUpSession(castedMsg.citySeed, castedMsg.pathSeed);
     }
 
     public void OnPingMsg(NetworkMessage msg)

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class CreateBuildingPlotsStep : GenerationStepBase
@@ -22,19 +21,10 @@ public class CreateBuildingPlotsStep : GenerationStepBase
         var insetAmount = ((options.roadWidth / 2f) + options.sidewalkWidth) * options.blockSize;
         var corners = city.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
         var mesh = GetMesh(corners);
-        var material = GetMaterial();
+        var material = MaterialsStore.instance.buildings;
         var buildingPlot = new BuildingPlotData(corners, mesh, material);
         
         return buildingPlot;
-    }
-    
-    private Material GetMaterial()
-    {
-        string[] guids = AssetDatabase.FindAssets("BuildingMat");
-        string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-        var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-        
-        return material;
     }
     
     private Mesh GetMesh(Vector3[] corners)
