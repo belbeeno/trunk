@@ -6,7 +6,7 @@ using UnityEngine;
 // This marks a gameobject as something that the player can interact with
 public abstract class Interactable : MonoBehaviour
 {
-    public ScritableInteractable itemData; 
+    public ScriptableInteractable itemData; 
 
     // The type of items this current item can be used with/on
     public HashSet<Type> itemsToInteractWith;

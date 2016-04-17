@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 // Keeps track of what item is currently being held and uses it on other items if possible
 public class Inventory : MonoBehaviour {
@@ -86,7 +87,7 @@ public class Inventory : MonoBehaviour {
         }
     }
 
-    protected delegate void OnAnimationComplete(GameObject phoneGO);
+    protected delegate void OnAnimationComplete(GameObject item);
     protected IEnumerator AnimateIntoPosession(Transform target
                                             , Transform newParent
                                             , float duration
@@ -94,7 +95,7 @@ public class Inventory : MonoBehaviour {
     {
         Vector3 startPos = target.position;
         Quaternion startRot = target.localRotation;
-        Quaternion randoRot = Random.rotation;
+        Quaternion randoRot = UnityEngine.Random.rotation;
         float timer = 0f;
         while (timer < duration)
         {
@@ -115,6 +116,20 @@ public class Inventory : MonoBehaviour {
 
         if (cb != null) cb.Invoke(target.gameObject);
     }
+
+    private IEnumerator StartAnimateIntoView(Transform start, Transform final, float duration)
+    {
+        Vector3 startPos = start.position;
+        float timer = 0f;
+        while (timer < duration)
+        {
+            start.position = Vector3.Lerp(start.position, final.position, Mathf.Clamp01(timer / duration));
+            timer += Time.deltaTime;
+            yield return 0;
+        }
+        
+    }
+
 
     public void InteractWithItem(GameObject item)
     {            
@@ -160,17 +175,20 @@ public class Inventory : MonoBehaviour {
         currentItem = item;
 
         // moves item to left side of the screen, the place for all items being held
-        currentItem.transform.parent = gameObject.transform;
-        start = currentItem.transform; 
-        var curScale = currentItem.transform.localScale;
-        targetScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
-        //currentItem.transform.localScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
-        targetRotation = Quaternion.Euler(item.GetComponent<Interactable>().inHandOrientation);
+       
         var rigidBody = currentItem.GetComponent<Rigidbody>();
         rigidBody.useGravity = false;
         rigidBody.isKinematic = true;
-        isAnimating = true;
-        time = 0f; 
+        StopAllCoroutines();
+        StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), 2f, StartAnimateIntoView));
+        // currentItem.transform.parent = gameObject.transform;
+        //start = currentItem.transform; 
+        //var curScale = currentItem.transform.localScale;
+        //targetScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
+        ////currentItem.transform.localScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
+        //targetRotation = Quaternion.Euler(item.GetComponent<Interactable>().inHandOrientation);
+        //isAnimating = true;
+        //time = 0f; 
     }
 
     public void DropItem()
@@ -194,11 +212,18 @@ public class Inventory : MonoBehaviour {
         isAnimating = false; 
     }
 
+    public void StartAnimateIntoView(GameObject item)
+    {
+        StopAllCoroutines();
+        var siobject = item.GetComponent<ScriptableInteractable>(); 
+        StartCoroutine(StartAnimateIntoView((possessionTarget != null ? possessionTarget : transform), siobject.transformWhenInInventory, 1f));
+    }
+
     public void PickUpPhone(GameObject phone)
     {
         hasPhone = true;
         phone.SetActive(false);
-        // Should we just destroy here?
+        phone.GetComponent<CellPhone>().CallOperator(); 
     }
 
     public bool IsHoldingItem()

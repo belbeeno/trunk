@@ -3,7 +3,8 @@ using System.Collections;
 using System;
 
 public class CellPhone : MonoBehaviour {
-    
+
+    public ScriptableInteractable data; 
 
     // Use this for initialization
     void Start () {
@@ -15,9 +16,9 @@ public class CellPhone : MonoBehaviour {
         
 	}
 
-    void CallOperator()
+    public void CallOperator()
     {
-
+        // Trigger animation to show up in inventory
     }
     
 }
