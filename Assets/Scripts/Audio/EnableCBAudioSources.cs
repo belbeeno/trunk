@@ -14,7 +14,10 @@ public class EnableCBAudioSources : MonoBehaviour
     {
         for (int i = 0; i < allSources.Count; i++)
         {
-            allSources[i].gameObject.SetActive(true);
+            if (allSources[i] != null)
+            {
+                allSources[i].gameObject.SetActive(true);
+            }
         }
     }
 

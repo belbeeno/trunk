@@ -66,6 +66,8 @@ namespace NetMessage
             {
                 Wrench = 1,
                 Screwdriver,
+                Crowbar,
+                TireIron,
                 Blanket,
                 Rope,
                 Hostage,        // <- if you get this, you've won!!!!
@@ -85,6 +87,39 @@ namespace NetMessage
             {
                 this.pos = pos;
                 this.type = type;
+            }
+            public Hint(Vector2 pos, string typeName)
+            {
+                this.pos = pos;
+                this.type = NameToType(typeName);
+            }
+            public static HintType NameToType(string typeName)
+            {
+                switch (typeName)
+                {
+                    case "Screwdriver":
+                        return HintType.Screwdriver;
+                    case "Crowbar":
+                        return HintType.Crowbar;
+                    case "TireIron":
+                        return HintType.TireIron;
+                    default:
+                        return HintType.INVALID;
+                }
+            }
+            public static string TypeToName(HintType type)
+            {
+                switch (type)
+                {
+                    case HintType.Screwdriver:
+                        return "Screwdriver";
+                    case HintType.Crowbar:
+                        return "Crowbar";
+                    case HintType.TireIron:
+                        return "TireIron";
+                    default:
+                        return string.Empty;
+                }
             }
 
             public override void Serialize(NetworkWriter writer)

@@ -53,7 +53,9 @@ public class DebugConsole : MonoBehaviour
     {
         _instance = this;
 	}
-	
+
+    private float touchTimer = 1f;
+
 	// Update is called once per frame
 	void Update ()
     {
@@ -76,26 +78,26 @@ public class DebugConsole : MonoBehaviour
             }
             return;
         }
-        /*
-        if ((Input.touchSupported 
-                && Input.touchCount > 0 
+        //*
+        if (Input.touchSupported 
+                && Input.touchCount == 1 
                 && Input.touches[0].phase == TouchPhase.Ended)
-            || Input.GetKeyUp(KeyCode.BackQuote))
+        {
+            float prevTimer = touchTimer;
+            touchTimer -= Time.deltaTime;
+            if (prevTimer > 0f && touchTimer <= 0f)
+            {
+                consolePanel.SetActive(!consolePanel.activeSelf);
+            }
+        }
+        else if (Input.GetKeyUp(KeyCode.BackQuote))
         {
             consolePanel.SetActive(!consolePanel.activeSelf);
         }
-#if UNITY_EDITOR
-        if (Input.GetButtonUp("Cancel"))
+        else
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            touchTimer = 1f;
         }
-        else if (Input.GetMouseButtonDown(0))
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-#endif
-        
         //*/
         if (consolePanel.activeSelf)
         {

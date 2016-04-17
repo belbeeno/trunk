@@ -20,6 +20,8 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
 
     [SerializeField]
     TrunkMover mover = null;
+    [SerializeField]
+    Outside outsideTrunk = null;
     
     public override void Begin()
     {
@@ -99,12 +101,29 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         Debug.DrawRay(response.origin, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
 #endif
-        float distFromOrigin = (Camera.main.transform.position - response.origin).sqrMagnitude;
-        if (distFromOrigin <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
+        float distFromOriginSqrd = (Camera.main.transform.position - response.origin).sqrMagnitude;
+        if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
         {
             response.hints.Add(new NetMessage.APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), NetMessage.APBResponse.Hint.HintType.Hostage));
         }
 
+        if (outsideTrunk == null)
+        {
+            Log("Trunk exterior missing!", true);
+        }
+        else 
+        {
+            var allDroppedItems = outsideTrunk.GetAllDroppedItems();
+            for (int i = 0; i < allDroppedItems.Count; i++)
+            {
+                distFromOriginSqrd = (allDroppedItems[i].positionDropped - response.origin).sqrMagnitude;
+                if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
+                {
+                    response.hints.Add(new NetMessage.APBResponse.Hint(allDroppedItems[i].positionDropped
+                                                                        , allDroppedItems[i].itemName));
+                }
+            }
+        }
 
         msg.conn.Send(NetMessage.ID.APB, response);
     }

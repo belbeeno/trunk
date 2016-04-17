@@ -3,6 +3,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public Camera operatorProxyCamera;
+    public RectTransform operatorMapCanvasRect;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
         var city = _generator.Generate(generationOptions);
         GenerateCity(city);
         InitializeRoutePlanner(city);
-        RepositionProxyCamera();
+        RefreshMapSizeAndPositions();
     }
     
     public void StartGame()
@@ -41,13 +42,16 @@ public class GameManager : MonoBehaviour
         routePlanner.graph = result.roadGraph;
     }
     
-    private void RepositionProxyCamera()
+    private void RefreshMapSizeAndPositions()
     {
         var cameraX =  generationOptions.cityWidth / 2f;
         var cameraZ = generationOptions.cityHeight / 2f; 
-        operatorProxyCamera.transform.position = new Vector3(cameraX, 300f, cameraZ);
+        operatorProxyCamera.transform.position = new Vector3(cameraX, 400f, cameraZ);
         operatorProxyCamera.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
         operatorProxyCamera.orthographicSize = generationOptions.cityHeight / 2f;
+
+        operatorMapCanvasRect.anchoredPosition3D = new Vector3(0f, 300f, 0f);
+        operatorMapCanvasRect.sizeDelta = Vector2.one * Mathf.Min(generationOptions.cityHeight, generationOptions.cityWidth);
     }
     
     private static void StartCar()

@@ -14,7 +14,7 @@ public class City : MonoBehaviour
     {
         while (transform.childCount > 0) 
         {
-            GameObject.DestroyImmediate(transform.GetChild(0).gameObject);
+            GameObject.Destroy(transform.GetChild(0).gameObject);
         }
     }
     

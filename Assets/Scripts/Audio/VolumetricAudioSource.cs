@@ -90,8 +90,6 @@ public class VolumetricAudioSource : MonoBehaviour
             }
             else
             {
-                float dx = segment.end.x - segment.start.x;
-                float dy = segment.end.y - segment.start.y;
                 float t = ((frozenTarget.x - segment.start.x) * segment.Vector.x
                     + (frozenTarget.y - segment.start.y) * segment.Vector.y)
                     / segment.Vector.sqrMagnitude;

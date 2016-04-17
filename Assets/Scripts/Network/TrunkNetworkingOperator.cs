@@ -86,6 +86,12 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
                 gameOverMsg.timestamp = Network.time;
                 msg.conn.Send(NetMessage.ID.GameOver, gameOverMsg);
             }
+            else
+            {
+                string hintType = NetMessage.APBResponse.Hint.TypeToName(castedMsg.hints[i].type);
+                Log(hintType + " found at position: " + castedMsg.hints[i].pos.ToString());
+
+            }
         }
     }
 
