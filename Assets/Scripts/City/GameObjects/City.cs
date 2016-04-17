@@ -51,6 +51,9 @@ public class City : MonoBehaviour
         var clickCollider = CreateGameObject("Click Collider");
         var meshCollider = clickCollider.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = result.clickColliderMesh;
+        clickCollider.tag = "Networking";
+        clickCollider.layer = LayerMask.NameToLayer("HostOnly");
+        clickCollider.transform.position = new Vector3(0f, 1f, 0f);
     }
     
     private void AddDebugObjs(GenerationData result)
