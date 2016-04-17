@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class AddSidewalksStep : GenerationStepBase
@@ -22,19 +21,10 @@ public class AddSidewalksStep : GenerationStepBase
         var insetAmount = (options.roadWidth / 2f) * options.blockSize;
         var corners = cityBlock.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
         var mesh = GetMesh(corners);
-        var material = GetMaterial();
+        var material = MaterialsStore.instance.buildings;
         var sidewalk = new SidewalkData(corners, mesh, material);
         
         return sidewalk;
-    }
-    
-    private Material GetMaterial()
-    {
-        string[] guids = AssetDatabase.FindAssets("BuildingMat");
-        string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-        var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-        
-        return material;
     }
     
     private Mesh GetMesh(Vector3[] corners)
