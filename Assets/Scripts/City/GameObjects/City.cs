@@ -50,6 +50,16 @@ public class City : MonoBehaviour
         {
             var parkObj = CreateGameObject(parksObj, "Park");
             AddMesh(parkObj, park.mesh, park.material);
+            var center = park.corners.Average();
+            var parkPrefab = (GameObject)GameObject.Instantiate(PrefabStore.instance.park, center, Quaternion.identity);
+            parkPrefab.transform.parent = parkObj.transform;
+            
+            var parkGround = parkPrefab.transform.FindChild("pPlane1");
+            var groundRenderer = parkGround.GetComponent<MeshRenderer>();
+            var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
+            groundRenderer.sharedMaterial.color = Color.green;
+            parkPrefab.transform.localScale = Vector3.one * parkSize;
+            parkPrefab.transform.position += Vector3.forward * parkSize / 3;
         }
         
         // Water

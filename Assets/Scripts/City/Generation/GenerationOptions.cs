@@ -24,6 +24,7 @@ public class GenerationOptions
     
     [Header("City Features")]
     [Range(0, 10)] public int numParks;
+    [Range(0f, 8f)] public float parksDist;
     [Range(0, 10)] public int numSchools;
     
 }

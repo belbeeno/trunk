@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AddWaterPlaneStep : GenerationStepBase
 {               
-    private Color _waterColor = Color.blue;
+    private Color _waterColor = new Color(0f, 0f, 0.5f, 1f);
     
     public override void Run()
     {
@@ -23,7 +23,7 @@ public class AddWaterPlaneStep : GenerationStepBase
     
     private Mesh GetMesh(Vector3[] corners)
     {        
-        var waterLevel = 0.2f * options.blockSize;
+        var waterLevel = 0.05f * options.blockSize;
         
         Mesh generatedMesh = new Mesh();
         List<Vector3> points = new List<Vector3>();

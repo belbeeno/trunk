@@ -4,27 +4,40 @@ using UnityEngine;
 
 public class AddParksStep : GenerationStepBase
 {             
-    private Color _parkColor = Color.green;
+    private IList<ParkData> _parks;
+    
+    private Color _parkColor = new Color(0f, 0.4f, 0f, 1f);
       
     public override void Run()
     {
-        data.parks = Enumerable.Range(0, options.numParks)
-            .Select(i => CreatePark())
-            .ToArray();
+        _parks = new List<ParkData>();
+        while (_parks.Count() < options.numParks)
+        {
+            AddPark();
+        }
+        
+        data.parks = _parks.ToArray();
     }
     
-    private ParkData CreatePark()
+    private void AddPark()
     {
         var block = data.cityBlocks.Where(c => !c.ContainsRiver()).RandomMember();
-        block.isPark = true;
-        
         var insetAmount = (options.roadWidth / 2f) * options.blockSize;
         var corners = block.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
         var mesh = GetMesh(corners);
         var material = MaterialsStore.instance.basic;
         var park = new ParkData(corners, mesh, material);
         
-        return park;
+        var isOkay = _parks
+            .Select(p => p.corners.Average())
+            .Select(c => Vector3.Distance(c, park.corners.Average()))
+            .All(d => d > options.parksDist * options.blockSize);
+
+        if (isOkay)
+        {
+            block.isPark = true;
+            _parks.Add(park);
+        }
     }
     
     private BuildingPlotData CreateBuildingPlot(CityBlockData city)
