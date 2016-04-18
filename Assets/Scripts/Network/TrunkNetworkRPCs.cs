@@ -62,17 +62,17 @@ namespace NetMessage
     {
         public class Hint : MessageBase
         {
-            public enum HintType : short
+            public enum HintType
             {
-                Wrench = 1,
+                INVALID = -1,
+
+                Wrench = 0,
                 Screwdriver,
                 Crowbar,
                 TireIron,
                 Blanket,
                 Rope,
                 Hostage,        // <- if you get this, you've won!!!!
-
-                INVALID = -1,
             }
 
             public Vector2 pos = new Vector2();
@@ -130,7 +130,7 @@ namespace NetMessage
             public override void Deserialize(NetworkReader reader)
             {
                 pos = reader.ReadVector2();
-                type = (HintType)reader.ReadUInt16();
+                type = (HintType)reader.ReadInt16();
             }
         }
         public List<Hint> hints = new List<Hint>();

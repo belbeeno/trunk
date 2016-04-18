@@ -94,13 +94,8 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
 
         NetMessage.APBResponse response = new NetMessage.APBResponse();
         response.origin = castedMsg.position;
-#if UNITY_EDITOR
-        Debug.DrawLine(Camera.main.transform.position, response.origin, Color.red, 5f);
-        Debug.DrawRay(response.origin, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(response.origin, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(response.origin, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(response.origin, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
-#endif
+        response.origin.y = 0f;
+
         float distFromOriginSqrd = (Camera.main.transform.position - response.origin).sqrMagnitude;
         if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
         {
@@ -116,6 +111,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
             var allDroppedItems = outsideTrunk.GetAllDroppedItems();
             for (int i = 0; i < allDroppedItems.Count; i++)
             {
+                response.origin.y = allDroppedItems[i].positionDropped.y;
                 distFromOriginSqrd = (allDroppedItems[i].positionDropped - response.origin).sqrMagnitude;
                 if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
                 {
@@ -125,6 +121,27 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
             }
         }
 
+#if UNITY_EDITOR
+        Debug.DrawLine(Camera.main.transform.position, response.origin, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
+        Debug.DrawRay(response.origin, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
+
+        Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
+        Vector3 nextPos = new Vector3();
+        for (float i = 1f; i < 10f; i += 1f)
+        {
+            nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+            nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+
+            Debug.DrawLine(response.origin + prevPos, response.origin + nextPos, Color.red, 5f, false);
+
+            prevPos = nextPos;
+        }
+        nextPos.Set(Mathf.Cos(0f), 0f, Mathf.Sin(0f));
+        Debug.DrawLine(prevPos, nextPos * GameSettings.APB_RADIUS, Color.red, 5f);
+#endif
         msg.conn.Send(NetMessage.ID.APB, response);
     }
 

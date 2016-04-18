@@ -68,7 +68,7 @@ public sealed class ObjectPool : MonoBehaviour
                 while (list.Count < initialPoolSize)
                 {
                     var obj = (GameObject)Object.Instantiate(prefab);
-                    obj.transform.parent = parent;
+                    obj.transform.SetParent(parent, false);
                     list.Add(obj);
                 }
                 prefab.SetActive(active);
@@ -118,7 +118,7 @@ public sealed class ObjectPool : MonoBehaviour
                 if (obj != null)
                 {
                     trans = obj.transform;
-                    trans.parent = parent;
+                    trans.SetParent(parent, false);
                     trans.localPosition = position;
                     trans.localRotation = rotation;
                     obj.SetActive(true);
@@ -128,7 +128,7 @@ public sealed class ObjectPool : MonoBehaviour
             }
             obj = (GameObject)Object.Instantiate(prefab);
             trans = obj.transform;
-            trans.parent = parent;
+            trans.SetParent(parent, false);
             trans.localPosition = position;
             trans.localRotation = rotation;
             instance.spawnedObjects.Add(obj, prefab);
@@ -138,7 +138,7 @@ public sealed class ObjectPool : MonoBehaviour
         {
             obj = (GameObject)Object.Instantiate(prefab);
             trans = obj.GetComponent<Transform>();
-            trans.parent = parent;
+            trans.SetParent(parent, false);
             trans.localPosition = position;
             trans.localRotation = rotation;
             return obj;
@@ -181,7 +181,7 @@ public sealed class ObjectPool : MonoBehaviour
     {
         instance.pooledObjects[prefab].Add(obj);
         instance.spawnedObjects.Remove(obj);
-        obj.transform.parent = instance.transform;
+        obj.transform.SetParent(instance.transform);
         obj.SetActive(false);
     }
 

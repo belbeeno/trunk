@@ -11,6 +11,8 @@ public class POI : MonoBehaviour
 
     public RectTransform rect = null;
     private RectTransform parentRect = null;
+
+    public OperatorActionBar actionBar = null;
 	
     void Start()
     {
@@ -28,27 +30,33 @@ public class POI : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        Vector2 outPos;
-        bool isOnScreen = RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out outPos);
-        if (isOnScreen)
+        if (actionBar == null) return;
+        Vector2 normPos;
+        bool success = false;
+        
+        if (actionBar.GetNormalizedMapPosition(out normPos, false))
         {
-            rect.anchoredPosition = Vector2.MoveTowards(rect.anchoredPosition, outPos, maxMoveDelta);
-        }
-        else
-        {
-            return;
+            Vector2 localPos;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out localPos))
+            {
+                rect.anchoredPosition = Vector2.MoveTowards(rect.anchoredPosition, localPos, maxMoveDelta * Time.deltaTime);
+                success = true;
+            }
         }
 
-        Ray camToCity = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit info;
-        bool success = false;
-        if (Physics.Raycast(camToCity, out info, 1000f, targetMask.value))
+        if (success)
         {
-            if (info.collider != null && info.collider.tag.Equals("POI"))
+            success = false;
+            Ray camToCity = actionBar.proxyCamera.ViewportPointToRay(normPos);
+            RaycastHit info;
+            if (Physics.Raycast(camToCity, out info, 1000f, targetMask.value))
             {
-                string target = info.collider.gameObject.name;
-                textfield.text = target.Substring(0, Mathf.Min(textfield.text.Length + 1, target.Length));
-                success = true;
+                if (info.collider != null && info.collider.tag.Equals("POI"))
+                {
+                    string target = info.collider.gameObject.name;
+                    textfield.text = target.Substring(0, Mathf.Min(textfield.text.Length + 1, target.Length));
+                    success = true;
+                }
             }
         }
 
@@ -58,6 +66,5 @@ public class POI : MonoBehaviour
         }
 
         background.enabled = (textfield.text.Length > 0);
-
 	}
 }
