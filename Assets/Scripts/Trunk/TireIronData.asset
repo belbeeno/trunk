@@ -15,6 +15,8 @@ MonoBehaviour:
   itemName: TireIron
   mesh: {fileID: 0}
   disposeOnUse: 0
+  positionWhenInInventory: {x: 0.1679996, y: 0.2569998, z: 0.6899993}
+  rotationWhenInInventory: {x: 7.613236, y: 255.9422, z: 288.2704}
   interactableFastenerList: 01000000
   canUnfastenFasteners: 1
   canOpenLatch: 1

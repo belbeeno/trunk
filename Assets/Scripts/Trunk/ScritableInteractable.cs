@@ -7,6 +7,7 @@ public class ScriptableInteractable : ScriptableObject {
     public string itemName;
     public MeshRenderer mesh;
     public bool disposeOnUse = false;
-    public Transform transformWhenInInventory; 
+    public Vector3 positionWhenInInventory;
+    public Vector3 rotationWhenInInventory;  
 
 }

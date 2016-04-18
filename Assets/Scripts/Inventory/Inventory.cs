@@ -9,11 +9,7 @@ public class Inventory : MonoBehaviour {
     private GameObject currentItem;
 
     [SerializeField]
-    private GameObject trunk;
-
-    [SerializeField]
-    [Range(0, 1)]
-    private float scaleFactor=.5f;
+    private GameObject trunk = null;
 
     [SerializeField]
     [Range(0, 10)]
@@ -22,13 +18,12 @@ public class Inventory : MonoBehaviour {
     private bool hasPhone;
 
     public Transform possessionTarget = null;
-    private Transform start;
     [SerializeField]
     private bool isAnimating;
+
+    [SerializeField]
+    [Range(0, 2)]
     private float animationLength = 1f;
-    private float time;
-    private Vector3 targetScale;
-    private Quaternion targetRotation; 
 
     // Use this for initialization
     void Start () {
@@ -38,19 +33,7 @@ public class Inventory : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (isAnimating)
-        {
-            time += Time.deltaTime;
-            var t = Mathf.Min(time / animationLength, 1);
-            currentItem.transform.localPosition = Vector3.Lerp(start.localPosition, new Vector3(0, 0, 0), t);
-            //currentItem.transform.localScale = Vector3.Lerp(start.localScale, targetScale, t);
-            currentItem.transform.localRotation = Quaternion.Slerp(start.localRotation, targetRotation, t);
-            if (t >= 1)
-            {
-                isAnimating = false; 
-            }
-        }
-
+       
     }
 
     public GameObject GetCurrentItem()
@@ -93,37 +76,34 @@ public class Inventory : MonoBehaviour {
                                             , float duration
                                             , OnAnimationComplete cb = null)
     {
-        Vector3 startPos = target.position;
+        Transform targetParent = target.parent.transform; 
+        Vector3 startPos = target.localPosition;
         Quaternion startRot = target.localRotation;
         Quaternion randoRot = UnityEngine.Random.rotation;
         float timer = 0f;
+        Vector3 carSpaceTargetPosition = new Vector3();
         while (timer < duration)
         {
-            target.position = Vector3.Lerp(target.position, newParent.position, Mathf.Clamp01(timer / duration));
-            
-            if (timer < duration / 2f)
-            {
-                target.localRotation = Quaternion.SlerpUnclamped(startRot, randoRot, Ease.CircEaseInOut(timer, 0f, 1f, duration / 2f));
-            }
-            else
-            {
-                target.localRotation = Quaternion.SlerpUnclamped(randoRot, newParent.localRotation, Ease.CircEaseOutIn(timer - duration / 2f, 0f, 1f, duration / 2f));
-            }
+            carSpaceTargetPosition = targetParent.localToWorldMatrix.MultiplyPoint(startPos);
+            target.position = Vector3.Lerp(carSpaceTargetPosition, newParent.position, Mathf.Clamp01(timer / duration));
+            target.localRotation = Quaternion.SlerpUnclamped(startRot, newParent.localRotation, Ease.CircEaseInOut(timer, 0f, 1f, duration));
             timer += Time.deltaTime;
             yield return 0;
         }
-        target.SetParent(newParent, false);
+        target.SetParent(newParent, true);
+        Debug.Log("Done Animating");
 
         if (cb != null) cb.Invoke(target.gameObject);
     }
 
-    private IEnumerator StartAnimateIntoView(Transform start, Transform final, float duration)
+    private IEnumerator StartAnimateIntoView(Transform itemToAnimateTransform, Vector3 finalLocalPosition, float duration)
     {
-        Vector3 startPos = start.position;
+        Vector3 startPos = itemToAnimateTransform.localPosition;
+        
         float timer = 0f;
         while (timer < duration)
         {
-            start.position = Vector3.Lerp(start.position, final.position, Mathf.Clamp01(timer / duration));
+            itemToAnimateTransform.localPosition = Vector3.Lerp(startPos, finalLocalPosition, Mathf.Clamp01(timer / duration));
             timer += Time.deltaTime;
             yield return 0;
         }
@@ -141,7 +121,7 @@ public class Inventory : MonoBehaviour {
                 col.attachedRigidbody.useGravity = false;
                 col.enabled = false;
                 StopAllCoroutines();
-                StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), 2f, PickUpPhone));
+                StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), animationLength, PickUpPhone));
             }
             return; 
         }
@@ -177,17 +157,18 @@ public class Inventory : MonoBehaviour {
         // moves item to left side of the screen, the place for all items being held
        
         var rigidBody = currentItem.GetComponent<Rigidbody>();
+        rigidBody.detectCollisions = false; 
         rigidBody.useGravity = false;
         rigidBody.isKinematic = true;
+        isAnimating = true;
         StopAllCoroutines();
-        StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), 2f, StartAnimateIntoView));
+        StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), animationLength, StartAnimateIntoView));
         // currentItem.transform.parent = gameObject.transform;
         //start = currentItem.transform; 
         //var curScale = currentItem.transform.localScale;
         //targetScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
         ////currentItem.transform.localScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
         //targetRotation = Quaternion.Euler(item.GetComponent<Interactable>().inHandOrientation);
-        //isAnimating = true;
         //time = 0f; 
     }
 
@@ -206,6 +187,7 @@ public class Inventory : MonoBehaviour {
         var rigidBody = currentItem.GetComponent<Rigidbody>();
         rigidBody.useGravity = true;
         rigidBody.isKinematic = false;
+        rigidBody.detectCollisions = true; 
         rigidBody.AddForce(transform.forward * thrust, ForceMode.Impulse);
         currentItem.transform.parent = trunk.transform;
         currentItem = null;
@@ -215,15 +197,18 @@ public class Inventory : MonoBehaviour {
     public void StartAnimateIntoView(GameObject item)
     {
         StopAllCoroutines();
-        var siobject = item.GetComponent<ScriptableInteractable>(); 
-        StartCoroutine(StartAnimateIntoView((possessionTarget != null ? possessionTarget : transform), siobject.transformWhenInInventory, 1f));
+        var siobject = item.GetComponent<Interactable>().itemData;
+        item.transform.localRotation = Quaternion.Euler(siobject.rotationWhenInInventory);
+        Debug.Log("Done");
+        StartCoroutine(StartAnimateIntoView(item.transform, siobject.positionWhenInInventory, animationLength));
     }
 
     public void PickUpPhone(GameObject phone)
     {
         hasPhone = true;
         phone.SetActive(false);
-        phone.GetComponent<CellPhone>().CallOperator(); 
+        phone.GetComponent<CellPhone>().CallOperator();
+        Debug.Log("Done picking up phone");
     }
 
     public bool IsHoldingItem()
