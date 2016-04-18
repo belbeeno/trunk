@@ -107,6 +107,7 @@ public class Inventory : MonoBehaviour {
             timer += Time.deltaTime;
             yield return 0;
         }
+        isAnimating = false; 
         
     }
 
@@ -163,13 +164,6 @@ public class Inventory : MonoBehaviour {
         isAnimating = true;
         StopAllCoroutines();
         StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), animationLength, StartAnimateIntoView));
-        // currentItem.transform.parent = gameObject.transform;
-        //start = currentItem.transform; 
-        //var curScale = currentItem.transform.localScale;
-        //targetScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
-        ////currentItem.transform.localScale = new Vector3(scaleFactor * curScale.x, scaleFactor * curScale.y, scaleFactor * curScale.z);
-        //targetRotation = Quaternion.Euler(item.GetComponent<Interactable>().inHandOrientation);
-        //time = 0f; 
     }
 
     public void DropItem()
@@ -199,7 +193,6 @@ public class Inventory : MonoBehaviour {
         StopAllCoroutines();
         var siobject = item.GetComponent<Interactable>().itemData;
         item.transform.localRotation = Quaternion.Euler(siobject.rotationWhenInInventory);
-        Debug.Log("Done");
         StartCoroutine(StartAnimateIntoView(item.transform, siobject.positionWhenInInventory, animationLength));
     }
 
@@ -208,7 +201,6 @@ public class Inventory : MonoBehaviour {
         hasPhone = true;
         phone.SetActive(false);
         phone.GetComponent<CellPhone>().CallOperator();
-        Debug.Log("Done picking up phone");
     }
 
     public bool IsHoldingItem()
