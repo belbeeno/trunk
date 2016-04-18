@@ -4,6 +4,7 @@ public class GameManager : MonoBehaviour
 {
     public Camera operatorProxyCamera;
     public RectTransform operatorMapCanvasRect;
+    public BoxCollider boxClicker;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
 
         operatorMapCanvasRect.anchoredPosition3D = new Vector3(0f, 300f, 0f);
         operatorMapCanvasRect.sizeDelta = Vector2.one * Mathf.Min(generationOptions.cityHeight, generationOptions.cityWidth);
+        boxClicker.size = new Vector3(generationOptions.cityWidth, generationOptions.cityHeight, 0f);
     }
     
     private static void StartCar()

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public abstract class OperatorItemBase : MonoBehaviour
@@ -13,6 +14,7 @@ public abstract class OperatorItemBase : MonoBehaviour
     private int prevState = -1;
 
     public OperatorToggle[] togglesToTest = new OperatorToggle[2];
+    public OperatorActionBar actionBar = null;
 
     protected RectTransform parentRect = null;
     protected RectTransform rect = null;
@@ -24,6 +26,20 @@ public abstract class OperatorItemBase : MonoBehaviour
     protected abstract void UpdatePositions();
 
     public abstract void OperatorAction(OperatorToggle.OperatorAction action);
+
+    [SerializeField]
+    private Image[] _cachedChildren = new Image[0];
+    protected Image[] ChildrenImages
+    {
+        get
+        {
+            if (_cachedChildren.Length <= 0)
+            {
+                _cachedChildren = GetComponentsInChildren<Image>();
+            }
+            return _cachedChildren;
+        }
+    }
 
     // Use this for initialization
     protected virtual void Start()
@@ -46,6 +62,22 @@ public abstract class OperatorItemBase : MonoBehaviour
     }
 
     protected Vector2 target = new Vector2();
+    protected bool UpdateTarget()
+    {
+        Vector2 normalizedPos;
+        if (actionBar.GetNormalizedMapPosition(out normalizedPos))
+        {
+            DebugConsole.SetText("GetNormPos", normalizedPos.ToString());
+            target = actionBar.GetProxyMapPosition(normalizedPos);
+            DebugConsole.SetText("target", target.ToString());
+            return true;
+        }
+
+        DebugConsole.SetText("GetNormPos", "OFF SCREEN");
+        return false;
+
+        //RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, MyCamera, out target);
+    }
 
     private void UpdateStatus()
     {
@@ -58,17 +90,23 @@ public abstract class OperatorItemBase : MonoBehaviour
         {
             if (prevState == -1)
             {
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out target);
+                UpdateTarget();
                 AnchoredPosition = target;
             }
             // Why are aniations structured like this lol
             if (animController.isPlaying)
             {
-                animController.CrossFade(animNames[currentState],0.25f);
+                animController.CrossFade(animNames[currentState], 0.25f);
             }
             else
             {
                 animController.Play(animNames[currentState], PlayMode.StopAll);
+                for (int i = 0; i < ChildrenImages.Length; i++)
+                {
+                    // Wow are you fucking serious????
+                    // http://forum.unity3d.com/threads/alpha-animation-not-working-with-some-ui-elements.266278/#post-1953828
+                    ChildrenImages[i].SetAllDirty();
+                }
             }
             group.alpha = 1f;
         }
@@ -102,7 +140,7 @@ public abstract class OperatorItemBase : MonoBehaviour
         {
             if (currentState == PreviewState)
             {
-                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out target))
+                if (UpdateTarget())
                 {
 #if UNITY_EDITOR
                     InitPositions();
