@@ -43,6 +43,18 @@ public class City : MonoBehaviour
             var roadMeshObj = CreateGameObject(roadMeshesObj, "Road Mesh");
             AddMesh(roadMeshObj, roadMesh.mesh, roadMesh.material);
         }
+        
+        // Parks
+        var parksObj = CreateGameObject("Park");
+        foreach (var park in result.parks)
+        {
+            var parkObj = CreateGameObject(parksObj, "Park");
+            AddMesh(parkObj, park.mesh, park.material);
+        }
+        
+        // Water
+        var waterObj = CreateGameObject("Water");
+        AddMesh(waterObj, result.water.mesh, result.water.material);
     }
     
     private void AddColliders(GenerationData result)

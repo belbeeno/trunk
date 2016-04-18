@@ -18,4 +18,12 @@ public static class LinqExtensions
             action(item);
         }
     }
+    
+    public static T RandomMember<T>(this IEnumerable<T> source)
+    {
+        var index = UnityEngine.Random.Range(0, source.Count());
+        var member = source.ElementAt(index);
+        
+        return member;
+    }
 }

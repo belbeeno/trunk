@@ -1,5 +1,4 @@
 using System.Linq;
-using UnityEngine;
 
 public class CityBlockData
 {
@@ -9,6 +8,7 @@ public class CityBlockData
     }
     
     public readonly RoadEdge[] boundingRoads;
+    public bool isPark = false;
     
     public bool ContainsRiver()
     {

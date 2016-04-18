@@ -8,9 +8,11 @@ public class CityGenerator
             new RemoveDeadEndsStep(),
             new AddBridgesStep(),
             new FindCityBlocksStep(),
+            new AddParksStep(), 
             new CreateBuildingPlotsStep(),
             new AddSidewalksStep(),
             new AddRoadMeshesStep(),
+            new AddWaterPlaneStep(),
             new AddClickColliderStep()
         };
     
