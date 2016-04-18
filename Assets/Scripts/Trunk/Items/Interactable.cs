@@ -16,9 +16,7 @@ public abstract class Interactable : MonoBehaviour
 
     // Whether the object is currently in the inventory or not
     private bool isSelected;
-
-    public Vector3 inHandOrientation;
-
+    
     void Start()
     {
     }

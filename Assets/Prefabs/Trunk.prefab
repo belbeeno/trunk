@@ -55,22 +55,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!1 &107786
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 429112}
-  - 114: {fileID: 11467594}
-  m_Layer: 8
-  m_Name: Inventory
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &113552
 GameObject:
   m_ObjectHideFlags: 1
@@ -529,6 +513,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &154366
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 490984}
+  m_Layer: 8
+  m_Name: PossesionMarker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &158072
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,6 +600,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!1 &165928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 499696}
+  - 114: {fileID: 11433884}
+  m_Layer: 8
+  m_Name: Inventory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &168592
 GameObject:
   m_ObjectHideFlags: 1
@@ -633,21 +648,6 @@ GameObject:
   - 54: {fileID: 5493704}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &176492
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 481240}
-  m_Layer: 8
-  m_Name: PossesionMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -851,7 +851,6 @@ Transform:
   - {fileID: 22464058}
   - {fileID: 445480}
   - {fileID: 439872}
-  - {fileID: 429112}
   m_Father: {fileID: 462686}
   m_RootOrder: 0
 --- !u!4 &401612
@@ -915,7 +914,7 @@ Transform:
   - {fileID: 487378}
   - {fileID: 489108}
   m_Father: {fileID: 420906}
-  m_RootOrder: 4
+  m_RootOrder: 5
 --- !u!4 &415692
 Transform:
   m_ObjectHideFlags: 1
@@ -947,7 +946,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 135050}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.179, z: 0}
+  m_LocalPosition: {x: -0.377, y: 0.179, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 487378}
@@ -966,6 +965,7 @@ Transform:
   - {fileID: 491710}
   - {fileID: 435088}
   - {fileID: 453878}
+  - {fileID: 499696}
   - {fileID: 412892}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -993,19 +993,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 412892}
   m_RootOrder: 7
---- !u!4 &429112
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 107786}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2459997, y: -0.085000455, z: 0.4580011}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 481240}
-  m_Father: {fileID: 400834}
-  m_RootOrder: 5
 --- !u!4 &432550
 Transform:
   m_ObjectHideFlags: 1
@@ -1222,7 +1209,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 177426}
   m_LocalRotation: {x: 0.49203005, y: 0.12633185, z: -0.21421236, w: 0.834302}
-  m_LocalPosition: {x: 1.22, y: -0.345, z: -0.192}
+  m_LocalPosition: {x: 0.305, y: 1.387, z: -0.163}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 422514}
@@ -1327,18 +1314,6 @@ Transform:
   - {fileID: 494242}
   m_Father: {fileID: 463504}
   m_RootOrder: 0
---- !u!4 &481240
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 176492}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.269, y: -0.5, z: -0.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 429112}
-  m_RootOrder: 0
 --- !u!4 &483300
 Transform:
   m_ObjectHideFlags: 1
@@ -1357,8 +1332,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 114624}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.524, y: 2.035, z: 0.183}
+  m_LocalRotation: {x: 0.001645619, y: -0.008238468, z: -0.19586942, w: 0.98059404}
+  m_LocalPosition: {x: -0.21599913, y: 1.7839994, z: -0.23000002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 419264}
@@ -1377,6 +1352,18 @@ Transform:
   - {fileID: 410914}
   m_Father: {fileID: 412892}
   m_RootOrder: 13
+--- !u!4 &490984
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 154366}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.269, y: -0.5, z: -0.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 499696}
+  m_RootOrder: 0
 --- !u!4 &491710
 Transform:
   m_ObjectHideFlags: 1
@@ -1408,6 +1395,19 @@ Transform:
   - {fileID: 458056}
   m_Father: {fileID: 478788}
   m_RootOrder: 0
+--- !u!4 &499696
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165928}
+  m_LocalRotation: {x: 0.5000001, y: 0.49999997, z: 0.49999997, w: 0.49999997}
+  m_LocalPosition: {x: -0.33399963, y: -0.38999888, z: 2.2749991}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 490984}
+  m_Father: {fileID: 420906}
+  m_RootOrder: 4
 --- !u!20 &2031258
 Camera:
   m_ObjectHideFlags: 1
@@ -2304,7 +2304,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -2369,7 +2369,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3, y: 0.1, z: 2}
+  m_Size: {x: 0.3, y: 0.1, z: 1.4}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &6551016
 BoxCollider:
@@ -2653,7 +2653,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: InteractWithItem
           m_Mode: 2
           m_Arguments:
@@ -2683,7 +2683,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -2713,7 +2713,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: InteractWithItem
           m_Mode: 2
           m_Arguments:
@@ -2771,7 +2771,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: InteractWithItem
           m_Mode: 2
           m_Arguments:
@@ -2824,7 +2824,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 0}
-  inHandOrientation: {x: 0, y: 0, z: 0}
 --- !u!114 &11432822
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2841,7 +2840,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -2867,7 +2866,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: b347ccd9f2ec7aa4a966bccd27683953, type: 2}
-  inHandOrientation: {x: 90, y: 0, z: 0}
+--- !u!114 &11433884
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcdfc900e1aaef849a6ee65a70e8aa2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentItem: {fileID: 0}
+  trunk: {fileID: 158444}
+  cameraTransform: {fileID: 462686}
+  thrust: 6
+  possessionTarget: {fileID: 490984}
+  isAnimating: 0
+  animationLength: 1
 --- !u!114 &11435614
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2944,7 +2960,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -2970,7 +2986,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: fb6e60680124fde45bd1d33b0b9d3b86, type: 2}
-  inHandOrientation: {x: 0, y: 0, z: 0}
 --- !u!114 &11448684
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2987,7 +3002,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: InteractWithItem
           m_Mode: 2
           m_Arguments:
@@ -3017,7 +3032,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -3068,7 +3083,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: InteractWithItem
           m_Mode: 2
           m_Arguments:
@@ -3098,7 +3113,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -3189,7 +3204,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -3218,23 +3233,6 @@ MonoBehaviour:
   toggleCullingMask:
     serializedVersion: 2
     m_Bits: 0
---- !u!114 &11467594
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 107786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcdfc900e1aaef849a6ee65a70e8aa2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  trunk: {fileID: 158444}
-  scaleFactor: 0.5
-  thrust: 6
-  possessionTarget: {fileID: 481240}
-  isAnimating: 0
 --- !u!114 &11467724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3247,7 +3245,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 0}
-  inHandOrientation: {x: 0, y: 0, z: 0}
   cover: {fileID: 192478}
 --- !u!114 &11469812
 MonoBehaviour:
@@ -3275,7 +3272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 041854f699a844c41b250a7085f53cad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
+  itemData: {fileID: 11400000, guid: abbd89c8d8eeb4648af33740e3ddbd54, type: 2}
 --- !u!114 &11475012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3292,7 +3289,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -3337,7 +3334,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -3381,7 +3378,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: InteractWithItem
           m_Mode: 2
           m_Arguments:
@@ -3411,7 +3408,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: DropItem
           m_Mode: 1
           m_Arguments:
@@ -3439,7 +3436,7 @@ MonoBehaviour:
   reticleSegments: 20
   reticleGrowthSpeed: 8
   drawReticle: 0
-  inventory: {fileID: 11467594}
+  inventory: {fileID: 11433884}
 --- !u!114 &11488214
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3452,7 +3449,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 0}
-  inHandOrientation: {x: 0, y: 0, z: 0}
 --- !u!114 &11489892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3465,7 +3461,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 11a69cab6f849fb42aac4d7736a7910f, type: 2}
-  inHandOrientation: {x: 0, y: 0, z: 180}
 --- !u!114 &11494620
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3482,7 +3477,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11467594}
+        - m_Target: {fileID: 11433884}
           m_MethodName: InteractWithItem
           m_Mode: 2
           m_Arguments:

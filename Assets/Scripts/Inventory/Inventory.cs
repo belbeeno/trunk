@@ -12,6 +12,9 @@ public class Inventory : MonoBehaviour {
     private GameObject trunk = null;
 
     [SerializeField]
+    private Transform cameraTransform = null; 
+
+    [SerializeField]
     [Range(0, 10)]
     private float thrust = 6f;
 
@@ -33,7 +36,13 @@ public class Inventory : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-       
+        var start = gameObject.transform.localRotation;
+        var end = Quaternion.Euler(0, 0, cameraTransform.eulerAngles.y);
+        gameObject.transform.localRotation = Quaternion.Slerp(start, end, Time.deltaTime*40);
+        //gameObject.transform.localRotation = Quaternion.Euler(0, 0, cameraTransform.eulerAngles.y);
+        ////rotation -> camera world position - object world position; 
+        //quaternion.lookrotation();
+        ////position a
     }
 
     public GameObject GetCurrentItem()
@@ -96,10 +105,10 @@ public class Inventory : MonoBehaviour {
         if (cb != null) cb.Invoke(target.gameObject);
     }
 
-    private IEnumerator StartAnimateIntoView(Transform itemToAnimateTransform, Vector3 finalLocalPosition, float duration)
+    private IEnumerator AnimateIntoView(Transform itemToAnimateTransform, Vector3 finalLocalPosition, float duration)
     {
         Vector3 startPos = itemToAnimateTransform.localPosition;
-        
+        Debug.Log("animating into view " + itemToAnimateTransform.ToString());
         float timer = 0f;
         while (timer < duration)
         {
@@ -113,7 +122,11 @@ public class Inventory : MonoBehaviour {
 
 
     public void InteractWithItem(GameObject item)
-    {            
+    {   
+        if (isAnimating)
+        {
+            return;
+        }
         if (!hasPhone)
         {
             if (item.GetComponent<CellPhone>())
@@ -172,7 +185,7 @@ public class Inventory : MonoBehaviour {
         {
             return;
         }
-        
+        StopAllCoroutines(); 
         var interactable = currentItem.GetComponent<Interactable>();
         interactable.ItemDropped();
 
@@ -193,14 +206,22 @@ public class Inventory : MonoBehaviour {
         StopAllCoroutines();
         var siobject = item.GetComponent<Interactable>().itemData;
         item.transform.localRotation = Quaternion.Euler(siobject.rotationWhenInInventory);
-        StartCoroutine(StartAnimateIntoView(item.transform, siobject.positionWhenInInventory, animationLength));
+        StartCoroutine(AnimateIntoView(item.transform, siobject.positionWhenInInventory, animationLength));
     }
 
     public void PickUpPhone(GameObject phone)
     {
+        StartAnimateIntoView(phone);
         hasPhone = true;
-        phone.SetActive(false);
+        Debug.Log("Hasphone");
         phone.GetComponent<CellPhone>().CallOperator();
+        StartCoroutine(AnimateIntoPosession(phone.transform, (possessionTarget != null ? possessionTarget : transform), animationLength, SetPhoneInactive));
+        phone.SetActive(false);
+    }
+
+    private void SetPhoneInactive(GameObject phone)
+    {
+        phone.SetActive(false);
     }
 
     public bool IsHoldingItem()

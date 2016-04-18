@@ -2,10 +2,8 @@
 using System.Collections;
 using System;
 
-public class CellPhone : MonoBehaviour {
-
-    public ScriptableInteractable data; 
-
+public class CellPhone : Interactable {
+    
     // Use this for initialization
     void Start () {
 	
