@@ -26,7 +26,7 @@ public class Inventory : MonoBehaviour {
 
     [SerializeField]
     [Range(0, 2)]
-    private float animationLength = 1f;
+    private float animationLength = 5f;
 
     // Use this for initialization
     void Start () {
@@ -39,10 +39,10 @@ public class Inventory : MonoBehaviour {
         var start = gameObject.transform.localRotation;
         var end = Quaternion.Euler(0, 0, cameraTransform.eulerAngles.y);
         gameObject.transform.localRotation = Quaternion.Slerp(start, end, Time.deltaTime*40);
-        //gameObject.transform.localRotation = Quaternion.Euler(0, 0, cameraTransform.eulerAngles.y);
-        ////rotation -> camera world position - object world position; 
-        //quaternion.lookrotation();
-        ////position a
+        if(IsHoldingItem())
+        {
+            DebugConsole.SetText("scale", currentItem.transform.localScale.ToString());
+        }
     }
 
     public GameObject GetCurrentItem()
@@ -156,7 +156,7 @@ public class Inventory : MonoBehaviour {
             if (curObjInteract.CanInteractWith(itemInteract))
             {
                 curObjInteract.InteractWith(itemInteract);
-                if (itemInteract.GetType() == typeof(Outside))
+                if (itemInteract.GetType() == typeof(Outside) || itemInteract.GetType() == typeof(WedgeGap))
                 {
                     currentItem = null; 
                 }

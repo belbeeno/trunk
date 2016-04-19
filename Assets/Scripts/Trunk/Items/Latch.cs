@@ -10,6 +10,7 @@ public class Latch : Interactable
 
     private float degreeTrunkLeftOpen = 3f;
     public GameObject cover;
+    public List<GameObject> sideOpenings; 
     private bool isOpening;
     float timer = 0f;
     float duration = 2f;
@@ -17,7 +18,6 @@ public class Latch : Interactable
     void Start()
     {
         isOpen = false;
-        itemsToInteractWith = new HashSet<Type>() { typeof(Tool) };
         canBeHeld = false;
     }
 
@@ -42,6 +42,10 @@ public class Latch : Interactable
             isOpening = false;
             gameObject.layer = LayerMask.NameToLayer("ClientOnly");
             Debug.Log("Stopped opening");
+            foreach (var side in sideOpenings)
+            {
+                side.GetComponent<BoxCollider>().enabled = true;
+            }
         }
     }
 

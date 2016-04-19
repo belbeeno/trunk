@@ -20,5 +20,5 @@ MonoBehaviour:
   interactableFastenerList: 00000000
   canUnfastenFasteners: 1
   canOpenLatch: 1
-  canWedgeOpenTrunk: 1
+  canWedgeOpenTrunk: 0
   currentAnimation: 0
