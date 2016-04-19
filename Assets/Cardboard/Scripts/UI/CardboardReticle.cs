@@ -106,30 +106,13 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
             // do nothing if we can't interact with whatever we're looking at
             return;
         }
-        // at this point, whatever we're looking at should be interactable
-        // Check if we're holding anything
-        var hasItem = !inventory.isEmpty();
-        var targetItem = targetObject.GetComponent<Interactable>();
 
-        var itemsCanInteract = false; 
-        if (hasItem && targetItem != null)
-        {
-            // check if what we're holding can interact with what we're looking at
-            var currentItem = inventory.GetCurrentItem().GetComponent<Interactable>();
-            Debug.Log("currentItem " + currentItem); 
-            itemsCanInteract = currentItem.CanInteractWith(targetItem);
-        }
-        
-        // only set as target if: 
-        // we're not holding anything and the item we're looking at can be held
-        // we are holding something and we're looking at something that our current item can interact with
-    drawReticle = (!hasItem && targetItem.CanBeHeld()) || (hasItem && itemsCanInteract);
+        drawReticle = inventory.CanInteractWith(targetObject);
         if (drawReticle)
         {
             SetGazeTarget(intersectionPosition);
         }
-
-  }
+    }
 
   /// Called every frame the user is still looking at a valid GameObject. This
   /// can be a 3D or UI element.
