@@ -1,13 +1,28 @@
 using UnityEngine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
+    [System.Serializable]
+    public struct GameManagerFlowStep
+    {
+        public GameObject target;
+        public bool isEnabled;
+    }
+
+    public GameManagerFlowStep[] initSteps = new GameManagerFlowStep[0];
+
     public Camera operatorProxyCamera;
     public RectTransform operatorMapCanvasRect;
     public BoxCollider boxClicker;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
+    public void Start()
+    {
+        initSteps.ForEach(x => x.target.SetActive(x.isEnabled));
+    }
+
     public void SetUpDebugGame()
     {
         SetUpGame(Random.Range(int.MinValue, int.MaxValue));

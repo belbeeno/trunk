@@ -12,7 +12,7 @@ public class POI : MonoBehaviour
     public RectTransform rect = null;
     private RectTransform parentRect = null;
 
-    public OperatorActionBar actionBar = null;
+    public ProxyCameraMap proxyMap = null;
 	
     void Start()
     {
@@ -30,11 +30,11 @@ public class POI : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        if (actionBar == null) return;
+        if (proxyMap == null) return;
         Vector2 normPos;
         bool success = false;
         
-        if (actionBar.GetNormalizedMapPosition(out normPos, false))
+        if (proxyMap.GetNormalizedMapPosition(out normPos, false))
         {
             Vector2 localPos;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out localPos))
@@ -47,7 +47,7 @@ public class POI : MonoBehaviour
         if (success)
         {
             success = false;
-            Ray camToCity = actionBar.proxyCamera.ViewportPointToRay(normPos);
+            Ray camToCity = proxyMap.proxyCamera.ViewportPointToRay(normPos);
             RaycastHit info;
             if (Physics.Raycast(camToCity, out info, 1000f, targetMask.value))
             {

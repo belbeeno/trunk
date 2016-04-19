@@ -2,8 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-[RequireComponent(typeof(ToggleGroup))]
-public class OperatorActionBar : MonoBehaviour 
+public class ProxyCameraMap : MonoBehaviour 
 {
     public RectTransform dispatchMapRect = null;
     public Camera proxyCamera = null;
@@ -81,14 +80,6 @@ public class OperatorActionBar : MonoBehaviour
     {
         Vector3 returnPoint = proxyCamera.ViewportToWorldPoint(normalizedMapPos);
         return new Vector2(returnPoint.x, returnPoint.z);
-    }
-
-    void Start()
-    {
-        if (toggles == null)
-        {
-            toggles = GetComponent<ToggleGroup>();
-        }
     }
 
     void Update()

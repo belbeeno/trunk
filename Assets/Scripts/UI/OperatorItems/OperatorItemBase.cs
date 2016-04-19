@@ -14,7 +14,7 @@ public abstract class OperatorItemBase : MonoBehaviour
     private int prevState = -1;
 
     public OperatorToggle[] togglesToTest = new OperatorToggle[2];
-    public OperatorActionBar actionBar = null;
+    public ProxyCameraMap actionBar = null;
 
     protected RectTransform parentRect = null;
     protected RectTransform rect = null;
