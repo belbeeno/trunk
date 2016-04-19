@@ -18,8 +18,29 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
 
     public HostTopology topology;
     protected TrunkNetworkingServer server = null;
+    public TrunkNetworkingServer Server
+    {
+        get { return server;  }
+    }
     protected int clientId = -1;
     protected TrunkNetworkDiscovery broadcaster = null;
+
+    public override int VoiceChatID
+    {
+        get { return 2; }
+    }
+    public override void OnNewSampleCaptured(VoiceChat.VoiceChatPacket packet)
+    {
+        if (server == null) return;
+
+        NetworkConnection client = server.FindConnection(clientId);
+        if (client != null)
+        {
+            //Debug.Log("New sample captured: " + packet.PacketId);
+            NetMessage.VoiceChatMsg msg = new NetMessage.VoiceChatMsg(packet);
+            client.SendUnreliable(NetMessage.ID.VoiceChatPacket, msg);
+        }
+    }
 
     public override void Begin() 
     {
@@ -32,6 +53,8 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         server.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
         server.RegisterHandler(NetMessage.ID.APB, OnAPBResponseMsg);
         server.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
+
+        server.RegisterHandler(NetMessage.ID.VoiceChatPacket, OnVoiceChatMsg);
 
         if (!server.Listen(GAME_PORT))
         {

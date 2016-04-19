@@ -22,6 +22,19 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     TrunkMover mover = null;
     [SerializeField]
     Outside outsideTrunk = null;
+
+    public override int VoiceChatID
+    {
+        get { return 1; }
+    }
+    public override void OnNewSampleCaptured(VoiceChat.VoiceChatPacket packet)
+    {
+        if (network == null) return;
+
+        //Debug.Log("New sample captured: " + packet.PacketId);
+        NetMessage.VoiceChatMsg msg = new NetMessage.VoiceChatMsg(packet);
+        network.SendUnreliable(NetMessage.ID.VoiceChatPacket, msg);
+    }
     
     public override void Begin()
     {
@@ -44,12 +57,15 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         network.RegisterHandler(NetMessage.ID.APB, OnAPBRequestMsg);
         network.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
 
+        network.RegisterHandler(NetMessage.ID.VoiceChatPacket, OnVoiceChatMsg);
+
         network.Connect(ip, TrunkNetworkingOperator.GAME_PORT);
     }
 
     public void OnConnectMsg(NetworkMessage msg)
     {
         Log("Connected to server! " + msg.ToString());
+
         NetMessage.PingMsg ping = new NetMessage.PingMsg();
         ping.msg = "Hi!";
         msg.conn.Send(NetMessage.ID.Ping, ping);

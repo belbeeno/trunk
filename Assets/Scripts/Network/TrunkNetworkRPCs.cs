@@ -36,10 +36,14 @@ namespace NetMessage
 
     public static class ID
     {
-        public const short InitSession      = 100;
-        public const short Ping             = 101;
-        public const short APB              = 102;
-        public const short GameOver         = 200;
+        public const short Base = MsgType.Highest;
+
+        public const short InitSession      = Base + 1;
+        public const short Ping             = Base + 2;
+        public const short APB              = Base + 3;
+        public const short GameOver         = Base + 4;
+
+        public const short VoiceChatPacket  = Base + 10;
     }
 
     public class InitSessionMsg : MessageBase
@@ -153,5 +157,33 @@ namespace NetMessage
     public class GameOverMsg : MessageBase
     {
         public double timestamp;
+    }
+
+    public class VoiceChatMsg : MessageBase
+    {
+        public VoiceChatMsg() { }
+        public VoiceChatMsg(VoiceChat.VoiceChatPacket packet)
+        {
+            payload = packet;
+        }
+
+        public VoiceChat.VoiceChatPacket payload;
+
+        public override void Serialize(NetworkWriter writer)
+        {
+            writer.Write((byte)payload.Compression);
+            writer.WriteBytesAndSize(payload.Data, payload.Length);
+            writer.Write(payload.NetworkId);
+            writer.Write(payload.PacketId);
+        }
+
+        public override void Deserialize(NetworkReader reader)
+        {
+            payload.Compression = (VoiceChat.VoiceChatCompression)reader.ReadByte();
+            payload.Data = reader.ReadBytesAndSize();
+            payload.Length = payload.Data.Length;
+            payload.NetworkId = reader.ReadInt32();
+            payload.PacketId = reader.ReadUInt64();
+        }
     }
 }
