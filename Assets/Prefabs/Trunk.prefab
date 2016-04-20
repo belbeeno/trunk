@@ -173,25 +173,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &116668
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 453744}
-  - 33: {fileID: 3353194}
-  - 65: {fileID: 6551016}
-  - 114: {fileID: 11494620}
-  - 114: {fileID: 11430896}
-  m_Layer: 10
-  m_Name: Outside
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &116754
 GameObject:
   m_ObjectHideFlags: 1
@@ -1297,7 +1278,7 @@ Transform:
   - {fileID: 463504}
   - {fileID: 495552}
   m_Father: {fileID: 420906}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!4 &415692
 Transform:
   m_ObjectHideFlags: 1
@@ -1353,11 +1334,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 145974}
-  m_LocalRotation: {x: -0.49991354, y: 0.5000864, z: 0.49991363, w: 0.50008637}
+  m_LocalRotation: {x: -0.00000011518238, y: -0.7072292, z: -0.7069844, w: 0.000000115222264}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 453744}
   - {fileID: 491710}
   - {fileID: 435088}
   - {fileID: 453878}
@@ -1463,7 +1443,7 @@ Transform:
   m_Children:
   - {fileID: 462686}
   m_Father: {fileID: 420906}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!4 &437052
 Transform:
   m_ObjectHideFlags: 1
@@ -1692,18 +1672,6 @@ Transform:
   - {fileID: 450392}
   m_Father: {fileID: 495552}
   m_RootOrder: 0
---- !u!4 &453744
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 116668}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.301, y: 0, z: 1.953}
-  m_LocalScale: {x: 0.1, y: 8.5, z: 3}
-  m_Children: []
-  m_Father: {fileID: 420906}
-  m_RootOrder: 0
 --- !u!4 &453878
 Transform:
   m_ObjectHideFlags: 1
@@ -1712,10 +1680,10 @@ Transform:
   m_GameObject: {fileID: 158072}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.301, y: 0, z: 1.953}
-  m_LocalScale: {x: 0.1, y: 8.5, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 420906}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!4 &456270
 Transform:
   m_ObjectHideFlags: 1
@@ -1938,7 +1906,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 420906}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!4 &493732
 Transform:
   m_ObjectHideFlags: 1
@@ -2055,13 +2023,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165928}
-  m_LocalRotation: {x: 0, y: -0.00000004213957, z: 0.000000042154134, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.7919997, y: -0.1439996, z: 2.3599997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 490984}
   m_Father: {fileID: 420906}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!20 &2031258
 Camera:
   m_ObjectHideFlags: 1
@@ -2740,13 +2708,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 193140}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!33 &3353194
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 116668}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &3353594
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -3072,18 +3033,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 0.1, z: 1.4}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &6551016
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 116668}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &6551508
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -3139,10 +3088,10 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 158072}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.1, y: 8.5, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &6566786
 BoxCollider:
@@ -3530,18 +3479,6 @@ MonoBehaviour:
   localWedgeLocation: {x: 0, y: 0, z: 0}
   otherGaps:
   - {fileID: 106614}
---- !u!114 &11430896
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 116668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f4ec246e104a145b83aa927c395427, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemData: {fileID: 0}
 --- !u!114 &11431956
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3849,12 +3786,12 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11433884}
-          m_MethodName: InteractWithItem
-          m_Mode: 2
+        - m_Target: {fileID: 165928}
+          m_MethodName: 
+          m_Mode: 0
           m_Arguments:
-            m_ObjectArgument: {fileID: 158072}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -4290,36 +4227,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 11a69cab6f849fb42aac4d7736a7910f, type: 2}
---- !u!114 &11494620
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 116668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 4
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 11433884}
-          m_MethodName: InteractWithItem
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 116668}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
 --- !u!114 &11498538
 MonoBehaviour:
   m_ObjectHideFlags: 1

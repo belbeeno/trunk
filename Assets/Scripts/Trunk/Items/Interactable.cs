@@ -32,7 +32,6 @@ public abstract class Interactable : MonoBehaviour
             var itemName = itemData.itemName;
             var position = transform.position;
             ((Outside)itemToInteractWith).DropItem(itemName);
-            Destroy(gameObject); 
             Debug.Log(string.Format("itemName {0}, position {1}", itemName, position));
         }
     }
