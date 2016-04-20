@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -6,13 +8,25 @@ public class GameManager : MonoBehaviour
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
-    public void SetUpDebugGame()
+    private bool _readyToStart;
+    private bool _otherReadyToStart;
+    private bool _gameHasStarted;
+    
+    public void Update()
     {
-        SetUpGame(Random.Range(int.MinValue, int.MaxValue));
-        StartGame();
+        if (!_gameHasStarted && _otherReadyToStart && _readyToStart)
+        {
+            _gameHasStarted = true;
+            StartGame();
+        }
     }
     
-    public void SetUpGame(int seed)
+    public void MarkOtherReady()
+    {
+        _otherReadyToStart = true;
+    }
+    
+    public void SetUpGame(int seed, Action callback)
     {
         Random.seed = seed;
         
@@ -20,6 +34,9 @@ public class GameManager : MonoBehaviour
         GenerateCity(city);
         InitializeRoutePlanner(city);
         RepositionProxyCamera();
+        
+        _readyToStart = true;
+        callback();
     }
     
     public void StartGame()
@@ -55,5 +72,11 @@ public class GameManager : MonoBehaviour
         var gameObj = GameObject.Find("Car");
         var car = gameObj.GetComponent<TrunkMover>();
         car.canMove = true;
+    }
+    
+    public void SetUpDebugGame()
+    {
+        SetUpGame(Random.Range(int.MinValue, int.MaxValue), () => {});
+        StartGame();
     }
 }

@@ -2,37 +2,46 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class AddSidewalksStep : GenerationStepBase
-{
-    private readonly Color _sidewalkColor = Color.grey;
-    
+public class AddParksStep : GenerationStepBase
+{    
+    private Color _parkColor = new Color(0f, 0.4f, 0f, 1f);
+      
     public override void Run()
     {
-        var sidewalks = data.cityBlocks
-            .Where(c => !c.ContainsRiver())
-            .Where(c => !c.isSmallPark)
-            .Where(c => !c.isLargePark)
-            .Select(b => CreateSidewalk(b))
-            .ToList();
+        data.smallParks = data.cityBlocks
+            .Where(b => b.isSmallPark)
+            .Select(b => AddPark(b, PrefabStore.instance.smallPark))
+            .ToArray();
         
-        data.sidewalks = sidewalks;
+        data.largeParks = data.cityBlocks
+            .Where(b => b.isLargePark)
+            .Select(b => AddPark(b, PrefabStore.instance.largePark))
+            .ToArray();
     }
     
-    private SidewalkData CreateSidewalk(CityBlockData cityBlock)
-    {
+    private ParkData AddPark(CityBlockData block, GameObject prefab)
+    {        
         var insetAmount = (options.roadWidth / 2f) * options.blockSize;
-        var corners = cityBlock.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
+        var corners = block.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
         var mesh = GetMesh(corners);
         var material = MaterialsStore.instance.basic;
-        var sidewalk = new SidewalkData(corners, mesh, material);
+        var park = new ParkData(corners, mesh, material, prefab);
+        return park;
+    }
+    
+    private BuildingPlotData CreateBuildingPlot(CityBlockData city)
+    {
+        var insetAmount = ((options.roadWidth / 2f) + options.sidewalkWidth) * options.blockSize;
+        var corners = city.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
+        var mesh = GetMesh(corners);
+        var material = MaterialsStore.instance.buildings;
+        var buildingPlot = new BuildingPlotData(corners, mesh, material);
         
-        return sidewalk;
+        return buildingPlot;
     }
     
     private Mesh GetMesh(Vector3[] corners)
-    {
-        var sidewalkHeight = 0.001f * options.blockSize;
-        
+    {        
         Mesh generatedMesh = new Mesh();
         List<Vector3> points = new List<Vector3>();
         List<Color> colors = new List<Color>();
@@ -43,24 +52,8 @@ public class AddSidewalksStep : GenerationStepBase
         for (int corner = 0; corner < corners.Length; corner++)
         {
             points.Add(corners[corner]);
-            colors.Add(_sidewalkColor);
+            colors.Add(_parkColor);
             uvs.Add(GetUV(corners[corner]));
-        }
-        
-        // Top row
-        for (int corner = 0; corner < corners.Length; corner++)
-        {
-            points.Add( corners[corner] + Vector3.up * sidewalkHeight);
-            colors.Add(_sidewalkColor);
-            uvs.Add(GetUV( corners[corner]));
-            
-            tris.Add(corner);
-            tris.Add(corner + corners.Length);
-            tris.Add((corner + 1) % corners.Length);
-
-            tris.Add(corner + corners.Length);
-            tris.Add((corner + 1) % corners.Length + corners.Length);
-            tris.Add((corner + 1) % corners.Length);
         }
         
         // Solid top

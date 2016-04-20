@@ -41,7 +41,9 @@ public class AddRoadMeshesStep : GenerationStepBase
     }
     
     private Mesh GetMesh(Vector3[] corners)
-    {        
+    {
+        var roadHeight = options.blockSize;
+        
         Mesh generatedMesh = new Mesh();
         List<Vector3> points = new List<Vector3>();
         List<Color> colors = new List<Color>();
@@ -51,9 +53,25 @@ public class AddRoadMeshesStep : GenerationStepBase
         // Bottom row
         for (int corner = 0; corner < corners.Length; corner++)
         {
-            points.Add(corners[corner]);
+            points.Add(corners[corner] + Vector3.down * roadHeight);
             colors.Add(_roadColor);
             uvs.Add(GetUV(corners[corner]));
+        }
+        
+        // Top row
+        for (int corner = 0; corner < corners.Length; corner++)
+        {
+            points.Add( corners[corner]);
+            colors.Add(_roadColor);
+            uvs.Add(GetUV( corners[corner]));
+            
+            tris.Add(corner);
+            tris.Add(corner + corners.Length);
+            tris.Add((corner + 1) % corners.Length);
+
+            tris.Add(corner + corners.Length);
+            tris.Add((corner + 1) % corners.Length + corners.Length);
+            tris.Add((corner + 1) % corners.Length);
         }
         
         // Solid top
