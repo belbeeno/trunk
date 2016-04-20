@@ -64,14 +64,14 @@ public class AddRoadMeshesStep : GenerationStepBase
             points.Add( corners[corner]);
             colors.Add(_roadColor);
             uvs.Add(GetUV( corners[corner]));
-            
+
             tris.Add(corner);
-            tris.Add(corner + corners.Length);
             tris.Add((corner + 1) % corners.Length);
+            tris.Add(corner + corners.Length);
 
             tris.Add(corner + corners.Length);
-            tris.Add((corner + 1) % corners.Length + corners.Length);
             tris.Add((corner + 1) % corners.Length);
+            tris.Add((corner + 1) % corners.Length + corners.Length);
         }
         
         // Solid top
@@ -79,8 +79,8 @@ public class AddRoadMeshesStep : GenerationStepBase
         for (int i = target + 1; i < points.Count - 1; i++)
         {
             tris.Add(target);
-            tris.Add(i + 1);
             tris.Add(i);
+            tris.Add(i + 1);
         }
         
         generatedMesh.SetVertices(points);

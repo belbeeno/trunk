@@ -62,7 +62,7 @@ public class CreateBuildingPlotsStep : GenerationStepBase
     private BuildingPlotData CreateBuildingPlot(Vector3[] corners)
     {
         var mesh = GetMesh(corners);
-        var material = MaterialsStore.instance.sidewalks;
+        var material = MaterialsStore.instance.buildings;
         var buildingPlot = new BuildingPlotData(corners, mesh, material);
         
         return buildingPlot;
