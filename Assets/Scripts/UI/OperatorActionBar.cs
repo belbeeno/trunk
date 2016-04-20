@@ -5,6 +5,7 @@ using System.Collections;
 [RequireComponent(typeof(ToggleGroup))]
 public class OperatorActionBar : MonoBehaviour 
 {
+    public Camera operatorProxyCamera;
     public ToggleGroup toggles = null;
     private int _hostOnlyLayerMask = -1;
     private int HostOnlyLayerMask
@@ -33,7 +34,7 @@ public class OperatorActionBar : MonoBehaviour
             if (actives.MoveNext())
             {
                 OperatorToggle opToggle = actives.Current.GetComponent<OperatorToggle>();
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = operatorProxyCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hitInfo;
                 if (Physics.Raycast(ray, out hitInfo, 1000f, HostOnlyLayerMask))
                 {

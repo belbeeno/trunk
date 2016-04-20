@@ -30,6 +30,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         server.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
         server.RegisterHandler(NetMessage.ID.InitSession, OnInitSessionMsg);
         server.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
+        server.RegisterHandler(NetMessage.ID.Ready, OnReadyMsg);
         server.RegisterHandler(NetMessage.ID.APB, OnAPBResponseMsg);
         server.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
 
@@ -113,7 +114,32 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
     {
         // Don't really do anything with this yet.  Just for visual purposes.
         NetMessage.InitSessionMsg castedMsg = msg.ReadMessage<NetMessage.InitSessionMsg>();
-        SetUpSession(castedMsg.citySeed, castedMsg.pathSeed);
+        SetUpSession(castedMsg.seed, SendReadyMsg);
+    }
+    
+    private void SendReadyMsg()
+    {
+        NetworkConnection client = server.FindConnection(clientId);
+        if (client != null)
+        {
+            Log("Informing other player we're ready to start");
+            NetMessage.ReadyMsg msg = new NetMessage.ReadyMsg();
+            msg.seed = Random.seed;
+            client.Send(NetMessage.ID.Ready, msg);
+        }
+        else
+        {
+            Debug.LogWarning("Attempting to find connection for clientId " + clientId + " but got nothin!");
+        }
+    }
+    
+    private void OnReadyMsg(NetworkMessage msg)
+    {
+        var gameObj = GameObject.Find("GameManager");
+        var manager = gameObj.GetComponent<GameManager>();
+        
+        Log("Other player is ready!");
+        manager.MarkOtherReady();
     }
 
     public void OnPingMsg(NetworkMessage msg)

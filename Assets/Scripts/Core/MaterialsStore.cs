@@ -16,5 +16,6 @@ public class MaterialsStore : MonoBehaviour
         }
     }
     
+    public Material basic;
     public Material buildings;
 }

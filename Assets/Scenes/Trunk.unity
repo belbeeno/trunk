@@ -397,6 +397,49 @@ RectTransform:
   m_PrefabParentObject: {fileID: 22411144, guid: 0fc0b65bdfec5ac42a9208d94d2c60e9,
     type: 2}
   m_PrefabInternal: {fileID: 95017241}
+--- !u!1 &137861383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 137861385}
+  - 114: {fileID: 137861384}
+  m_Layer: 0
+  m_Name: PrefabStore
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &137861384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 137861383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 259aae3283d0e4af78cef2bf2abbd5df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smallPark: {fileID: 100002, guid: 44df437175f580f44a0b5bdea402c5a3, type: 3}
+  largePark: {fileID: 100034, guid: 49f2a8268e37d445887a0d82661bec68, type: 3}
+  school: {fileID: 100066, guid: 9ab7edcb9620a3f498c94c0b97bb5a07, type: 3}
+  monument: {fileID: 100000, guid: f2f4659fc120283409eb3f667ca324c4, type: 3}
+--- !u!4 &137861385
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 137861383}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 257.58887, y: 185.85518, z: 1669.585}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
 --- !u!1 &138508847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1147,8 +1190,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 371514718}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 850, z: -5}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 1200, y: 300, z: 1200}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1194,7 +1237,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 300
+  orthographic size: 1200
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1311,6 +1354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1132ad7270a3427e93c53c0d8d996b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  basic: {fileID: 2100000, guid: db4905b20c6ad4f418e0fda6c6c6e0d8, type: 2}
   buildings: {fileID: 2100000, guid: 80282dd0d61f381478ef2e65af26b1ce, type: 2}
 --- !u!4 &431326825
 Transform:
@@ -3393,6 +3437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 059cc8dc4bbbcd247bc448d6dda7115e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  operatorProxyCamera: {fileID: 0}
   toggles: {fileID: 1051395283}
 --- !u!114 &1051395285
 MonoBehaviour:
@@ -4671,7 +4716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 30
-  canMove: 0
+  canMove: 1
 --- !u!1 &1424076263 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 163810, guid: 1af3a40eecd3bee40939e0d9122826d9, type: 2}
@@ -6590,11 +6635,19 @@ MonoBehaviour:
     blocksHeight: 16
     blockSize: 150
     roadWidth: 0.3
+    alleyWidth: 0
     sidewalkWidth: 0.1
     floorHeight: 0.3
     riverWidth: 1.7
     numRiverSegments: 64
     numBridges: 5
+    numSmallParks: 10
+    smallParkDist: 3
+    numLargeParks: 4
+    largeParkDist: 5
+    numSchools: 6
+    schoolDist: 4
+    differentFeatureDist: 2
 --- !u!4 &1814474567
 Transform:
   m_ObjectHideFlags: 0

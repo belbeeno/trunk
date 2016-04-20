@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 public class City : MonoBehaviour 
@@ -7,7 +9,7 @@ public class City : MonoBehaviour
         ClearChildren();
         AddMeshes(result);
         AddColliders(result);
-        AddDebugObjs(result);
+//      AddDebugObjs(result);
     }
     
     private void ClearChildren()
@@ -43,6 +45,68 @@ public class City : MonoBehaviour
             var roadMeshObj = CreateGameObject(roadMeshesObj, "Road Mesh");
             AddMesh(roadMeshObj, roadMesh.mesh, roadMesh.material);
         }
+        
+        // Parks
+        var parksObj = CreateGameObject("Parks");
+        foreach (var park in result.smallParks)
+        {
+            var parkObj = CreateGameObject(parksObj, "Small Park");
+            AddMesh(parkObj, park.mesh, park.material);
+            var center = park.corners.Average();
+            var rotation = Quaternion.Euler(0, 90 * UnityEngine.Random.Range(0, 4), 0);
+            var parkPrefab = (GameObject)GameObject.Instantiate(park.prefab, center, rotation);
+            parkPrefab.transform.parent = parkObj.transform;
+            
+            var parkGround = parkPrefab.transform.FindChild("pPlane1");
+            var groundRenderer = parkGround.GetComponent<MeshRenderer>();
+            var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
+            groundRenderer.sharedMaterial.color = Color.green;
+            parkPrefab.transform.localScale = Vector3.one * parkSize;
+            parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
+        }
+        foreach (var park in result.largeParks)
+        {
+            var parkObj = CreateGameObject(parksObj, "Large Park");
+            AddMesh(parkObj, park.mesh, park.material);
+            var center = park.corners.Average();
+            
+            var rotation = Quaternion.Euler(0, 90 * UnityEngine.Random.Range(0, 4), 0);
+            var parkPrefab = (GameObject)GameObject.Instantiate(park.prefab, center, rotation);
+            parkPrefab.transform.parent = parkObj.transform;
+            
+            var parkGround = parkPrefab.transform.FindChild("pPlane1");
+            var groundRenderer = parkGround.GetComponent<MeshRenderer>();
+            var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
+            groundRenderer.sharedMaterial.color = Color.green;
+            parkPrefab.transform.localScale = Vector3.one * parkSize / 4f;
+            parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
+            var pos = parkPrefab.transform.position;
+            parkPrefab.transform.position = new Vector3(pos.x, 3, pos.z);
+        }
+        
+        // Schools
+        var schoolsObj = CreateGameObject("Schools");
+        foreach (var school in result.schools)
+        {
+            var schoolObj = CreateGameObject(parksObj, "School");
+            var center = school.corners.Average();
+            
+            var rotDeg = UnityEngine.Random.Range(0f, 1f) > 0.5 ? 0 : 180;
+            var width = school.corners.Max(c => c.x) - school.corners.Min(c => c.x);
+            var length = school.corners.Max(c => c.z) - school.corners.Min(c => c.z);
+            var rotation = (width < length)
+                ? Quaternion.Euler(0, rotDeg, 0)
+                : Quaternion.Euler(0, rotDeg + 90, 0);
+            
+            var schoolPrefab = (GameObject)GameObject.Instantiate(PrefabStore.instance.school, center, rotation);
+            schoolPrefab.transform.parent = schoolsObj.transform;
+            schoolPrefab.transform.localScale = Vector3.one * Math.Min(width, length) / 3.5f;
+            //schoolPrefab.transform.position -= schoolPrefab.transform.right * Math.Min(width, length) / 5;
+        }
+        
+        // Water
+        var waterObj = CreateGameObject("Water");
+        AddMesh(waterObj, result.water.mesh, result.water.material);
     }
     
     private void AddColliders(GenerationData result)
@@ -51,6 +115,9 @@ public class City : MonoBehaviour
         var clickCollider = CreateGameObject("Click Collider");
         var meshCollider = clickCollider.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = result.clickColliderMesh;
+        clickCollider.tag = "Networking";
+        clickCollider.layer = LayerMask.NameToLayer("HostOnly");
+        clickCollider.transform.position = new Vector3(0f, 1f, 0f);
     }
     
     private void AddDebugObjs(GenerationData result)

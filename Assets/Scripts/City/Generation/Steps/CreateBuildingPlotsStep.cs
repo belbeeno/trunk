@@ -10,16 +10,57 @@ public class CreateBuildingPlotsStep : GenerationStepBase
     {
         var plots = data.cityBlocks
             .Where(b => !b.ContainsRiver())
-            .Select(b => CreateBuildingPlot(b))
+            .Where(b => !b.IsCityFeature())
+            .SelectMany(b => CreateBuildingPlots(b))
             .ToList();
         
         data.buildingPlots = plots;
     }
     
-    private BuildingPlotData CreateBuildingPlot(CityBlockData city)
+    private BuildingPlotData[] CreateBuildingPlots(CityBlockData city)
     {
         var insetAmount = ((options.roadWidth / 2f) + options.sidewalkWidth) * options.blockSize;
-        var corners = city.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
+        var insetCorners = city.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
+        var plots = Subdivide(insetCorners)
+            .Select(p => p.Inset(options.blockSize * options.alleyWidth / 2f).ToArray())
+            .Select(p => CreateBuildingPlot(p))
+            .ToArray();
+            
+        return plots;
+    }
+    
+    private Vector3[][] Subdivide(Vector3[] corners)
+    {
+        var points = new List<Vector3[]>();
+        for (var x = 0; x < 3; x++)
+        for (var y = 0; y < 3; y++)
+        {
+            if (x == 1 && y == 1)
+            {
+                continue;
+            }
+            
+            points.Add(new [] {
+                DoubleLerp(corners, x/3f, y/3f),
+                DoubleLerp(corners, (x+1)/3f, y/3f),
+                DoubleLerp(corners, (x+1)/3f, (y+1)/3f),
+                DoubleLerp(corners, x/3f, (y+1)/3f)
+            });
+        }
+        
+        return points.ToArray();
+    }
+    
+    private Vector3 DoubleLerp(Vector3[] corners, float horizT, float vertT)
+    {
+        var p1 = Vector3.Lerp(corners[0], corners[1], horizT);
+        var p2 = Vector3.Lerp(corners[3], corners[2], horizT);
+        var p3 = Vector3.Lerp(p1, p2, vertT);
+        return p3;
+    }
+    
+    private BuildingPlotData CreateBuildingPlot(Vector3[] corners)
+    {
         var mesh = GetMesh(corners);
         var material = MaterialsStore.instance.buildings;
         var buildingPlot = new BuildingPlotData(corners, mesh, material);
@@ -29,7 +70,7 @@ public class CreateBuildingPlotsStep : GenerationStepBase
     
     private Mesh GetMesh(Vector3[] corners)
     {
-        var numFloors = Random.Range(1, 6);
+        var numFloors = Random.Range(1, 4);
         var floorHeight = options.floorHeight * options.blockSize;
         
         Mesh generatedMesh = new Mesh();

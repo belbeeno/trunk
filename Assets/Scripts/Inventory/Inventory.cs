@@ -67,7 +67,6 @@ public class Inventory : MonoBehaviour {
             {
                 // check if what we're holding can interact with what we're looking at
                 var currentInteractable = currentItem.GetComponent<Interactable>();
-                Debug.Log("currentItem " + currentItem);
                 return currentInteractable.CanInteractWith(targetInteractable);
             }
 
@@ -125,9 +124,7 @@ public class Inventory : MonoBehaviour {
         var pointerData = data as PointerEventData;
         var outside = pointerData.pointerCurrentRaycast.gameObject;
         var outsidePosition = outside.transform.InverseTransformPoint(pointerData.pointerCurrentRaycast.worldPosition);
-        DebugConsole.SetText("before scale", currentItem.transform.localScale.ToString());
         currentItem.transform.SetParent(outside.transform,true);
-        DebugConsole.SetText("after scale", currentItem.transform.localScale.ToString());
         StartCoroutine(AnimateToOutside(outsidePosition, animationLength, outside));
     }
 
@@ -177,7 +174,6 @@ public class Inventory : MonoBehaviour {
     {
         StartAnimateIntoView(phone);
         hasPhone = true;
-        Debug.Log("Hasphone");
         phone.GetComponent<CellPhone>().CallOperator();
         StartCoroutine(AnimateIntoPosession(phone.transform, (possessionTarget != null ? possessionTarget : transform), animationLength, SetPhoneInactive));
         phone.SetActive(false);
@@ -229,7 +225,6 @@ public class Inventory : MonoBehaviour {
             yield return 0;
         }
         target.SetParent(newParent, true);
-        Debug.Log("Done Animating");
 
         if (cb != null) cb.Invoke(target.gameObject);
     }
@@ -237,7 +232,6 @@ public class Inventory : MonoBehaviour {
     private IEnumerator AnimateIntoView(Transform itemToAnimateTransform, Vector3 finalLocalPosition, float duration)
     {
         Vector3 startPos = itemToAnimateTransform.localPosition;
-        Debug.Log("animating into view " + itemToAnimateTransform.ToString());
         float timer = 0f;
         while (timer < duration)
         {
@@ -252,7 +246,6 @@ public class Inventory : MonoBehaviour {
     private IEnumerator AnimateToOutside(Vector3 finalLocalPosition, float duration, GameObject outside)
     {
         Vector3 startPos = currentItem.transform.localPosition;
-        Debug.Log("animating into view " + currentItem.ToString());
         float timer = 0f;
         while (timer < duration)
         {
@@ -264,7 +257,6 @@ public class Inventory : MonoBehaviour {
         currentItem.GetComponent<Interactable>().InteractWith(outside.GetComponent<Interactable>());
 
         currentItem.transform.SetParent(null, true);
-        DebugConsole.SetText("direction", transform.parent.TransformDirection(Vector3.right).ToString());
         ThrowCurrentItem(transform.parent.TransformDirection(Vector3.right));
     }
     
