@@ -99,19 +99,23 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// point of the ray sent from the camera on the object.
   public virtual void OnGazeStart(Camera camera, GameObject targetObject, Vector3 intersectionPosition) {
 
+
         // check if what we're looking at is interactable
-        var isTargetInteractable = targetObject.layer == LayerMask.NameToLayer("Interactable");
-        if (!isTargetInteractable)
-        { 
+        if (drawReticle)
+        {
+            SetGazeTarget(intersectionPosition);
+        }
+    }
+
+    private void DrawReticle(GameObject targetObject)
+    {
+        if (targetObject.layer != LayerMask.NameToLayer("Interactable") || drawReticle)
+        {
             // do nothing if we can't interact with whatever we're looking at
             return;
         }
 
         drawReticle = inventory.CanInteractWith(targetObject);
-        if (drawReticle)
-        {
-            SetGazeTarget(intersectionPosition);
-        }
     }
 
   /// Called every frame the user is still looking at a valid GameObject. This
@@ -121,6 +125,8 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// looking at, and the intersectionPosition is the intersection point of the
   /// ray sent from the camera on the object.
   public virtual void OnGazeStay(Camera camera, GameObject targetObject, Vector3 intersectionPosition) {
+
+        DrawReticle(targetObject);
         if (drawReticle)
         {
             SetGazeTarget(intersectionPosition);
