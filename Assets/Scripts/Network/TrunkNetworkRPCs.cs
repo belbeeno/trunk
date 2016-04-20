@@ -38,19 +38,18 @@ namespace NetMessage
     {
         public const short Base = MsgType.Highest;
 
-        public const short InitSession      = Base + 1;
-        public const short Ping             = Base + 2;
-        public const short APB              = Base + 3;
-        public const short GameOver         = Base + 4;
 
-        public const short VoiceChatPacket  = Base + 10;
+        public const short VoiceChatPacket  = Base + 1;
+        public const short InitSession      = Base + 2;
+        public const short Ping             = Base + 3;
+		public const short Ready			= Base + 4;
+        public const short APB              = Base + 103;
+        public const short GameOver         = Base + 203;
     }
 
     public class InitSessionMsg : MessageBase
     {
-        // Don't really do anything yet, but...
-        public int citySeed = -1;
-        public int pathSeed = -1;
+        public int seed = -1;
     }
     
     public class PingMsg : MessageBase
@@ -58,10 +57,16 @@ namespace NetMessage
         public string msg;
     }
 
+    public class ReadyMsg : MessageBase
+    {
+        public int seed = -1;
+    }
+
     public class APBRequest : MessageBase
     {
         public Vector3 position;
     }
+    
     public class APBResponse : MessageBase
     {
         public class Hint : MessageBase
@@ -87,6 +92,7 @@ namespace NetMessage
                 this.pos = new Vector2(float.MaxValue, float.MaxValue);
                 this.type = HintType.INVALID;
             }
+            
             public Hint(Vector2 pos, HintType type)
             {
                 this.pos = pos;
@@ -137,6 +143,7 @@ namespace NetMessage
                 type = (HintType)reader.ReadInt16();
             }
         }
+        
         public List<Hint> hints = new List<Hint>();
 
         public Vector3 origin;

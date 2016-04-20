@@ -1,5 +1,6 @@
+using System;
 using UnityEngine;
-using System.Linq;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,22 +15,33 @@ public class GameManager : MonoBehaviour
 
     public Camera operatorProxyCamera;
     public RectTransform operatorMapCanvasRect;
-    public BoxCollider boxClicker;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
-    public void Start()
-    {
-        initSteps.ForEach(x => x.target.SetActive(x.isEnabled));
-    }
+    private bool _readyToStart;
+    private bool _otherReadyToStart;
+    private bool _gameHasStarted;
 
-    public void SetUpDebugGame()
+	public void Start()
+	{
+		initSteps.ForEach(x => x.target.SetActive(x.isEnabled));
+	}
+    
+    public void Update()
     {
-        SetUpGame(Random.Range(int.MinValue, int.MaxValue));
-        StartGame();
+        if (!_gameHasStarted && _otherReadyToStart && _readyToStart)
+        {
+            _gameHasStarted = true;
+            StartGame();
+        }
     }
     
-    public void SetUpGame(int seed)
+    public void MarkOtherReady()
+    {
+        _otherReadyToStart = true;
+    }
+    
+    public void SetUpGame(int seed, Action callback)
     {
         Random.seed = seed;
         
@@ -37,6 +49,9 @@ public class GameManager : MonoBehaviour
         GenerateCity(city);
         InitializeRoutePlanner(city);
         RefreshMapSizeAndPositions();
+        
+        _readyToStart = true;
+        callback();
     }
     
     public void StartGame()
@@ -68,7 +83,6 @@ public class GameManager : MonoBehaviour
 
         operatorMapCanvasRect.anchoredPosition3D = new Vector3(0f, 300f, 0f);
         operatorMapCanvasRect.sizeDelta = Vector2.one * Mathf.Min(generationOptions.cityHeight, generationOptions.cityWidth);
-        boxClicker.size = new Vector3(generationOptions.cityWidth, generationOptions.cityHeight, 0f);
     }
     
     private static void StartCar()
@@ -76,5 +90,11 @@ public class GameManager : MonoBehaviour
         var gameObj = GameObject.Find("Car");
         var car = gameObj.GetComponent<TrunkMover>();
         car.canMove = true;
+    }
+    
+    public void SetUpDebugGame()
+    {
+        SetUpGame(Random.Range(int.MinValue, int.MaxValue), () => {});
+        StartGame();
     }
 }

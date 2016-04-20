@@ -1,9 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
-using UnityEngine.Events;
-using System.Collections;
-using System.Collections.Generic;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingHostage : TrunkNetworkingBase
@@ -54,6 +50,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         network.RegisterHandler(MsgType.Connect, OnConnectMsg);
         network.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
         network.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
+        network.RegisterHandler(NetMessage.ID.Ready, OnReadyMsg);
         network.RegisterHandler(NetMessage.ID.APB, OnAPBRequestMsg);
         network.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
 
@@ -84,11 +81,34 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         Log("Ping! " + castedMsg.msg);
 
         NetMessage.InitSessionMsg initMsg = new NetMessage.InitSessionMsg();
-        initMsg.citySeed = Random.seed;
-        initMsg.pathSeed = Random.Range(int.MinValue, int.MaxValue);
+        initMsg.seed = Random.seed;
         msg.conn.Send(NetMessage.ID.InitSession, initMsg);
 
-        SetUpSession(initMsg.citySeed, initMsg.pathSeed);
+        SetUpSession(initMsg.seed, SendReadyMsg);
+    }
+    
+    private void SendReadyMsg()
+    {
+        if (network != null)
+        {
+            Log("Informing other player we're ready to start");
+            NetMessage.ReadyMsg msg = new NetMessage.ReadyMsg();
+            msg.seed = Random.seed;
+            network.Send(NetMessage.ID.Ready, msg);
+        }
+        else
+        {
+            Debug.LogWarning("Network is null!");
+        }
+    }
+    
+    private void OnReadyMsg(NetworkMessage msg)
+    {
+        var gameObj = GameObject.Find("GameManager");
+        var manager = gameObj.GetComponent<GameManager>();
+        
+        Log("Other player is ready!");
+        manager.MarkOtherReady();
     }
 
     public void OnGameOverMsg(NetworkMessage msg)

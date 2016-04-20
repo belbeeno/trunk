@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Networking;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
-using System.Collections;
+using UnityEngine.Networking;
 
 using VoiceChat;
 
@@ -17,7 +17,7 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     public VoiceChatPlayer voiceChatPlayer = null;
 
     public abstract void Begin();
-    public virtual void SetUpSession(int citySeed, int pathSeed)
+    public virtual void SetUpSession(int citySeed, Action callback)
     {
         VoiceChat.VoiceChatRecorder.Instance.NetworkId = VoiceChatID;
         if (!VoiceChat.VoiceChatRecorder.Instance.StartRecording())
@@ -36,10 +36,7 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
         var manager = gameObj.GetComponent<GameManager>();
         
         Log("Setting up game");
-        manager.SetUpGame(citySeed);
-        
-        Log("Starting game!");
-        manager.StartGame();
+        manager.SetUpGame(citySeed, callback);
         
         OnSessionEstablished.Invoke();
     }

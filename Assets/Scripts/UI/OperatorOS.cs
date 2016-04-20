@@ -18,7 +18,9 @@ public class OperatorOS : MonoBehaviour
             
         public void OnWindowStateChanged(bool newState)
         {
-            if (icon.myButton)
+            if (icon != null 
+                && icon.myButton != null
+                && icon.myButton.isActiveAndEnabled)
             {
                 icon.myButton.interactable = !newState;
             }

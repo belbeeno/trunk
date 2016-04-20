@@ -16,5 +16,8 @@ public class MaterialsStore : MonoBehaviour
         }
     }
     
+    public Material basic;
     public Material buildings;
+    public Material roads;
+    public Material sidewalks;
 }

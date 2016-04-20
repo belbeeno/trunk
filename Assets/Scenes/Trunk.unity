@@ -773,6 +773,49 @@ RectTransform:
   m_PrefabParentObject: {fileID: 22411144, guid: 0fc0b65bdfec5ac42a9208d94d2c60e9,
     type: 2}
   m_PrefabInternal: {fileID: 95017241}
+--- !u!1 &137861383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 137861385}
+  - 114: {fileID: 137861384}
+  m_Layer: 0
+  m_Name: PrefabStore
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &137861384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 137861383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 259aae3283d0e4af78cef2bf2abbd5df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smallPark: {fileID: 100002, guid: 44df437175f580f44a0b5bdea402c5a3, type: 3}
+  largePark: {fileID: 100034, guid: 49f2a8268e37d445887a0d82661bec68, type: 3}
+  school: {fileID: 100066, guid: 9ab7edcb9620a3f498c94c0b97bb5a07, type: 3}
+  monument: {fileID: 100000, guid: f2f4659fc120283409eb3f667ca324c4, type: 3}
+--- !u!4 &137861385
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 137861383}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 257.58887, y: 185.85518, z: 1669.585}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
 --- !u!1 &138508847
 GameObject:
   m_ObjectHideFlags: 0
@@ -2500,11 +2543,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 371514718}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 1200, y: 850, z: 1200}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 1200, y: 300, z: 1200}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1759028297}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
 --- !u!92 &371514721
@@ -2950,7 +2992,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1132ad7270a3427e93c53c0d8d996b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  basic: {fileID: 2100000, guid: db4905b20c6ad4f418e0fda6c6c6e0d8, type: 2}
   buildings: {fileID: 2100000, guid: 80282dd0d61f381478ef2e65af26b1ce, type: 2}
+  roads: {fileID: 2100000, guid: 736f13bcc5baa9046997d784b6ce1378, type: 2}
+  sidewalks: {fileID: 2100000, guid: 4af10fd497e20b14a81f4f4d5bc5cc6d, type: 2}
 --- !u!4 &431326825
 Transform:
   m_ObjectHideFlags: 0
@@ -2962,7 +3007,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
 --- !u!1 &443617371
 GameObject:
   m_ObjectHideFlags: 0
@@ -12539,46 +12584,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
---- !u!1 &1759028296
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1759028297}
-  - 65: {fileID: 1759028298}
-  m_Layer: 9
-  m_Name: CityClicker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1759028297
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1759028296}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 500}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 371514719}
-  m_RootOrder: 0
---- !u!65 &1759028298
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1759028296}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2400, y: 2400, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1768016913
 GameObject:
   m_ObjectHideFlags: 0
@@ -12870,17 +12875,24 @@ MonoBehaviour:
     isEnabled: 0
   operatorProxyCamera: {fileID: 371514723}
   operatorMapCanvasRect: {fileID: 1311964307}
-  boxClicker: {fileID: 1759028298}
   generationOptions:
     blocksWidth: 16
     blocksHeight: 16
     blockSize: 150
     roadWidth: 0.3
+    alleyWidth: 0
     sidewalkWidth: 0.1
     floorHeight: 0.3
     riverWidth: 1.7
     numRiverSegments: 64
     numBridges: 5
+    numSmallParks: 10
+    smallParkDist: 3
+    numLargeParks: 4
+    largeParkDist: 5
+    numSchools: 6
+    schoolDist: 4
+    differentFeatureDist: 2
 --- !u!4 &1814474567
 Transform:
   m_ObjectHideFlags: 0
