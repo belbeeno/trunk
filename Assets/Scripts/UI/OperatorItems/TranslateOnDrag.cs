@@ -38,9 +38,9 @@ public class TranslateOnDrag : MonoBehaviour
     public void StopMovingScreen()
     {
         cachedNewPos = rect.anchoredPosition;
-        if (rect.offsetMax.x > parentRect.rect.xMax)
+        if (rect.offsetMax.x > parentRect.rect.width)
         {
-            cachedNewPos.x -= rect.offsetMax.x - parentRect.rect.xMax;
+            cachedNewPos.x -= rect.offsetMax.x - parentRect.rect.width;
         }
         else if (rect.offsetMin.x < 0f)
         {
@@ -51,9 +51,9 @@ public class TranslateOnDrag : MonoBehaviour
         {
             cachedNewPos.y = 0f;
         }
-        else if (rect.offsetMin.y < -parentRect.rect.yMax)
+        else if (rect.offsetMin.y < -parentRect.rect.height)
         {
-            cachedNewPos.y -= rect.offsetMin.y + parentRect.rect.yMax;
+            cachedNewPos.y -= rect.offsetMin.y + parentRect.rect.height;
         }
         rect.anchoredPosition = cachedNewPos;
     }

@@ -13,6 +13,8 @@ public class POI : MonoBehaviour
     private RectTransform parentRect = null;
 
     public ProxyCameraMap proxyMap = null;
+
+    public string OVERRIDE_DebugText = string.Empty;
 	
     void Start()
     {
@@ -57,6 +59,12 @@ public class POI : MonoBehaviour
                     textfield.text = target.Substring(0, Mathf.Min(textfield.text.Length + 1, target.Length));
                     success = true;
                 }
+            }
+
+            if (!success && !string.IsNullOrEmpty(OVERRIDE_DebugText))
+            {
+                textfield.text = OVERRIDE_DebugText.Substring(0, Mathf.Min(textfield.text.Length + 1, OVERRIDE_DebugText.Length));
+                success = true;
             }
         }
 

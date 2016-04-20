@@ -25,9 +25,8 @@ public class TextboxResizer : UIBehaviour
         textBoxStartingSize = textBox.rectTransform.sizeDelta;
     }
 
-    protected IEnumerator AssignScrollerNextFrame(float val)
+    protected void AssignScrollerNextFrame(float val)
     {
-        yield return new WaitForEndOfFrame();
         scroller.verticalScrollbar.value = val;
     }
 
@@ -47,13 +46,12 @@ public class TextboxResizer : UIBehaviour
             {
                 if (inputField.caretPosition >= inputField.text.Length - 1)
                 {
-                    StopAllCoroutines();
-                    StartCoroutine(AssignScrollerNextFrame(scroller.verticalScrollbar.direction == Scrollbar.Direction.BottomToTop ? 0f : 1f));
+                    AssignScrollerNextFrame(scroller.verticalScrollbar.direction == Scrollbar.Direction.BottomToTop ? 0f : 1f);
                 }
                 else if (inputField.caretPosition <= 0)
                 {
                     StopAllCoroutines();
-                    StartCoroutine(AssignScrollerNextFrame(scroller.verticalScrollbar.direction == Scrollbar.Direction.BottomToTop ? 1f : 0f));
+                    AssignScrollerNextFrame(scroller.verticalScrollbar.direction == Scrollbar.Direction.BottomToTop ? 1f : 0f);
                 }
             }
         }
