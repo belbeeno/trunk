@@ -109,7 +109,7 @@ namespace VoiceChat
 
             packetsToPlay.Add(newPacket.PacketId, newPacket);
 
-            if (packetsToPlay.Count < 10)
+            if (packetsToPlay.Count < packetBufferSize)
             {
                 return;
             }
