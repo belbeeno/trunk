@@ -10,7 +10,7 @@ public class CreateBuildingPlotsStep : GenerationStepBase
     {
         var plots = data.cityBlocks
             .Where(b => !b.ContainsRiver())
-            .Where(b => !b.isPark)
+            .Where(b => !b.IsCityFeature())
             .SelectMany(b => CreateBuildingPlots(b))
             .ToList();
         

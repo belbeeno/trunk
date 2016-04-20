@@ -16,7 +16,8 @@ public class PrefabStore : MonoBehaviour
         }
     }
     
-    public GameObject park;
+    public GameObject smallPark;
+    public GameObject largePark;
     public GameObject school;
     public GameObject monument;
 }

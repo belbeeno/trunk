@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 public class City : MonoBehaviour 
@@ -7,7 +9,7 @@ public class City : MonoBehaviour
         ClearChildren();
         AddMeshes(result);
         AddColliders(result);
-        AddDebugObjs(result);
+//      AddDebugObjs(result);
     }
     
     private void ClearChildren()
@@ -45,13 +47,14 @@ public class City : MonoBehaviour
         }
         
         // Parks
-        var parksObj = CreateGameObject("Park");
-        foreach (var park in result.parks)
+        var parksObj = CreateGameObject("Parks");
+        foreach (var park in result.smallParks)
         {
-            var parkObj = CreateGameObject(parksObj, "Park");
+            var parkObj = CreateGameObject(parksObj, "Small Park");
             AddMesh(parkObj, park.mesh, park.material);
             var center = park.corners.Average();
-            var parkPrefab = (GameObject)GameObject.Instantiate(PrefabStore.instance.park, center, Quaternion.identity);
+            var rotation = Quaternion.Euler(0, 90 * UnityEngine.Random.Range(0, 4), 0);
+            var parkPrefab = (GameObject)GameObject.Instantiate(park.prefab, center, rotation);
             parkPrefab.transform.parent = parkObj.transform;
             
             var parkGround = parkPrefab.transform.FindChild("pPlane1");
@@ -59,7 +62,46 @@ public class City : MonoBehaviour
             var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
             groundRenderer.sharedMaterial.color = Color.green;
             parkPrefab.transform.localScale = Vector3.one * parkSize;
-            parkPrefab.transform.position += Vector3.forward * parkSize / 3;
+            parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
+        }
+        foreach (var park in result.largeParks)
+        {
+            var parkObj = CreateGameObject(parksObj, "Large Park");
+            AddMesh(parkObj, park.mesh, park.material);
+            var center = park.corners.Average();
+            
+            var rotation = Quaternion.Euler(0, 90 * UnityEngine.Random.Range(0, 4), 0);
+            var parkPrefab = (GameObject)GameObject.Instantiate(park.prefab, center, rotation);
+            parkPrefab.transform.parent = parkObj.transform;
+            
+            var parkGround = parkPrefab.transform.FindChild("pPlane1");
+            var groundRenderer = parkGround.GetComponent<MeshRenderer>();
+            var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
+            groundRenderer.sharedMaterial.color = Color.green;
+            parkPrefab.transform.localScale = Vector3.one * parkSize / 4f;
+            parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
+            var pos = parkPrefab.transform.position;
+            parkPrefab.transform.position = new Vector3(pos.x, 3, pos.z);
+        }
+        
+        // Schools
+        var schoolsObj = CreateGameObject("Schools");
+        foreach (var school in result.schools)
+        {
+            var schoolObj = CreateGameObject(parksObj, "School");
+            var center = school.corners.Average();
+            
+            var rotDeg = UnityEngine.Random.Range(0f, 1f) > 0.5 ? 0 : 180;
+            var width = school.corners.Max(c => c.x) - school.corners.Min(c => c.x);
+            var length = school.corners.Max(c => c.z) - school.corners.Min(c => c.z);
+            var rotation = (width < length)
+                ? Quaternion.Euler(0, rotDeg, 0)
+                : Quaternion.Euler(0, rotDeg + 90, 0);
+            
+            var schoolPrefab = (GameObject)GameObject.Instantiate(PrefabStore.instance.school, center, rotation);
+            schoolPrefab.transform.parent = schoolsObj.transform;
+            schoolPrefab.transform.localScale = Vector3.one * Math.Min(width, length) / 3.5f;
+            //schoolPrefab.transform.position -= schoolPrefab.transform.right * Math.Min(width, length) / 5;
         }
         
         // Water

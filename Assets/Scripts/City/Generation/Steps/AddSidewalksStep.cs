@@ -10,7 +10,8 @@ public class AddSidewalksStep : GenerationStepBase
     {
         var sidewalks = data.cityBlocks
             .Where(c => !c.ContainsRiver())
-            .Where(c => !c.isPark)
+            .Where(c => !c.isSmallPark)
+            .Where(c => !c.isLargePark)
             .Select(b => CreateSidewalk(b))
             .ToList();
         
