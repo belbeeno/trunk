@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class Outside : Interactable {
 
@@ -17,6 +18,8 @@ public class Outside : Interactable {
     }
 
     private List<droppedItem> droppedItems; 
+
+    
     
 	// Use this for initialization
 	void Start () {
@@ -41,4 +44,12 @@ public class Outside : Interactable {
         return droppedItems; 
     }
 
+    public void Test(BaseEventData data)
+    {
+        //DebugConsole.SetText("object", data.ToString());
+        var pointerData = data as PointerEventData;
+        DebugConsole.SetText("gameobject", pointerData.pointerCurrentRaycast.gameObject.ToString());
+        var outsidePosition = transform.InverseTransformPoint(pointerData.pointerCurrentRaycast.worldPosition); 
+       
+    }
 }

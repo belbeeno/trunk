@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "toolData", menuName = "Item/Tool")]
-public class ScriptableTools : ScritableInteractable
+public class ScriptableTools : ScriptableInteractable
 {
     public List<FastenerType> interactableFastenerList;
     public bool canUnfastenFasteners = false;

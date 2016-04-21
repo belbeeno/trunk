@@ -15,8 +15,10 @@ MonoBehaviour:
   itemName: Screwdriver
   mesh: {fileID: 0}
   disposeOnUse: 0
+  positionWhenInInventory: {x: 0, y: 0.97, z: 0.212}
+  rotationWhenInInventory: {x: 325, y: 110, z: 186}
   interactableFastenerList: 00000000
   canUnfastenFasteners: 1
   canOpenLatch: 1
-  canWedgeOpenTrunk: 1
+  canWedgeOpenTrunk: 0
   currentAnimation: 0

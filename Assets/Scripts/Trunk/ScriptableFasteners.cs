@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "FastenerData", menuName = "Item/Fastener")]
-public class ScriptableFasteners : ScritableInteractable
+public class ScriptableFasteners : ScriptableInteractable
 {
     public FastenerType type;
     public float unfastenDuration;
