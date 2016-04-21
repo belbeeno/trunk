@@ -30,6 +30,10 @@ public class Tool : Interactable {
             var fastenerType = ((Fasteners)item).GetFastenerType();
             return (toolData.interactableFastenerList.Contains(fastenerType));
         }
+        if (item.GetType() == typeof(WedgeGap))
+        {
+            return (toolData.canWedgeOpenTrunk);
+        }
         return base.CanInteractWith(item); 
     }
     
@@ -49,6 +53,12 @@ public class Tool : Interactable {
         {
             ((Fasteners)itemToInteractWith).Unfasten(); 
             
+        } else if (toolData.canWedgeOpenTrunk && itemToInteractWith.GetType() == typeof(WedgeGap))
+        {
+            var gap = (WedgeGap)itemToInteractWith;
+            gameObject.transform.parent = gap.transform;
+            gap.WedgeOpenCover(gameObject.transform);
+           
         }
         else
         {

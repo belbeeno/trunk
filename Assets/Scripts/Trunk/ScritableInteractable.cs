@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ScritableInteractable : ScriptableObject {
+[CreateAssetMenu(fileName = "InteractableData", menuName = "Item/Interactable")]
+public class ScriptableInteractable : ScriptableObject {
 
     public bool canBeHeld; // whether item can be held or not
     public string itemName;
     public MeshRenderer mesh;
     public bool disposeOnUse = false;
-    public Vector3 inventoryPosition;
-    public Vector3 inventoryRotation; 
+    public Vector3 positionWhenInInventory;
+    public Vector3 rotationWhenInInventory;  
 
 }

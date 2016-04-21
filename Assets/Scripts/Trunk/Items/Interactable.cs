@@ -6,7 +6,7 @@ using UnityEngine;
 // This marks a gameobject as something that the player can interact with
 public abstract class Interactable : MonoBehaviour
 {
-    public ScritableInteractable itemData; 
+    public ScriptableInteractable itemData; 
 
     // The type of items this current item can be used with/on
     public HashSet<Type> itemsToInteractWith;
@@ -16,9 +16,7 @@ public abstract class Interactable : MonoBehaviour
 
     // Whether the object is currently in the inventory or not
     private bool isSelected;
-
-    public Vector3 inHandOrientation;
-
+    
     void Start()
     {
     }
@@ -34,7 +32,6 @@ public abstract class Interactable : MonoBehaviour
             var itemName = itemData.itemName;
             var position = transform.position;
             ((Outside)itemToInteractWith).DropItem(itemName);
-            Destroy(gameObject); 
             Debug.Log(string.Format("itemName {0}, position {1}", itemName, position));
         }
     }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class Outside : Interactable {
 
@@ -17,6 +18,8 @@ public class Outside : Interactable {
     }
 
     private List<droppedItem> droppedItems = new List<droppedItem>();
+
+    
     
 	// Use this for initialization
 	void Start () {
