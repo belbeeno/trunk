@@ -19,6 +19,8 @@ MonoBehaviour:
   rotationWhenInInventory: {x: 52.85, y: 77, z: 1.25}
   interactableFastenerList: 01000000
   canUnfastenFasteners: 1
-  canOpenLatch: 1
+  canOpenLatch: 0
   canWedgeOpenTrunk: 1
   currentAnimation: 0
+  toolTipOffset: -0.451
+  toolForwardDirection: {x: 0, y: 0, z: 1}

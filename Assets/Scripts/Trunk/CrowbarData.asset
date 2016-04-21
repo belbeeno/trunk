@@ -20,5 +20,9 @@ MonoBehaviour:
   interactableFastenerList: 
   canUnfastenFasteners: 0
   canOpenLatch: 1
+  openLatchAnimationClipName: CrowbarOpenLatch
   canWedgeOpenTrunk: 1
+  wedgeOpenTrunkAnimationClipName: 
   currentAnimation: 0
+  toolTipOffset: 0.567
+  toolForwardDirection: {x: 0, y: 0, z: -1}

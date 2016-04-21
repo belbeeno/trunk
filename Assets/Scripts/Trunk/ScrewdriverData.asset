@@ -20,5 +20,9 @@ MonoBehaviour:
   interactableFastenerList: 00000000
   canUnfastenFasteners: 1
   canOpenLatch: 1
+  openLatchAnimationClipName: ScrewdriverOpenLatch
   canWedgeOpenTrunk: 0
+  wedgeOpenTrunkAnimationClipName: 
   currentAnimation: 0
+  toolTipOffset: 0.293
+  toolForwardDirection: {x: 0, y: 1, z: 0}

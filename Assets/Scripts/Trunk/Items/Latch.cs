@@ -15,6 +15,8 @@ public class Latch : Interactable
     float timer = 0f;
     float duration = 2f;
 
+    public Vector3 upDirection; 
+
     void Start()
     {
         isOpen = false;

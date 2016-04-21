@@ -122,6 +122,7 @@ public class City : MonoBehaviour
         clickCollider.tag = "Networking";
         clickCollider.layer = LayerMask.NameToLayer("HostOnly");
         clickCollider.transform.position = new Vector3(0f, 1f, 0f);
+        clickCollider.AddComponent<StopItemsFromMoving>(); 
     }
     
     private void AddDebugObjs(GenerationData result)
