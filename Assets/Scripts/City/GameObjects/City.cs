@@ -60,7 +60,6 @@ public class City : MonoBehaviour
             var parkGround = parkPrefab.transform.FindChild("pPlane1");
             var groundRenderer = parkGround.GetComponent<MeshRenderer>();
             var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
-            groundRenderer.sharedMaterial.color = Color.green;
             parkPrefab.transform.localScale = Vector3.one * parkSize;
             parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
         }
@@ -77,13 +76,12 @@ public class City : MonoBehaviour
             var parkGround = parkPrefab.transform.FindChild("pPlane1");
             var groundRenderer = parkGround.GetComponent<MeshRenderer>();
             var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
-            groundRenderer.sharedMaterial.color = Color.green;
             parkPrefab.transform.localScale = Vector3.one * parkSize / 4f;
             parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
             var pos = parkPrefab.transform.position;
             parkPrefab.transform.position = new Vector3(pos.x, 3, pos.z);
         }
-        
+
         // Schools
         var schoolsObj = CreateGameObject("Schools");
         foreach (var school in result.schools)
@@ -103,7 +101,13 @@ public class City : MonoBehaviour
             schoolPrefab.transform.localScale = Vector3.one * Math.Min(width, length) / 3.5f;
             //schoolPrefab.transform.position -= schoolPrefab.transform.right * Math.Min(width, length) / 5;
         }
-        
+
+        // As an optimization, static batch all the unmoving objects with many common materials
+        //*
+        StaticBatchingUtility.Combine(buildingsObj);
+        StaticBatchingUtility.Combine(sidewalksObj);
+        StaticBatchingUtility.Combine(roadMeshesObj);
+        //*/
         // Water
         var waterObj = CreateGameObject("Water");
         AddMesh(waterObj, result.water.mesh, result.water.material);

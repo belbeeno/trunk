@@ -24,7 +24,7 @@ public class AddParksStep : GenerationStepBase
         var insetAmount = (options.roadWidth / 2f) * options.blockSize;
         var corners = block.boundingRoads.Select(p => p.from.pos).Inset(insetAmount);
         var mesh = GetMesh(corners);
-        var material = MaterialsStore.instance.basic;
+        var material = MaterialsStore.instance.grass;
         var park = new ParkData(corners, mesh, material, prefab);
         return park;
     }

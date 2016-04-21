@@ -20,4 +20,5 @@ public class MaterialsStore : MonoBehaviour
     public Material buildings;
     public Material roads;
     public Material sidewalks;
+    public Material grass;
 }
