@@ -56,7 +56,9 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
-        StartCar();
+        var gameObj = GameObject.Find("Car");
+        var car = gameObj.GetComponent<TrunkMover>();
+        car.isMoving = true;
     }
     
     private void GenerateCity(GenerationData result)
@@ -83,13 +85,6 @@ public class GameManager : MonoBehaviour
 
         operatorMapCanvasRect.anchoredPosition3D = new Vector3(0f, 300f, 0f);
         operatorMapCanvasRect.sizeDelta = Vector2.one * Mathf.Min(generationOptions.cityHeight, generationOptions.cityWidth);
-    }
-    
-    private static void StartCar()
-    {
-        var gameObj = GameObject.Find("Car");
-        var car = gameObj.GetComponent<TrunkMover>();
-        car.canMove = true;
     }
     
     public void SetUpDebugGame()

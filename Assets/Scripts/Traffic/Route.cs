@@ -16,12 +16,48 @@ public class Route
         var gameObj = GameObject.Find("RoutePlanner");
         _routePlanner = gameObj.GetComponent<RoutePlanner>();
     }
+
+    public bool CanMove()
+    {
+        CheckPath();
+        return _upcomingEdges != null && _upcomingEdges.Any();
+    }
+
+    public bool IsAtIntersection()
+    {
+        return (_t > (1f - _cornerT) && CanMove());
+    }
+
+    public Vector3 GetTurningDir()
+    {
+        Vector3 nextVec = _upcomingEdges.First().to.pos - _upcomingEdges.First().from.pos;
+        Vector3 currVec = _currentEdge.to.pos - _currentEdge.from.pos;
+        float cross = currVec.x * nextVec.z - currVec.z * nextVec.x;
+
+        if (Mathf.Approximately(0f, cross))
+        {
+            return Vector3.zero;
+        }
+        if (cross > 0f)
+        {
+            return Vector3.right;
+        }
+        else
+        {
+            return Vector3.left;
+        }
+    }
+
+    public float GetTurnDuration(float speed)
+    {
+        return (_currentEdge.length / (speed / 2f)) * _cornerT;
+    }
     
     public void Update(Transform transform, float speed, float deltaTime)
     {
         CheckPath();
-                
-        if (_t > (1f - _cornerT) && _upcomingEdges.Any())
+
+        if (IsAtIntersection())
         {
              _t += deltaTime / (_currentEdge.length / (speed / 2f));
             LerpCorner(transform, _currentEdge, _upcomingEdges.First(), _t);

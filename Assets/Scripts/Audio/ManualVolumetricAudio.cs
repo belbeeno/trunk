@@ -5,18 +5,32 @@ using System.Collections;
 public class ManualVolumetricAudio : MonoBehaviour
 {
     public Vector3[] points = new Vector3[0];
-    protected VolumetricAudioSource source = null;
+    protected VolumetricAudioSource volumetricSource = null;
+
+    private float farthestDistFromCenterSquared = 0f;
+    private Vector3 averagePoint = new Vector3();
 
     void Start()
     {
-        source = GetComponent<VolumetricAudioSource>();
+        volumetricSource = GetComponent<VolumetricAudioSource>();
+
+        farthestDistFromCenterSquared = 0f;
+        averagePoint = points.Average();
+        for (int i = 0; i < points.Length; i++)
+        {
+            farthestDistFromCenterSquared = Mathf.Max((points[i] - averagePoint).sqrMagnitude, farthestDistFromCenterSquared);
+        }
+        farthestDistFromCenterSquared += volumetricSource.Source.maxDistance * volumetricSource.Source.maxDistance * 2f;
     }
 
     void Update()
     {
         if (points.Length > 0)
         {
-            source.MoveTowardsWhileInside(Camera.main.transform.position, points);
+            if ((Camera.main.transform.position - averagePoint).sqrMagnitude < farthestDistFromCenterSquared)
+            {
+                volumetricSource.MoveTowardsWhileInside(Camera.main.transform.position, points);
+            }
         }
     }
 

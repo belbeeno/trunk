@@ -16,8 +16,13 @@ public class PrefabStore : MonoBehaviour
         }
     }
     
+    [Header("Models")]
     public GameObject smallPark;
     public GameObject largePark;
     public GameObject school;
     public GameObject monument;
+
+    [Header("Audio")]
+    public GameObject schoolAudio;
+    public GameObject waterAudio;
 }
