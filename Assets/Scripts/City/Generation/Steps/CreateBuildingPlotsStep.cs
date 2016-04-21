@@ -4,7 +4,28 @@ using UnityEngine;
 
 public class CreateBuildingPlotsStep : GenerationStepBase
 {
-    private readonly Color _buildingColor = Color.grey;
+    private readonly Color[] _buildingColors = new []
+        {
+            // Blues
+            new Color(0f, 0.2f, 0.7f),
+            new Color(0.2f, 0.4f, 1f),
+            
+            // Purples
+            new Color(0.5f, 0f, 0.7f),
+            new Color(0.7f, 0f, 0.5f),
+            
+            // Reds
+            new Color(0.7f, 0f, 0.2f),
+            new Color(0.7f, 0.2f, 0f),
+            
+            // Yellows
+            new Color(1f, 0.8f, 0.2f),
+            new Color(0.9f, 0.7f, 0f),
+            
+            // Greens
+            new Color(0.2f, 0.7f, 0f),
+            new Color(0.5f, 0.7f, 0f)
+        };
     
     public override void Run()
     {
@@ -72,6 +93,7 @@ public class CreateBuildingPlotsStep : GenerationStepBase
     {
         var numFloors = Random.Range(1, 4);
         var floorHeight = options.floorHeight * options.blockSize;
+        var color = _buildingColors.RandomMember();
         
         Mesh generatedMesh = new Mesh();
         List<Vector3> points = new List<Vector3>();
@@ -84,7 +106,7 @@ public class CreateBuildingPlotsStep : GenerationStepBase
             for (int corner = 0; corner < corners.Length; corner++)
             {
                 points.Add(corners[corner] + Vector3.up * floorHeight * floor);
-                colors.Add(_buildingColor);
+                colors.Add(color);
                 uvs.Add(new Vector2((float)corner, (float)floor));
                 if (floor > 0)
                 {
@@ -111,7 +133,7 @@ public class CreateBuildingPlotsStep : GenerationStepBase
         averagePointsOnRoof *= 1f / corners.Length;
         averagePointsOnRoof.y = ((float)numFloors + 0.5f) * floorHeight;
         points.Add(averagePointsOnRoof);
-        colors.Add(_buildingColor);
+        colors.Add(color);
         uvs.Add(new Vector2(1f, Mathf.Max((float)numFloors - 1f, 0f)));
         
         generatedMesh.SetVertices(points);

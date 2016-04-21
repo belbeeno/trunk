@@ -6577,10 +6577,10 @@ MonoBehaviour:
   generationOptions:
     blocksWidth: 16
     blocksHeight: 16
-    blockSize: 150
+    blockSize: 200
     roadWidth: 0.3
-    alleyWidth: 0
-    sidewalkWidth: 0.1
+    alleyWidth: 0.02
+    sidewalkWidth: 0.05
     floorHeight: 0.3
     riverWidth: 1.7
     numRiverSegments: 64
