@@ -1,30 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class Bouncer : MonoBehaviour {
 
     public GameObject _trunkLid = null;
     float _duration = 0f;
     float _timer = 0f;
-
     float _final = 4f; 
-
-    bool _isBouncing;
+    bool _isBouncing = false;
 
     [Range(10, 200)]
     public float _maxAmp = 25f;
 
-    float t = 0f;
-
     float _start;
 
-
-
-    // Use this for initialization
-    void Start() {
-    }
-	
 	// Update is called once per frame
 	void Update () {
         if (!_isBouncing)
@@ -33,9 +23,8 @@ public class Bouncer : MonoBehaviour {
         }
 
         _timer += Time.deltaTime;
-        t = _timer / _duration;
-
-        var y = 0f;
+        float t = _timer / _duration;
+        float y = 0f;
         
         if (t < 0.5)
         {
@@ -46,16 +35,14 @@ public class Bouncer : MonoBehaviour {
             y = Ease.ElasticEaseIn(1-t, 0, _final, 1);
         }
 
-        y = Mathf.Min(360f, (_start - y * _maxAmp)); 
-        y = Mathf.Max(y, 270f);
-
+        y = Mathf.Clamp((_start - y * _maxAmp), _start - _maxAmp, _start + _maxAmp);
         _trunkLid.transform.localRotation = Quaternion.Euler(0, y, 0);
 
         if (_timer > _duration)
         {
             _trunkLid.transform.localRotation = Quaternion.Euler(0, _start, 0);
             _isBouncing = false;
-            Debug.Log("Stopped Bouncing");
+            //Debug.Log("Stopped Bouncing");
         }
     }
 
@@ -69,6 +56,6 @@ public class Bouncer : MonoBehaviour {
         _duration = duration;
         _timer = 0;
         _isBouncing = true;
-        Debug.Log("Starting bounce");
+        //Debug.Log("Starting bounce");
     }
 }

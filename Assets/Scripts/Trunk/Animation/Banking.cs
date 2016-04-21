@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class Banking : MonoBehaviour {
     [SerializeField]
     GameObject _rotationLayer;

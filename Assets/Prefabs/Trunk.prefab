@@ -247,7 +247,7 @@ GameObject:
   - 4: {fileID: 498428}
   - 20: {fileID: 2075436}
   - 114: {fileID: 11469058}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PostRender
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1015,6 +1015,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &181570
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 454860}
+  - 23: {fileID: 2388572}
+  - 33: {fileID: 3337870}
+  - 114: {fileID: 11455136}
+  m_Layer: 8
+  m_Name: IntroCube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &184432
 GameObject:
   m_ObjectHideFlags: 1
@@ -1101,7 +1119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &192478
 GameObject:
   m_ObjectHideFlags: 1
@@ -1200,7 +1218,7 @@ GameObject:
   - 4: {fileID: 415628}
   - 20: {fileID: 2059220}
   - 114: {fileID: 11412914}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PreRender
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1731,6 +1749,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 420906}
   m_RootOrder: 2
+--- !u!4 &454860
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181570}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_Children: []
+  m_Father: {fileID: 462686}
+  m_RootOrder: 3
 --- !u!4 &456270
 Transform:
   m_ObjectHideFlags: 1
@@ -1794,6 +1824,7 @@ Transform:
   - {fileID: 400834}
   - {fileID: 498428}
   - {fileID: 415628}
+  - {fileID: 454860}
   m_Father: {fileID: 435088}
   m_RootOrder: 0
 --- !u!4 &463504
@@ -2773,6 +2804,32 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!23 &2388572
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181570}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 9a61ba63e5102db4e8e2408e9795df17, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!23 &2395936
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -2855,6 +2912,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 158072}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &3337870
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181570}
+  m_Mesh: {fileID: 4300000, guid: b42a65cf12a3bb441b75bd2ee4e35df1, type: 3}
 --- !u!33 &3340948
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -4038,6 +4102,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Delegates: []
   delegates: []
+--- !u!114 &11455136
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958b87f8d6c630041ae855bcecf26c81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myImage: {fileID: 0}
+  group: {fileID: 0}
+  meshRend: {fileID: 2388572}
+  state: 0
+  duration: 3
+  OnFadeInComplete:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnFadeOutComplete:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!114 &11455716
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4415,7 +4505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _trunkLid: {fileID: 192478}
-  _maxAmp: 25
+  _maxAmp: 70
 --- !u!124 &12422468
 Behaviour:
   m_ObjectHideFlags: 1
