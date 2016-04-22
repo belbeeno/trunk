@@ -57,8 +57,6 @@ public class City : MonoBehaviour
             var parkPrefab = (GameObject)GameObject.Instantiate(park.prefab, center, rotation);
             parkPrefab.transform.parent = parkObj.transform;
             
-            var parkGround = parkPrefab.transform.FindChild("pPlane1");
-            var groundRenderer = parkGround.GetComponent<MeshRenderer>();
             var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
             parkPrefab.transform.localScale = Vector3.one * parkSize;
             parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
@@ -78,8 +76,6 @@ public class City : MonoBehaviour
             var parkPrefab = (GameObject)GameObject.Instantiate(park.prefab, center, rotation);
             parkPrefab.transform.parent = parkObj.transform;
             
-            var parkGround = parkPrefab.transform.FindChild("pPlane1");
-            var groundRenderer = parkGround.GetComponent<MeshRenderer>();
             var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
             parkPrefab.transform.localScale = Vector3.one * parkSize / 4f;
             parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
