@@ -31,6 +31,19 @@ public class VolumetricAudioSource : MonoBehaviour
     }
     public FreezeAxis axisToFreeze = FreezeAxis.Y;
 
+    protected CardboardAudioSource _source = null;
+    public CardboardAudioSource Source
+    {
+        get
+        {
+            if (_source == null)
+            {
+                _source = GetComponent<CardboardAudioSource>();
+            }
+            return _source;
+        }
+    }
+
     public void MoveTowardsWhileInside(Vector3 target, params Vector3[] verts)
     {
         float minDistSqrd = float.MaxValue;
@@ -90,8 +103,6 @@ public class VolumetricAudioSource : MonoBehaviour
             }
             else
             {
-                float dx = segment.end.x - segment.start.x;
-                float dy = segment.end.y - segment.start.y;
                 float t = ((frozenTarget.x - segment.start.x) * segment.Vector.x
                     + (frozenTarget.y - segment.start.y) * segment.Vector.y)
                     / segment.Vector.sqrMagnitude;

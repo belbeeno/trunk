@@ -15,14 +15,12 @@ public class TranslateOnDrag : MonoBehaviour
     }
 
     private Vector2 cachedNewPos;
-    private bool isMoving = false;
     private Vector2 startOffset;
 
     public void StartMovingScreen(Vector2 mousePos)
     {
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, mousePos, Camera.main, out cachedNewPos))
         {
-            isMoving = true;
             startOffset.Set(cachedNewPos.x - rect.anchoredPosition.x, cachedNewPos.y + rect.anchoredPosition.y);
         }
     }
@@ -39,11 +37,10 @@ public class TranslateOnDrag : MonoBehaviour
 
     public void StopMovingScreen()
     {
-        isMoving = false;
         cachedNewPos = rect.anchoredPosition;
-        if (rect.offsetMax.x > parentRect.rect.xMax)
+        if (rect.offsetMax.x > parentRect.rect.width)
         {
-            cachedNewPos.x -= rect.offsetMax.x - parentRect.rect.xMax;
+            cachedNewPos.x -= rect.offsetMax.x - parentRect.rect.width;
         }
         else if (rect.offsetMin.x < 0f)
         {
@@ -54,9 +51,9 @@ public class TranslateOnDrag : MonoBehaviour
         {
             cachedNewPos.y = 0f;
         }
-        else if (rect.offsetMin.y < -parentRect.rect.yMax)
+        else if (rect.offsetMin.y < -parentRect.rect.height)
         {
-            cachedNewPos.y -= rect.offsetMin.y + parentRect.rect.yMax;
+            cachedNewPos.y -= rect.offsetMin.y + parentRect.rect.height;
         }
         rect.anchoredPosition = cachedNewPos;
     }

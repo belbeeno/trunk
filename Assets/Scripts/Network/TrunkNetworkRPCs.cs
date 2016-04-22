@@ -36,11 +36,18 @@ namespace NetMessage
 
     public static class ID
     {
-        public const short InitSession      = 100;
-        public const short Ping             = 101;
-        public const short Ready            = 102;
-        public const short APB              = 200;
-        public const short GameOver         = 300;
+        public const short Base = MsgType.Highest;
+
+        public const short VoiceChatPacket  = Base + 1;
+        public const short InitSession      = Base + 2;
+        public const short Ping             = Base + 3;
+		public const short Ready			= Base + 4;
+
+        public const short APB              = Base + 11;
+        public const short TriggerPoliceCar    = Base + 12;
+        public const short TriggerCopter    = Base + 13;
+
+        public const short GameOver         = Base + 20;
     }
 
     public class InitSessionMsg : MessageBase
@@ -62,20 +69,21 @@ namespace NetMessage
     {
         public Vector3 position;
     }
-    
     public class APBResponse : MessageBase
     {
         public class Hint : MessageBase
         {
-            public enum HintType : short
+            public enum HintType
             {
-                Wrench = 1,
+                INVALID = -1,
+
+                Wrench = 0,
                 Screwdriver,
+                Crowbar,
+                TireIron,
                 Blanket,
                 Rope,
                 Hostage,        // <- if you get this, you've won!!!!
-
-                INVALID = -1,
             }
 
             public Vector2 pos = new Vector2();
@@ -92,6 +100,39 @@ namespace NetMessage
                 this.pos = pos;
                 this.type = type;
             }
+            public Hint(Vector2 pos, string typeName)
+            {
+                this.pos = pos;
+                this.type = NameToType(typeName);
+            }
+            public static HintType NameToType(string typeName)
+            {
+                switch (typeName)
+                {
+                    case "Screwdriver":
+                        return HintType.Screwdriver;
+                    case "Crowbar":
+                        return HintType.Crowbar;
+                    case "TireIron":
+                        return HintType.TireIron;
+                    default:
+                        return HintType.INVALID;
+                }
+            }
+            public static string TypeToName(HintType type)
+            {
+                switch (type)
+                {
+                    case HintType.Screwdriver:
+                        return "Screwdriver";
+                    case HintType.Crowbar:
+                        return "Crowbar";
+                    case HintType.TireIron:
+                        return "TireIron";
+                    default:
+                        return string.Empty;
+                }
+            }
 
             public override void Serialize(NetworkWriter writer)
             {
@@ -101,7 +142,7 @@ namespace NetMessage
             public override void Deserialize(NetworkReader reader)
             {
                 pos = reader.ReadVector2();
-                type = (HintType)reader.ReadUInt16();
+                type = (HintType)reader.ReadInt16();
             }
         }
         
@@ -122,8 +163,41 @@ namespace NetMessage
         }
     }
 
+    public class TriggerPoliceMsg : MessageBase
+    {
+        public Vector2 position;
+    }
+
     public class GameOverMsg : MessageBase
     {
         public double timestamp;
+    }
+
+    public class VoiceChatMsg : MessageBase
+    {
+        public VoiceChatMsg() { }
+        public VoiceChatMsg(VoiceChat.VoiceChatPacket packet)
+        {
+            payload = packet;
+        }
+
+        public VoiceChat.VoiceChatPacket payload;
+
+        public override void Serialize(NetworkWriter writer)
+        {
+            writer.Write((byte)payload.Compression);
+            writer.WriteBytesAndSize(payload.Data, payload.Length);
+            writer.Write(payload.NetworkId);
+            writer.Write(payload.PacketId);
+        }
+
+        public override void Deserialize(NetworkReader reader)
+        {
+            payload.Compression = (VoiceChat.VoiceChatCompression)reader.ReadByte();
+            payload.Data = reader.ReadBytesAndSize();
+            payload.Length = payload.Data.Length;
+            payload.NetworkId = reader.ReadInt32();
+            payload.PacketId = reader.ReadUInt64();
+        }
     }
 }

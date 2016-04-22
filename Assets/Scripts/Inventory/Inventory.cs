@@ -120,6 +120,8 @@ public class Inventory : MonoBehaviour {
 
     public void GetOutsidePosition(BaseEventData data)
     {
+        if (currentItem == null) return;
+
         //DebugConsole.SetText("object", data.ToString());
         var pointerData = data as PointerEventData;
         var outside = pointerData.pointerCurrentRaycast.gameObject;
@@ -213,7 +215,6 @@ public class Inventory : MonoBehaviour {
         Transform targetParent = target.parent.transform;
         Vector3 startPos = target.localPosition;
         Quaternion startRot = target.localRotation;
-        Quaternion randoRot = UnityEngine.Random.rotation;
         float timer = 0f;
         Vector3 carSpaceTargetPosition = new Vector3();
         while (timer < duration)

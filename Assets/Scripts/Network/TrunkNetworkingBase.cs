@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using UnityEngine.Networking;
+
+using VoiceChat;
 
 public abstract class TrunkNetworkingBase : MonoBehaviour
 {
@@ -10,9 +13,25 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     public UnityEvent OnResetImminent;
     public UnityEvent OnGameWin;
 
+    public abstract int VoiceChatID { get; }
+    public VoiceChatPlayer voiceChatPlayer = null;
+
     public abstract void Begin();
     public virtual void SetUpSession(int citySeed, Action callback)
     {
+        VoiceChat.VoiceChatRecorder.Instance.NetworkId = VoiceChatID;
+        if (!VoiceChat.VoiceChatRecorder.Instance.StartRecording())
+        {
+            Log("VoiceChat Recording couldn't start!", true);
+            return;
+        }
+        else
+        {
+            //Debug.Log("Voicechat Initialized, starting...");
+            VoiceChatRecorder.Instance.NewSample += OnNewSampleCaptured;
+            voiceChatPlayer.gameObject.SetActive(true);
+        }
+
         var gameObj = GameObject.Find("GameManager");
         var manager = gameObj.GetComponent<GameManager>();
         
@@ -54,5 +73,13 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
         }
 
         SceneManager.LoadScene("Trunk", LoadSceneMode.Single);
+    }
+
+    public abstract void OnNewSampleCaptured(VoiceChatPacket packet);
+    public void OnVoiceChatMsg(NetworkMessage msg)
+    {
+        NetMessage.VoiceChatMsg castedMsg = msg.ReadMessage<NetMessage.VoiceChatMsg>();
+        //Debug.Log("Voicechat recieved packet id " + castedMsg.payload.PacketId);
+        voiceChatPlayer.OnNewSample(castedMsg.payload);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class Banking : MonoBehaviour {
     [SerializeField]
     GameObject _rotationLayer;
@@ -31,7 +31,7 @@ public class Banking : MonoBehaviour {
             return; 
         }
         _timer += Time.deltaTime;
-        _t = _timer / _duration;
+        _t = Mathf.Clamp01(_timer / _duration);
 
         var y = 0f; 
         if (_t < 0.5)
@@ -50,7 +50,6 @@ public class Banking : MonoBehaviour {
         {
             stopBanking(); 
         }
-         
     }
 
 

@@ -4,13 +4,28 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
+    [System.Serializable]
+    public struct GameManagerFlowStep
+    {
+        public GameObject target;
+        public bool isEnabled;
+    }
+
+    public GameManagerFlowStep[] initSteps = new GameManagerFlowStep[0];
+
     public Camera operatorProxyCamera;
+    public RectTransform operatorMapCanvasRect;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
     private bool _readyToStart;
     private bool _otherReadyToStart;
     private bool _gameHasStarted;
+
+	public void Start()
+	{
+		initSteps.ForEach(x => x.target.SetActive(x.isEnabled));
+	}
     
     public void Update()
     {
@@ -33,7 +48,7 @@ public class GameManager : MonoBehaviour
         var city = _generator.Generate(generationOptions);
         GenerateCity(city);
         InitializeRoutePlanner(city);
-        RepositionProxyCamera();
+        RefreshMapSizeAndPositions();
         
         _readyToStart = true;
         callback();
@@ -41,7 +56,9 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
-        StartCar();
+        var gameObj = GameObject.Find("Car");
+        var car = gameObj.GetComponent<TrunkMover>();
+        car.isMoving = true;
     }
     
     private void GenerateCity(GenerationData result)
@@ -58,20 +75,16 @@ public class GameManager : MonoBehaviour
         routePlanner.graph = result.roadGraph;
     }
     
-    private void RepositionProxyCamera()
+    private void RefreshMapSizeAndPositions()
     {
         var cameraX =  generationOptions.cityWidth / 2f;
         var cameraZ = generationOptions.cityHeight / 2f; 
-        operatorProxyCamera.transform.position = new Vector3(cameraX, 300f, cameraZ);
+        operatorProxyCamera.transform.position = new Vector3(cameraX, 400f, cameraZ);
         operatorProxyCamera.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
         operatorProxyCamera.orthographicSize = generationOptions.cityHeight / 2f;
-    }
-    
-    private static void StartCar()
-    {
-        var gameObj = GameObject.Find("Car");
-        var car = gameObj.GetComponent<TrunkMover>();
-        car.canMove = true;
+
+        operatorMapCanvasRect.anchoredPosition3D = new Vector3(0f, 300f, 0f);
+        operatorMapCanvasRect.sizeDelta = Vector2.one * Mathf.Min(generationOptions.cityHeight, generationOptions.cityWidth);
     }
     
     public void SetUpDebugGame()

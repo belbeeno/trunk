@@ -18,8 +18,29 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
 
     public HostTopology topology;
     protected TrunkNetworkingServer server = null;
+    public TrunkNetworkingServer Server
+    {
+        get { return server;  }
+    }
     protected int clientId = -1;
     protected TrunkNetworkDiscovery broadcaster = null;
+
+    public override int VoiceChatID
+    {
+        get { return 2; }
+    }
+    public override void OnNewSampleCaptured(VoiceChat.VoiceChatPacket packet)
+    {
+        if (server == null) return;
+
+        NetworkConnection client = server.FindConnection(clientId);
+        if (client != null)
+        {
+            //Debug.Log("New sample captured: " + packet.PacketId);
+            NetMessage.VoiceChatMsg msg = new NetMessage.VoiceChatMsg(packet);
+            client.SendUnreliable(NetMessage.ID.VoiceChatPacket, msg);
+        }
+    }
 
     public override void Begin() 
     {
@@ -33,6 +54,8 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         server.RegisterHandler(NetMessage.ID.Ready, OnReadyMsg);
         server.RegisterHandler(NetMessage.ID.APB, OnAPBResponseMsg);
         server.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
+
+        server.RegisterHandler(NetMessage.ID.VoiceChatPacket, OnVoiceChatMsg);
 
         if (!server.Listen(GAME_PORT))
         {
@@ -57,6 +80,30 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
     {
         if (server == null) return;
 
+#if UNITY_EDITOR
+        if (Debug.isDebugBuild)
+        {
+            Debug.DrawRay(pos, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
+
+            Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
+            Vector3 nextPos = new Vector3();
+            for (float i = 1f; i < 10f; i += 1f)
+            {
+                nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+                nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+
+                Debug.DrawLine(pos + prevPos, pos + nextPos, Color.red, 5f, false);
+
+                prevPos = nextPos;
+            }
+            nextPos.Set(Mathf.Cos(0f), 0f, Mathf.Sin(0f));
+            Debug.DrawLine(prevPos, nextPos * GameSettings.APB_RADIUS, Color.red, 5f, false);
+        }
+#endif
+
         NetworkConnection client = server.FindConnection(clientId);
         if (client != null)
         {
@@ -64,6 +111,22 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
             NetMessage.APBRequest msg = new NetMessage.APBRequest();
             msg.position = pos;
             client.Send(NetMessage.ID.APB, msg);
+        }
+        else
+        {
+            Debug.LogWarning("Attempting to find connection for clientId " + clientId + " but got nothin!");
+        }
+    }
+
+    public void TriggerPoliceInHostageScene(Vector2 pos)
+    {
+        NetworkConnection client = server.FindConnection(clientId);
+        if (client != null)
+        {
+            Log("Requesting Police car at pos " + pos.ToString());
+            NetMessage.TriggerPoliceMsg msg = new NetMessage.TriggerPoliceMsg();
+            msg.position = pos;
+            client.Send(NetMessage.ID.TriggerPoliceCar, msg);
         }
         else
         {
@@ -86,6 +149,12 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
                 NetMessage.GameOverMsg gameOverMsg = new NetMessage.GameOverMsg();
                 gameOverMsg.timestamp = Network.time;
                 msg.conn.Send(NetMessage.ID.GameOver, gameOverMsg);
+            }
+            else
+            {
+                string hintType = NetMessage.APBResponse.Hint.TypeToName(castedMsg.hints[i].type);
+                Log(hintType + " found at position: " + castedMsg.hints[i].pos.ToString());
+                OperatorIcons.NewIcon(castedMsg.hints[i].pos, castedMsg.hints[i].type);
             }
         }
     }

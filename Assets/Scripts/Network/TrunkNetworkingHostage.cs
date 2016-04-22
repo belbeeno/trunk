@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingHostage : TrunkNetworkingBase
@@ -16,6 +17,23 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
 
     [SerializeField]
     TrunkMover mover = null;
+    [SerializeField]
+    Outside outsideTrunk = null;
+    [SerializeField]
+    GameObject policeCarInstance = null;
+
+    public override int VoiceChatID
+    {
+        get { return 1; }
+    }
+    public override void OnNewSampleCaptured(VoiceChat.VoiceChatPacket packet)
+    {
+        if (network == null) return;
+
+        //Debug.Log("New sample captured: " + packet.PacketId);
+        NetMessage.VoiceChatMsg msg = new NetMessage.VoiceChatMsg(packet);
+        network.SendUnreliable(NetMessage.ID.VoiceChatPacket, msg);
+    }
     
     public override void Begin()
     {
@@ -36,8 +54,13 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         network.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
         network.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
         network.RegisterHandler(NetMessage.ID.Ready, OnReadyMsg);
+
         network.RegisterHandler(NetMessage.ID.APB, OnAPBRequestMsg);
+        network.RegisterHandler(NetMessage.ID.TriggerPoliceCar, OnTriggerPoliceCarMsg);
+
         network.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
+
+        network.RegisterHandler(NetMessage.ID.VoiceChatPacket, OnVoiceChatMsg);
 
         network.Connect(ip, TrunkNetworkingOperator.GAME_PORT);
     }
@@ -45,6 +68,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     public void OnConnectMsg(NetworkMessage msg)
     {
         Log("Connected to server! " + msg.ToString());
+
         NetMessage.PingMsg ping = new NetMessage.PingMsg();
         ping.msg = "Hi!";
         msg.conn.Send(NetMessage.ID.Ping, ping);
@@ -112,26 +136,74 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
 
         NetMessage.APBResponse response = new NetMessage.APBResponse();
         response.origin = castedMsg.position;
+        response.origin.y = 0f;
+
+        float distFromOriginSqrd = (Camera.main.transform.position - response.origin).sqrMagnitude;
+        if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
+        {
+            response.hints.Add(new NetMessage.APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), NetMessage.APBResponse.Hint.HintType.Hostage));
+        }
+
+        if (outsideTrunk == null)
+        {
+            Log("Trunk exterior missing!", true);
+        }
+        else 
+        {
+            var allDroppedItems = outsideTrunk.GetAllDroppedItems();
+            for (int i = 0; i < allDroppedItems.Count; i++)
+            {
+                response.origin.y = allDroppedItems[i].positionDropped.y;
+                distFromOriginSqrd = (allDroppedItems[i].positionDropped - response.origin).sqrMagnitude;
+                if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
+                {
+                    response.hints.Add(new NetMessage.APBResponse.Hint(allDroppedItems[i].positionDropped
+                                                                        , allDroppedItems[i].itemName));
+                }
+            }
+        }
+
 #if UNITY_EDITOR
         Debug.DrawLine(Camera.main.transform.position, response.origin, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
         Debug.DrawRay(response.origin, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
-#endif
-        float distFromOrigin = (Camera.main.transform.position - response.origin).sqrMagnitude;
-        if (distFromOrigin <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
+
+        Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
+        Vector3 nextPos = new Vector3();
+        for (float i = 1f; i < 10f; i += 1f)
         {
-            response.hints.Add(new NetMessage.APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), NetMessage.APBResponse.Hint.HintType.Hostage));
+            nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+            nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+
+            Debug.DrawLine(response.origin + prevPos, response.origin + nextPos, Color.red, 5f, false);
+
+            prevPos = nextPos;
         }
-
-
+        nextPos.Set(Mathf.Cos(0f), 0f, Mathf.Sin(0f));
+        Debug.DrawLine(prevPos, nextPos * GameSettings.APB_RADIUS, Color.red, 5f);
+#endif
         msg.conn.Send(NetMessage.ID.APB, response);
+    }
+
+    public void OnTriggerPoliceCarMsg(NetworkMessage msg)
+    {
+        NetMessage.TriggerPoliceMsg castedMsg = msg.ReadMessage<NetMessage.TriggerPoliceMsg>();
+        StartCoroutine(PoliceCarThread(castedMsg.position));
+    }
+    public IEnumerator PoliceCarThread(Vector2 pos)
+    {
+        policeCarInstance.transform.position = new Vector3(pos.x, 0f, pos.y);
+        policeCarInstance.SetActive(true);
+        yield return new WaitForSeconds(GameSettings.COP_SIREN_PING_DURATION);
+        policeCarInstance.SetActive(false);
     }
 
     public void Start()
     {
         _instance = this;
+        policeCarInstance.SetActive(false);
     }
 
     public void Update()
