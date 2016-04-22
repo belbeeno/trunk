@@ -38,13 +38,16 @@ namespace NetMessage
     {
         public const short Base = MsgType.Highest;
 
-
         public const short VoiceChatPacket  = Base + 1;
         public const short InitSession      = Base + 2;
         public const short Ping             = Base + 3;
 		public const short Ready			= Base + 4;
-        public const short APB              = Base + 103;
-        public const short GameOver         = Base + 203;
+
+        public const short APB              = Base + 11;
+        public const short TriggerPoliceCar    = Base + 12;
+        public const short TriggerCopter    = Base + 13;
+
+        public const short GameOver         = Base + 20;
     }
 
     public class InitSessionMsg : MessageBase
@@ -66,7 +69,6 @@ namespace NetMessage
     {
         public Vector3 position;
     }
-    
     public class APBResponse : MessageBase
     {
         public class Hint : MessageBase
@@ -159,6 +161,11 @@ namespace NetMessage
             Helpers.DeserializeList(reader, ref hints);
             origin = reader.ReadVector3();
         }
+    }
+
+    public class TriggerPoliceMsg : MessageBase
+    {
+        public Vector2 position;
     }
 
     public class GameOverMsg : MessageBase

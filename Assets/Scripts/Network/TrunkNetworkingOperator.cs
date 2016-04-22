@@ -81,24 +81,27 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         if (server == null) return;
 
 #if UNITY_EDITOR
-        Debug.DrawRay(pos, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(pos, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(pos, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(pos, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
-
-        Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
-        Vector3 nextPos = new Vector3();
-        for (float i = 1f; i < 10f; i += 1f)
+        if (Debug.isDebugBuild)
         {
-            nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
-            nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+            Debug.DrawRay(pos, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
 
-            Debug.DrawLine(pos + prevPos, pos + nextPos, Color.red, 5f, false);
+            Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
+            Vector3 nextPos = new Vector3();
+            for (float i = 1f; i < 10f; i += 1f)
+            {
+                nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+                nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
 
-            prevPos = nextPos;
+                Debug.DrawLine(pos + prevPos, pos + nextPos, Color.red, 5f, false);
+
+                prevPos = nextPos;
+            }
+            nextPos.Set(Mathf.Cos(0f), 0f, Mathf.Sin(0f));
+            Debug.DrawLine(prevPos, nextPos * GameSettings.APB_RADIUS, Color.red, 5f, false);
         }
-        nextPos.Set(Mathf.Cos(0f), 0f, Mathf.Sin(0f));
-        Debug.DrawLine(prevPos, nextPos * GameSettings.APB_RADIUS, Color.red, 5f, false);
 #endif
 
         NetworkConnection client = server.FindConnection(clientId);
@@ -108,6 +111,22 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
             NetMessage.APBRequest msg = new NetMessage.APBRequest();
             msg.position = pos;
             client.Send(NetMessage.ID.APB, msg);
+        }
+        else
+        {
+            Debug.LogWarning("Attempting to find connection for clientId " + clientId + " but got nothin!");
+        }
+    }
+
+    public void TriggerPoliceInHostageScene(Vector2 pos)
+    {
+        NetworkConnection client = server.FindConnection(clientId);
+        if (client != null)
+        {
+            Log("Requesting Police car at pos " + pos.ToString());
+            NetMessage.TriggerPoliceMsg msg = new NetMessage.TriggerPoliceMsg();
+            msg.position = pos;
+            client.Send(NetMessage.ID.TriggerPoliceCar, msg);
         }
         else
         {

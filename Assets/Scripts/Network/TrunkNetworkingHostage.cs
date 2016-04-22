@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingHostage : TrunkNetworkingBase
@@ -18,6 +19,8 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     TrunkMover mover = null;
     [SerializeField]
     Outside outsideTrunk = null;
+    [SerializeField]
+    GameObject policeCarInstance = null;
 
     public override int VoiceChatID
     {
@@ -51,7 +54,10 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         network.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
         network.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
         network.RegisterHandler(NetMessage.ID.Ready, OnReadyMsg);
+
         network.RegisterHandler(NetMessage.ID.APB, OnAPBRequestMsg);
+        network.RegisterHandler(NetMessage.ID.TriggerPoliceCar, OnTriggerPoliceCarMsg);
+
         network.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
 
         network.RegisterHandler(NetMessage.ID.VoiceChatPacket, OnVoiceChatMsg);
@@ -181,9 +187,23 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         msg.conn.Send(NetMessage.ID.APB, response);
     }
 
+    public void OnTriggerPoliceCarMsg(NetworkMessage msg)
+    {
+        NetMessage.TriggerPoliceMsg castedMsg = msg.ReadMessage<NetMessage.TriggerPoliceMsg>();
+        StartCoroutine(PoliceCarThread(castedMsg.position));
+    }
+    public IEnumerator PoliceCarThread(Vector2 pos)
+    {
+        policeCarInstance.transform.position = new Vector3(pos.x, 0f, pos.y);
+        policeCarInstance.SetActive(true);
+        yield return new WaitForSeconds(GameSettings.COP_SIREN_PING_DURATION);
+        policeCarInstance.SetActive(false);
+    }
+
     public void Start()
     {
         _instance = this;
+        policeCarInstance.SetActive(false);
     }
 
     public void Update()
