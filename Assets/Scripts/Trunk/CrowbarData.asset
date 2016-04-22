@@ -13,16 +13,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canBeHeld: 1
   itemName: Crowbar
-  mesh: {fileID: 0}
   disposeOnUse: 0
   positionWhenInInventory: {x: 0.148, y: 0.73, z: 0.063}
   rotationWhenInInventory: {x: 47.198, y: 113, z: 305}
   interactableFastenerList: 
   canUnfastenFasteners: 0
+  unfastenAnimationClipName: 
   canOpenLatch: 1
   openLatchAnimationClipName: CrowbarOpenLatch
   canWedgeOpenTrunk: 1
   wedgeOpenTrunkAnimationClipName: 
-  currentAnimation: 0
-  toolTipOffset: 0.567
-  toolForwardDirection: {x: 0, y: 0, z: -1}
+  toolTipOffset: 0.673214
+  toolForwardDirection: {x: -0.2533, y: 0.0134, z: -0.6236}

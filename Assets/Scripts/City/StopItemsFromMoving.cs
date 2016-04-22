@@ -13,9 +13,9 @@ public class StopItemsFromMoving : MonoBehaviour {
 	
 	}
 
-    void OnCollisionEnter(Collision collision)
-    {
-        var item = collision.gameObject; 
+    void OnCollisionEnter(Collision other)
+    {   
+        var item = other.gameObject; 
         if (item.GetComponent<Interactable>() != null)
         {
             item.GetComponent<Rigidbody>().isKinematic = true;

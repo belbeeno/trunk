@@ -121,7 +121,7 @@ public class City : MonoBehaviour
         meshCollider.sharedMesh = result.clickColliderMesh;
         clickCollider.tag = "Networking";
         clickCollider.layer = LayerMask.NameToLayer("HostOnly");
-        clickCollider.transform.position = new Vector3(0f, 1f, 0f);
+        clickCollider.transform.position = new Vector3(0f, 0f, 0f);
         clickCollider.AddComponent<StopItemsFromMoving>(); 
     }
     

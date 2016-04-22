@@ -8,10 +8,8 @@ using System.Collections;
 public class Tool : Interactable {
 
     private ScriptableTools toolData;
-
-    private Vector3 localPositionToAmnimateTo; 
-
-   // Use this for initialization
+    
+    // Use this for initialization
     void Start () {
         toolData = (ScriptableTools)itemData; 
         canBeHeld = toolData.canBeHeld; 
@@ -78,10 +76,8 @@ public class Tool : Interactable {
                                             , Animation actionAnimation
                                             , OnAnimationComplete cb = null)
     {
-        DebugConsole.SetText("before position", transform.localPosition.ToString());
-        DebugConsole.SetText("calculated position", newParent.InverseTransformPoint(transform.TransformPoint(transform.localPosition)).ToString());
+        var curParent = transform.parent; 
         transform.parent = newParent;
-        DebugConsole.SetText("after position", transform.localPosition.ToString());
 
         Vector3 startPos = transform.localPosition;
         Quaternion startRot = transform.localRotation;
@@ -94,10 +90,25 @@ public class Tool : Interactable {
             timer += Time.deltaTime;
             yield return 0;
         }
-
-        //Trigger animation script here
+        
         actionAnimation.Play(toolData.openLatchAnimationClipName);
+        while (actionAnimation.isPlaying)
+        {
+            yield return 0; 
+        }
         if (cb != null) cb.Invoke();
+
+        var curRot = transform.localRotation;
+        var curPos = transform.localPosition;
+        timer = 0f;
+        while (timer < duration)
+        {
+            transform.localPosition = Vector3.Lerp(curPos, startPos, Mathf.Clamp01(timer / duration));
+            transform.localRotation = Quaternion.SlerpUnclamped(curRot, startRot, Ease.CircEaseInOut(timer, 0f, 1f, duration));
+            timer += Time.deltaTime;
+            yield return 0;
+        }
+        transform.parent = curParent; 
     }
 
 }

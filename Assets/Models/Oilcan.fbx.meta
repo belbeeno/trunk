@@ -6,11 +6,30 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: ikHandle1
+    100004: jntBase
+    100006: joint2
+    100008: joint3
+    100010: joint4
+    100012: joint5
+    100014: locator1
+    100016: oilcan
     400000: //RootNode
+    400002: ikHandle1
+    400004: jntBase
+    400006: joint2
+    400008: joint3
+    400010: joint4
+    400012: joint5
+    400014: locator1
+    400016: oilcan
     2300000: //RootNode
     3300000: //RootNode
     4300000: oilcan
+    7400000: Take 001
     9500000: //RootNode
+    11100000: //RootNode
+    13700000: oilcan
   materials:
     importMaterials: 1
     materialName: 0
@@ -69,7 +88,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 1
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
