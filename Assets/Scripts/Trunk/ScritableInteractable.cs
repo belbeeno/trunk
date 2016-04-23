@@ -8,6 +8,8 @@ public class ScriptableInteractable : ScriptableObject {
     public string itemName;
     public bool disposeOnUse = false;
     public Vector3 positionWhenInInventory;
-    public Vector3 rotationWhenInInventory;  
+    public Vector3 rotationWhenInInventory;
+
+    public GameObject pivotLayer;   
 
 }

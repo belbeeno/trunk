@@ -15,5 +15,8 @@ public class ScriptableTools : ScriptableInteractable
     public float toolTipOffset;
 
     // Moving in this direction would move the tool forward tip first
-    public Vector3 toolForwardDirection; 
+    public Vector3 frontDirection;
+    public Vector3 toolUpDirectionWhenFlat;
+
+    public Transform wedgeStartTransform; 
 }

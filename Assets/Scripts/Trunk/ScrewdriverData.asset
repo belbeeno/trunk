@@ -16,6 +16,7 @@ MonoBehaviour:
   disposeOnUse: 0
   positionWhenInInventory: {x: 0, y: 0.97, z: 0.212}
   rotationWhenInInventory: {x: 325, y: 110, z: 186}
+  pivotLayer: {fileID: 0}
   interactableFastenerList: 00000000
   canUnfastenFasteners: 1
   unfastenAnimationClipName: 
@@ -24,4 +25,6 @@ MonoBehaviour:
   canWedgeOpenTrunk: 0
   wedgeOpenTrunkAnimationClipName: 
   toolTipOffset: 0.475
-  toolForwardDirection: {x: 0, y: -1, z: 0}
+  frontDirection: {x: 0, y: 0, z: 0}
+  toolUpDirectionWhenFlat: {x: 0, y: 0, z: 0}
+  wedgeStartTransform: {fileID: 0}

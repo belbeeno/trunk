@@ -9,6 +9,8 @@ public class Inventory : MonoBehaviour {
     [SerializeField]
     private GameObject currentItem;
 
+    private Interactable currentInteractable; 
+
     [SerializeField]
     private GameObject trunk = null;
 
@@ -19,6 +21,7 @@ public class Inventory : MonoBehaviour {
     [Range(0, 10)]
     private float thrust = 6f;
 
+    [SerializeField]
     private bool hasPhone;
 
     public Transform possessionTarget = null;
@@ -62,12 +65,11 @@ public class Inventory : MonoBehaviour {
         }
         else {
 
-            var targetInteractable = item.GetComponent<Interactable>();
+            var targetInteractable = GetInteractable(item);
             if (IsHoldingItem() && targetInteractable != null)
             {
                 // check if what we're holding can interact with what we're looking at
-                var currentInteractable = currentItem.GetComponent<Interactable>();
-                return currentInteractable.CanInteractWith(targetInteractable);
+               return currentInteractable.CanInteractWith(targetInteractable);
             }
 
             return targetInteractable == null ? false : targetInteractable.CanBeHeld();
@@ -96,7 +98,7 @@ public class Inventory : MonoBehaviour {
         // Pick up the item
         if (!IsHoldingItem())
         {
-            var otherItem = item.GetComponent<Interactable>();
+            var otherItem = GetInteractable(item);
             if (!otherItem.CanBeHeld())
             {
                 return; 
@@ -105,8 +107,8 @@ public class Inventory : MonoBehaviour {
             HoldItem(item);
         } else
         {
-            var itemInteract = item.GetComponent<Interactable>(); 
-            var curObjInteract = currentItem.GetComponent<Interactable>();
+            var itemInteract = GetInteractable(item);
+            var curObjInteract = GetInteractable(currentItem);
             if (curObjInteract.CanInteractWith(itemInteract))
             {
                 curObjInteract.InteractWith(itemInteract);
@@ -116,6 +118,11 @@ public class Inventory : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public Interactable GetInteractable(GameObject item)
+    {
+       return item.GetComponent<Interactable>() ?? item.transform.parent.GetComponent<Interactable>();
     }
 
     public void GetOutsidePosition(BaseEventData data)
@@ -131,9 +138,9 @@ public class Inventory : MonoBehaviour {
     public void HoldItem(GameObject item)
     {
         currentItem = item;
-
+        currentInteractable = GetInteractable(item);
         // moves item to left side of the screen, the place for all items being held
-       
+
         var rigidBody = currentItem.GetComponent<Rigidbody>();
         rigidBody.detectCollisions = false; 
         rigidBody.useGravity = false;
@@ -149,9 +156,8 @@ public class Inventory : MonoBehaviour {
         {
             return;
         }
-        StopAllCoroutines(); 
-        var interactable = currentItem.GetComponent<Interactable>();
-        interactable.ItemDropped();
+        StopAllCoroutines();
+        currentInteractable.ItemDropped();
 
         // throws item in the direction currently facing
         //currentItem.transform.localScale = start.localScale;
@@ -168,6 +174,7 @@ public class Inventory : MonoBehaviour {
         rigidBody.detectCollisions = true;
         rigidBody.AddForce(direction * thrust, ForceMode.Impulse);
         currentItem = null;
+        currentInteractable = null;
     }
 
     public void PickUpPhone(GameObject phone)
@@ -182,7 +189,7 @@ public class Inventory : MonoBehaviour {
     public void StartAnimateIntoView(GameObject item)
     {
         StopAllCoroutines();
-        var siobject = item.GetComponent<Interactable>().itemData;
+        var siobject = GetInteractable(item).itemData;
         item.transform.localRotation = Quaternion.Euler(siobject.rotationWhenInInventory);
         StartCoroutine(AnimateIntoView(item.transform, siobject.positionWhenInInventory, animationLength));
     }
@@ -254,7 +261,7 @@ public class Inventory : MonoBehaviour {
             yield return 0;
         }
         isAnimating = false;
-        currentItem.GetComponent<Interactable>().InteractWith(outside.GetComponent<Interactable>());
+        currentInteractable.InteractWith(GetInteractable(outside));
 
         currentItem.transform.SetParent(null, true);
         ThrowCurrentItem(transform.parent.TransformDirection(Vector3.right));

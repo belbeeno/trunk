@@ -23,5 +23,7 @@ MonoBehaviour:
   openLatchAnimationClipName: CrowbarOpenLatch
   canWedgeOpenTrunk: 1
   wedgeOpenTrunkAnimationClipName: 
-  toolTipOffset: 0.673214
-  toolForwardDirection: {x: -0.2533, y: 0.0134, z: -0.6236}
+  toolTipOffset: 0.672761
+  frontDirection: {x: -0.672, y: -0.032, z: 0}
+  toolUpDirectionWhenFlat: {x: 0, y: 0, z: 0}
+  wedgeStartTransform: {fileID: 0}

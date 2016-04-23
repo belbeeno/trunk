@@ -49,7 +49,7 @@ public class Tool : Interactable {
             if (!latch.isOpen)
             {
                 StopAllCoroutines(); 
-                StartCoroutine(AnimateIntoPosition(latch.transform, latch.upDirection, 1f, GetComponent<Animation>(), latch.Open));
+                StartCoroutine(AnimateIntoPosition(latch.transform, latch.toolContactDirection, 1f, GetComponent<Animation>(), toolData.openLatchAnimationClipName, true, latch.Open));
             }
         }
         else if (toolData.canUnfastenFasteners && itemToInteractWith.GetType() == typeof(Fasteners))
@@ -59,9 +59,8 @@ public class Tool : Interactable {
         } else if (toolData.canWedgeOpenTrunk && itemToInteractWith.GetType() == typeof(WedgeGap))
         {
             var gap = (WedgeGap)itemToInteractWith;
-            gameObject.transform.parent = gap.transform;
-            gap.WedgeOpenCover(gameObject.transform);
-           
+            StartCoroutine(AnimateIntoPosition(gap.transform, gap.gapUpPosition, 1f, GetComponent<Animation>(), toolData.wedgeOpenTrunkAnimationClipName, false, wcb: gap.WedgeOpenCover, offsetStart: gap.positionToolStartAt));
+                      
         }
         else
         {
@@ -69,34 +68,58 @@ public class Tool : Interactable {
         }
     }
 
-    protected delegate void OnAnimationComplete();
+    protected delegate void latch();
+    protected delegate void wedge(float duration);
     protected IEnumerator AnimateIntoPosition(Transform newParent
                                             , Vector3 newParentLocalUpDirection
                                             , float duration
                                             , Animation actionAnimation
-                                            , OnAnimationComplete cb = null)
+                                            , string animationName
+                                            , bool animateBack
+                                            , latch lcb = null
+                                            , wedge wcb = null
+                                            , Vector3 offsetStart = new Vector3())
     {
         var curParent = transform.parent; 
         transform.parent = newParent;
 
         Vector3 startPos = transform.localPosition;
         Quaternion startRot = transform.localRotation;
-        var endRot = Quaternion.FromToRotation(toolData.toolForwardDirection, newParentLocalUpDirection);
+        var endRot = Quaternion.FromToRotation(toolData.frontDirection, -1 * newParentLocalUpDirection);
+        var contactPosition = (newParentLocalUpDirection * toolData.toolTipOffset) + offsetStart; 
         float timer = 0f;
         while (timer < duration)
         {
-            transform.localPosition = Vector3.Lerp(startPos, newParentLocalUpDirection * toolData.toolTipOffset, Mathf.Clamp01(timer / duration));
+            transform.localPosition = Vector3.Lerp(startPos, contactPosition, Mathf.Clamp01(timer / duration));
             transform.localRotation = Quaternion.SlerpUnclamped(startRot, endRot, Ease.CircEaseInOut(timer, 0f, 1f, duration));
             timer += Time.deltaTime;
             yield return 0;
         }
-        
-        actionAnimation.Play(toolData.openLatchAnimationClipName);
-        while (actionAnimation.isPlaying)
+                
+        var isHatchAnimationTriggered = wcb == null;
+        if (!isHatchAnimationTriggered)
         {
-            yield return 0; 
+            timer = 0f;
+            var wedgeEndPos = newParent.GetComponent<WedgeGap>().positionToolEndsAt;
+            var rotationLayer = transform.GetChild(0); 
+            var wedgeEndRot = Quaternion.FromToRotation(rotationLayer.up, wedgeEndPos);
+            wcb.Invoke(duration);
+            while (timer < duration)
+            {
+                transform.localPosition = Vector3.Lerp(contactPosition, wedgeEndPos, Ease.QuadEaseInOut(timer, 0f, 1f, duration));
+                rotationLayer.localRotation = Quaternion.Slerp(Quaternion.identity, Quaternion.Euler(0,90,0), Ease.QuadEaseInOut(timer, 0f, 1f, duration));
+                timer += Time.deltaTime;
+                yield return 0; 
+            }
         }
-        if (cb != null) cb.Invoke();
+        
+
+        if (lcb != null) lcb.Invoke();
+
+        if (!animateBack)
+        {
+            yield break; 
+        }
 
         var curRot = transform.localRotation;
         var curPos = transform.localPosition;

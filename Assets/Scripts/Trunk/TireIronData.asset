@@ -13,14 +13,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canBeHeld: 1
   itemName: TireIron
-  mesh: {fileID: 0}
   disposeOnUse: 0
   positionWhenInInventory: {x: -0.264, y: 1.066, z: -0.015}
   rotationWhenInInventory: {x: 52.85, y: 77, z: 1.25}
   interactableFastenerList: 01000000
   canUnfastenFasteners: 1
+  unfastenAnimationClipName: 
   canOpenLatch: 0
+  openLatchAnimationClipName: 
   canWedgeOpenTrunk: 1
-  currentAnimation: 0
-  toolTipOffset: -0.451
-  toolForwardDirection: {x: 0, y: 0, z: 1}
+  wedgeOpenTrunkAnimationClipName: TireIronWedgeOpenTrunk
+  toolTipOffset: 0.451
+  frontDirection: {x: 0, y: 0, z: 0}
+  toolUpDirectionWhenFlat: {x: 0, y: 0, z: 0}
+  wedgeStartTransform: {fileID: 0}

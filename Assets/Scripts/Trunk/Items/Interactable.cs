@@ -16,7 +16,7 @@ public abstract class Interactable : MonoBehaviour
 
     // Whether the object is currently in the inventory or not
     private bool isSelected;
-    
+        
     void Start()
     {
     }
