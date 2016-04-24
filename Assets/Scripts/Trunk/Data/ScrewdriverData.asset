@@ -15,6 +15,8 @@ MonoBehaviour:
   itemName: Screwdriver
   disposeOnUse: 0
   rotationWhenInInventory: 30
+  itemDroppedSoundClip: {fileID: 8300000, guid: 33eff2c6653f38247b8f724e7d833b40,
+    type: 3}
   interactableFastenerList: 00000000
   canUnfastenFasteners: 1
   unfastenAnimationClipName: 
@@ -26,3 +28,4 @@ MonoBehaviour:
   frontDirection: {x: 0, y: 0, z: 0}
   toolUpDirectionWhenFlat: {x: 0, y: 0, z: 0}
   wedgeStartTransform: {fileID: 0}
+  itemLatchSoundClip: {fileID: 8300000, guid: c280554fee66ff145b4968b8edc9ebe7, type: 3}

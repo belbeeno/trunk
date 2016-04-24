@@ -15,6 +15,8 @@ MonoBehaviour:
   itemName: Crowbar
   disposeOnUse: 0
   rotationWhenInInventory: -140
+  itemDroppedSoundClip: {fileID: 8300000, guid: e6378488f776269419451a2e127be98d,
+    type: 3}
   interactableFastenerList: 
   canUnfastenFasteners: 0
   unfastenAnimationClipName: 
@@ -26,3 +28,4 @@ MonoBehaviour:
   frontDirection: {x: 0.672, y: 0.032, z: 0}
   toolUpDirectionWhenFlat: {x: 0, y: 0, z: 1}
   wedgeStartTransform: {fileID: 0}
+  itemLatchSoundClip: {fileID: 8300000, guid: 9bad25a7a56d46240bc50dad6cd65f03, type: 3}

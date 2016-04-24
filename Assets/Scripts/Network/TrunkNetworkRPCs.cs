@@ -91,9 +91,19 @@ namespace NetMessage
                 this.pos = pos;
                 this.type = type;
             }
+            public Hint(Vector3 pos, HintType type)
+            {
+                this.pos = new Vector2(pos.x, pos.z);
+                this.type = type;
+            }
             public Hint(Vector2 pos, string typeName)
             {
                 this.pos = pos;
+                this.type = NameToType(typeName);
+            }
+            public Hint(Vector3 pos, string typeName)
+            {
+                this.pos = new Vector2(pos.x, pos.z);
                 this.type = NameToType(typeName);
             }
             public static HintType NameToType(string typeName)

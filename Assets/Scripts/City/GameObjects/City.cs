@@ -60,9 +60,10 @@ public class City : MonoBehaviour
             var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
             parkPrefab.transform.localScale = Vector3.one * parkSize;
             parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
-
-            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.schoolAudio);
+            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.parkAudio);
             audioInstance.transform.SetParent(parkObj.transform, false);
+            audioInstance.transform.position = center;
+            CardboardAudio.ActivatePostInitialization(audioInstance); 
             ManualVolumetricAudio audioBounds = audioInstance.GetComponent<ManualVolumetricAudio>();
             audioBounds.points = park.corners;
         }
@@ -82,9 +83,15 @@ public class City : MonoBehaviour
             var pos = parkPrefab.transform.position;
             parkPrefab.transform.position = new Vector3(pos.x, 3, pos.z);
 
-            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.schoolAudio);
+            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.bigParkAudio);
             audioInstance.transform.SetParent(parkObj.transform, false);
+            audioInstance.transform.position = center;
+            CardboardAudio.ActivatePostInitialization(audioInstance); 
             ManualVolumetricAudio audioBounds = audioInstance.GetComponent<ManualVolumetricAudio>();
+            if (audioBounds == null) Debug.LogError("audioBounds is null!");
+            if (audioBounds.points == null) Debug.LogError("points is null!");
+            if (park == null) Debug.LogError("park is null!");
+            if (park.corners == null) Debug.LogError("corners is null!");
             audioBounds.points = park.corners;
         }
 
@@ -109,6 +116,8 @@ public class City : MonoBehaviour
 
             GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.schoolAudio);
             audioInstance.transform.SetParent(schoolObj.transform, false);
+            audioInstance.transform.position = center;
+            CardboardAudio.ActivatePostInitialization(audioInstance); 
             ManualVolumetricAudio audioBounds = audioInstance.GetComponent<ManualVolumetricAudio>();
             audioBounds.points = school.corners;
         }
@@ -119,9 +128,17 @@ public class City : MonoBehaviour
         StaticBatchingUtility.Combine(sidewalksObj);
         StaticBatchingUtility.Combine(roadMeshesObj);
         //*/
+
         // Water
         var waterObj = CreateGameObject("Water");
         AddMesh(waterObj, result.water.mesh, result.water.material);
+        
+        GameObject waterAudioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.waterAudio);
+        waterAudioInstance.transform.SetParent(waterObj.transform, false);
+        waterAudioInstance.transform.position = result.water.corners[0];
+        RiverVolumetricAudio waterAudioBounds = waterAudioInstance.GetComponent<RiverVolumetricAudio>();
+        waterAudioBounds.BuildFromRiverGraph(result.riverGraph);
+        CardboardAudio.ActivatePostInitialization(waterAudioInstance);
     }
     
     private void AddColliders(GenerationData result)
