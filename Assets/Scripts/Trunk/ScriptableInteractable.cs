@@ -10,5 +10,6 @@ public class ScriptableInteractable : ScriptableObject {
     public float rotationWhenInInventory;
     
     public AudioClip itemDroppedSoundClip;
+    public AudioClip itemPickedUpSoundClip; 
 
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d08d8254ea2ad1248842ff64ada6efe0, type: 3}
+  m_Name: NewspaperData
+  m_EditorClassIdentifier: 
+  canBeHeld: 1
+  itemName: Newspaper
+  disposeOnUse: 0
+  rotationWhenInInventory: 90
+  itemDroppedSoundClip: {fileID: 8300000, guid: 05b229a4b3b8c3341af84bd636f67ee3,
+    type: 3}
+  itemPickedUpSoundClip: {fileID: 8300000, guid: 4e4ac0aa6c459714a81847e7e4c14a25,
+    type: 3}

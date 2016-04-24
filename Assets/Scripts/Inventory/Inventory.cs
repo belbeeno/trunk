@@ -100,7 +100,7 @@ public class Inventory : MonoBehaviour {
     }
 
     public void InteractWithItem(GameObject item)
-    {   
+    {
         if (isAnimating)
         {
             return;
@@ -168,7 +168,14 @@ public class Inventory : MonoBehaviour {
         rigidBody.isKinematic = true;
         isAnimating = true;
         StopAllCoroutines();
-        GetComponent<CardboardAudioSource>().Play(); 
+        var pickupSoundClip = currentInteractable.itemData.itemPickedUpSoundClip;        
+        if ( pickupSoundClip == null)
+        {
+            GetComponent<CardboardAudioSource>().Play();
+        } else
+        {
+            GetComponent<CardboardAudioSource>().PlayOneShot(pickupSoundClip);
+        }
         StartCoroutine(AnimateIntoPosession(item.transform, (rightTarget.GetChild(0) ?? transform), toInventoryAnimationLength));
     }
 
@@ -180,6 +187,7 @@ public class Inventory : MonoBehaviour {
         }
         StopAllCoroutines();
         currentInteractable.ItemDropped();
+        currentItem.transform.localRotation = Quaternion.identity;
 
         // throws item in the direction currently facing
         //currentItem.transform.localScale = start.localScale;
