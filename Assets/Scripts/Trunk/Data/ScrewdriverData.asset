@@ -14,16 +14,14 @@ MonoBehaviour:
   canBeHeld: 1
   itemName: Screwdriver
   disposeOnUse: 0
-  positionWhenInInventory: {x: 0, y: 0.97, z: 0.212}
-  rotationWhenInInventory: {x: 325, y: 110, z: 186}
-  pivotLayer: {fileID: 0}
+  rotationWhenInInventory: 30
   interactableFastenerList: 00000000
   canUnfastenFasteners: 1
   unfastenAnimationClipName: 
   canOpenLatch: 1
   openLatchAnimationClipName: ScrewdriverOpenLatch
   canWedgeOpenTrunk: 0
-  wedgeOpenTrunkAnimationClipName: 
+  localAxisToRotateForWedge: {x: 0, y: 0, z: 0}
   toolTipOffset: 0.475
   frontDirection: {x: 0, y: 0, z: 0}
   toolUpDirectionWhenFlat: {x: 0, y: 0, z: 0}

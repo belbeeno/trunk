@@ -8,14 +8,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28eb96a3a5539bf408e45cfa16d79225, type: 3}
-  m_Name: ScrewData
+  m_Script: {fileID: 11500000, guid: d08d8254ea2ad1248842ff64ada6efe0, type: 3}
+  m_Name: CellphoneData
   m_EditorClassIdentifier: 
   canBeHeld: 0
-  itemName: Screw
-  mesh: {fileID: 0}
+  itemName: CellPhone
   disposeOnUse: 0
-  type: 0
-  unfastenDuration: 2
-  fastenerLength: 0.067
-  startPosition: {x: 3.009, y: 1.388, z: 0}
+  rotationWhenInInventory: 100

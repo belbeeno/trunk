@@ -24,13 +24,17 @@ public class Inventory : MonoBehaviour {
     [SerializeField]
     private bool hasPhone;
 
-    public Transform possessionTarget = null;
+    public Transform leftTarget = null;
+    public Transform rightTarget = null;
+
     [SerializeField]
     private bool isAnimating;
 
     [SerializeField]
     [Range(0, 2)]
-    private float animationLength = 5f;
+    private float toOutsideAnimationLength = 5f;
+
+    private float toInventoryAnimationLength = 0.75f;
 
     // Use this for initialization
     void Start () {
@@ -41,8 +45,27 @@ public class Inventory : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         var start = gameObject.transform.localRotation;
-        var end = Quaternion.Euler(0, 0, cameraTransform.eulerAngles.y);
-        gameObject.transform.localRotation = Quaternion.Slerp(start, end, Time.deltaTime*40);
+        var lstart = leftTarget.transform.localRotation;
+        var rstart = rightTarget.transform.localRotation; 
+        var camRotY = cameraTransform.localRotation.eulerAngles.y;
+
+        var moveRight = (camRotY >= 0 && camRotY < 60) || (camRotY > 320 && camRotY <= 360);
+        var moveLeft = (camRotY > 300 && camRotY < 360) || (camRotY >= 0 && camRotY < 20);
+
+        var end = Quaternion.Euler(0, 0, camRotY);
+        transform.localRotation = Quaternion.Slerp(start, end, Time.deltaTime*40);
+
+        if (moveRight)
+        {
+            rightTarget.transform.localRotation = Quaternion.Slerp(rstart, end, Time.deltaTime * 40);
+            rightTarget.GetChild(0).transform.LookAt(cameraTransform);
+        }
+        if (moveLeft)
+        {
+            leftTarget.transform.localRotation = Quaternion.Slerp(lstart, end, Time.deltaTime * 40);
+            leftTarget.GetChild(0).transform.LookAt(cameraTransform);
+        }
+        
     }
 
     public GameObject GetCurrentItem()
@@ -90,8 +113,7 @@ public class Inventory : MonoBehaviour {
                 Collider col = item.GetComponent<Collider>();
                 col.attachedRigidbody.useGravity = false;
                 col.enabled = false;
-                StopAllCoroutines();
-                StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), animationLength, PickUpPhone));
+                StartCoroutine(AnimateIntoPosession(item.transform, (leftTarget.GetChild(0) ?? transform), toInventoryAnimationLength, PickUpPhone));
             }
             return; 
         }
@@ -132,7 +154,7 @@ public class Inventory : MonoBehaviour {
         var outside = pointerData.pointerCurrentRaycast.gameObject;
         var outsidePosition = outside.transform.InverseTransformPoint(pointerData.pointerCurrentRaycast.worldPosition);
         currentItem.transform.SetParent(outside.transform,true);
-        StartCoroutine(AnimateToOutside(outsidePosition, animationLength, outside));
+        StartCoroutine(AnimateToOutside(outsidePosition, toOutsideAnimationLength, outside));
     }
 
     public void HoldItem(GameObject item)
@@ -147,7 +169,7 @@ public class Inventory : MonoBehaviour {
         rigidBody.isKinematic = true;
         isAnimating = true;
         StopAllCoroutines();
-        StartCoroutine(AnimateIntoPosession(item.transform, (possessionTarget != null ? possessionTarget : transform), animationLength, StartAnimateIntoView));
+        StartCoroutine(AnimateIntoPosession(item.transform, (rightTarget.GetChild(0) ?? transform), toInventoryAnimationLength));
     }
 
     public void DropItem()
@@ -162,7 +184,7 @@ public class Inventory : MonoBehaviour {
         // throws item in the direction currently facing
         //currentItem.transform.localScale = start.localScale;
         currentItem.transform.parent = trunk.transform;
-        ThrowCurrentItem(transform.up);
+        ThrowCurrentItem(cameraTransform.forward);
         isAnimating = false; 
     }
 
@@ -179,26 +201,10 @@ public class Inventory : MonoBehaviour {
 
     public void PickUpPhone(GameObject phone)
     {
-        StartAnimateIntoView(phone);
         hasPhone = true;
         phone.GetComponent<CellPhone>().CallOperator();
-        StartCoroutine(AnimateIntoPosession(phone.transform, (possessionTarget != null ? possessionTarget : transform), animationLength, SetPhoneInactive));
-        phone.SetActive(false);
     }
-
-    public void StartAnimateIntoView(GameObject item)
-    {
-        StopAllCoroutines();
-        var siobject = GetInteractable(item).itemData;
-        item.transform.localRotation = Quaternion.Euler(siobject.rotationWhenInInventory);
-        StartCoroutine(AnimateIntoView(item.transform, siobject.positionWhenInInventory, animationLength));
-    }
-
-    private void SetPhoneInactive(GameObject phone)
-    {
-        phone.SetActive(false);
-    }
-
+    
     public bool IsHoldingItem()
     {
         return currentItem != null; 
@@ -217,37 +223,22 @@ public class Inventory : MonoBehaviour {
                                             , float duration
                                             , OnAnimationComplete cb = null)
     {
-        Transform targetParent = target.parent.transform;
+        target.parent = newParent;
         Vector3 startPos = target.localPosition;
         Quaternion startRot = target.localRotation;
-        Quaternion randoRot = UnityEngine.Random.rotation;
-        float timer = 0f;
-        Vector3 carSpaceTargetPosition = new Vector3();
-        while (timer < duration)
-        {
-            carSpaceTargetPosition = targetParent.localToWorldMatrix.MultiplyPoint(startPos);
-            target.position = Vector3.Lerp(carSpaceTargetPosition, newParent.position, Mathf.Clamp01(timer / duration));
-            target.localRotation = Quaternion.SlerpUnclamped(startRot, newParent.localRotation, Ease.CircEaseInOut(timer, 0f, 1f, duration));
-            timer += Time.deltaTime;
-            yield return 0;
-        }
-        target.SetParent(newParent, true);
-
-        if (cb != null) cb.Invoke(target.gameObject);
-    }
-
-    private IEnumerator AnimateIntoView(Transform itemToAnimateTransform, Vector3 finalLocalPosition, float duration)
-    {
-        Vector3 startPos = itemToAnimateTransform.localPosition;
+        var item = target.GetComponent<Interactable>(); 
+        var endRot = Quaternion.AngleAxis(target.GetComponent<Interactable>().itemData.rotationWhenInInventory, Vector3.forward);
         float timer = 0f;
         while (timer < duration)
         {
-            itemToAnimateTransform.localPosition = Vector3.Lerp(startPos, finalLocalPosition, Mathf.Clamp01(timer / duration));
+            target.localPosition = Vector3.Lerp(startPos, Vector3.zero, Ease.CircEaseInOut(timer, 0f, 1f, duration)); 
+            target.localRotation = Quaternion.SlerpUnclamped(startRot, endRot, Ease.CircEaseInOut(timer, 0f, 1f, duration));
             timer += Time.deltaTime;
             yield return 0;
         }
         isAnimating = false;
-
+        if (cb != null) cb.Invoke(target.gameObject);
+        
     }
 
     private IEnumerator AnimateToOutside(Vector3 finalLocalPosition, float duration, GameObject outside)

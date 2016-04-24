@@ -9,22 +9,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86a6ea89988e9ed43a32dc9c8bc75bf1, type: 3}
-  m_Name: TireIronData
+  m_Name: CrowbarData
   m_EditorClassIdentifier: 
   canBeHeld: 1
-  itemName: TireIron
+  itemName: Crowbar
   disposeOnUse: 0
-  positionWhenInInventory: {x: -0.264, y: 1.066, z: -0.015}
-  rotationWhenInInventory: {x: 52.85, y: 77, z: 1.25}
-  pivotLayer: {fileID: 0}
-  interactableFastenerList: 01000000
-  canUnfastenFasteners: 1
+  rotationWhenInInventory: -140
+  interactableFastenerList: 
+  canUnfastenFasteners: 0
   unfastenAnimationClipName: 
-  canOpenLatch: 0
-  openLatchAnimationClipName: 
+  canOpenLatch: 1
+  openLatchAnimationClipName: CrowbarOpenLatch
   canWedgeOpenTrunk: 1
-  localAxisToRotateForWedge: {x: 0, y: 0, z: 1}
-  toolTipOffset: 0.451
-  frontDirection: {x: 1, y: 0, z: 0}
+  localAxisToRotateForWedge: {x: 1, y: 0, z: 1}
+  toolTipOffset: 0.672761
+  frontDirection: {x: 0.672, y: 0.032, z: 0}
   toolUpDirectionWhenFlat: {x: 0, y: 0, z: 1}
   wedgeStartTransform: {fileID: 0}

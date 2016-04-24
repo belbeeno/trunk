@@ -131,7 +131,6 @@ public class Tool : Interactable {
                                             , float duration
                                             , Vector3 offsetStart = new Vector3())
     {
-        var curParent = transform.parent;
         transform.parent = newParent;
 
         Vector3 startPos = transform.localPosition;
