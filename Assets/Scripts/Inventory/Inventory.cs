@@ -78,6 +78,11 @@ public class Inventory : MonoBehaviour {
     // currently holding something and the two items can interact 
     public bool CanInteractWith(GameObject item)
     {
+        if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.PreGame 
+            && GameManager.Get().RemoteStatus != GameManager.PlayerStatus.NotConnected)
+        {
+            return false;
+        }
         if (isAnimating)
         {
             return false;
@@ -105,14 +110,19 @@ public class Inventory : MonoBehaviour {
         {
             return;
         }
+        if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGamePreCall)
+        {
+            // Not ready yet; wait for the cinematic to finish!
+            return;
+        }
         if (item.GetComponent<CellPhone>())
-            {
-                Collider col = item.GetComponent<Collider>();
-                col.attachedRigidbody.useGravity = false;
-                col.enabled = false;
-                StartCoroutine(AnimateIntoPosession(item.transform, (leftTarget.GetChild(0) ?? transform), toInventoryAnimationLength, PickUpPhone));
-            
-            return; 
+        {
+            Collider col = item.GetComponent<Collider>();
+            col.attachedRigidbody.useGravity = false;
+            col.enabled = false;
+            StartCoroutine(AnimateIntoPosession(item.transform, (leftTarget.GetChild(0) ?? transform), toInventoryAnimationLength, PickUpPhone));
+
+            return;
         }
         // Pick up the item
         if (!IsHoldingItem())

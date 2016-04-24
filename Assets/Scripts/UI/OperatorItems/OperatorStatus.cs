@@ -46,8 +46,17 @@ public class OperatorStatus : MonoBehaviour
 
     public void Update()
     {
-        SetTimers(ref checkAreaTimer, GameSettings.APB_COOLDOWN, ref checkAreaToggle);
-        SetTimers(ref policeTimer, GameSettings.COP_SIREN_PING_COOLDOWN, ref policeToggle);
-        SetTimers(ref helicopterTimer, GameSettings.HELICOPTER_PING_COOLDOWN, ref helicopterToggle);
+        if (GameManager.Get().RemoteStatus == GameManager.PlayerStatus.InGame)
+        {
+            SetTimers(ref checkAreaTimer, GameSettings.APB_COOLDOWN, ref checkAreaToggle);
+            SetTimers(ref policeTimer, GameSettings.COP_SIREN_PING_COOLDOWN, ref policeToggle);
+            SetTimers(ref helicopterTimer, GameSettings.HELICOPTER_PING_COOLDOWN, ref helicopterToggle);
+        }
+        else
+        {
+            checkAreaToggle.SetInteractable(false);
+            policeToggle.SetInteractable(false);
+            helicopterToggle.SetInteractable(false);
+        }
     }
 }
