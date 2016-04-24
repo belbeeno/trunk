@@ -226,7 +226,6 @@ public class Inventory : MonoBehaviour {
         target.parent = newParent;
         Vector3 startPos = target.localPosition;
         Quaternion startRot = target.localRotation;
-        var item = target.GetComponent<Interactable>(); 
         var endRot = Quaternion.AngleAxis(target.GetComponent<Interactable>().itemData.rotationWhenInInventory, Vector3.forward);
         float timer = 0f;
         while (timer < duration)
