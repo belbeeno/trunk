@@ -13264,7 +13264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a40b544b8c3553c40852ae7ad35a9343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vrModeEnabled: 0
+  vrModeEnabled: 1
   distortionCorrection: 2
   enableAlignmentMarker: 1
   enableSettingsButton: 1
@@ -16719,7 +16719,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-  voiceChatPlayer: {fileID: 485350158}
+  voiceChatPlayer: {fileID: 0}
   statusText: {fileID: 881470862}
   mover: {fileID: 1406049026}
   outsideTrunk: {fileID: 829516072}
@@ -18215,7 +18215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftThumbDeadzone: 50
   cursorSensitivity: {x: 0.5, y: 0.5}
-  cameraToLetFly: {fileID: 1424076264}
+  cameraToLetFly: {fileID: 0}
   moveSpeed: 10
 --- !u!4 &1950455569
 Transform:
