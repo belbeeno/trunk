@@ -49,6 +49,37 @@ ModelImporter:
     100082: transform32
     100084: transform33
     100086: transform34
+    100088: group27
+    100090: Hostage
+    100092: polySurface31
+    100094: polySurface32
+    100096: polySurface33
+    100098: polySurface34
+    100100: polySurface55
+    100102: polySurface56
+    100104: polySurface57
+    100106: polySurface58
+    100108: polySurface59
+    100110: polySurface60
+    100112: polySurface61
+    100114: polySurface63
+    100116: transform35
+    100118: transform36
+    100120: transform37
+    100122: transform38
+    100124: transform39
+    100126: transform40
+    100128: transform41
+    100130: transform42
+    100132: transform43
+    100134: transform44
+    100136: transform45
+    100138: transform46
+    100140: transform47
+    100142: transform48
+    100144: transform49
+    100146: transform50
+    100148: transform51
     400000: //RootNode
     400002: pCube3
     400004: pCylinder11
@@ -93,12 +124,46 @@ ModelImporter:
     400082: transform32
     400084: transform33
     400086: transform34
+    400088: group27
+    400090: Hostage
+    400092: polySurface31
+    400094: polySurface32
+    400096: polySurface33
+    400098: polySurface34
+    400100: polySurface55
+    400102: polySurface56
+    400104: polySurface57
+    400106: polySurface58
+    400108: polySurface59
+    400110: polySurface60
+    400112: polySurface61
+    400114: polySurface63
+    400116: transform35
+    400118: transform36
+    400120: transform37
+    400122: transform38
+    400124: transform39
+    400126: transform40
+    400128: transform41
+    400130: transform42
+    400132: transform43
+    400134: transform44
+    400136: transform45
+    400138: transform46
+    400140: transform47
+    400142: transform48
+    400144: transform49
+    400146: transform50
+    400148: transform51
     2300000: polySurface51
     2300002: //RootNode
+    2300004: polySurface63
     3300000: polySurface51
     3300002: //RootNode
+    3300004: polySurface63
     4300000: polySurface51
     4300002: polySurface47
+    4300004: polySurface63
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -124,7 +189,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 15
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1

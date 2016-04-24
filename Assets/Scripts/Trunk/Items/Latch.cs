@@ -6,6 +6,7 @@ using System.Collections.Generic;
 // Latches are used to prevent something with a hinge to open. 
 public class Latch : Interactable
 {
+    [SerializeField]
     public bool isOpen { get; set; }
 
     private float degreeTrunkLeftOpen = 3f;
@@ -14,6 +15,8 @@ public class Latch : Interactable
     private bool isOpening;
     float timer = 0f;
     float duration = 2f;
+
+    public Vector3 toolContactDirection; 
 
     void Start()
     {
