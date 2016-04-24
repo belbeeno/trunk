@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
         InGamePreCall,  // Haven't picked up the phone yet
         InGameRinging,  // It's ringing...
         InGame,
+        
+        GameOver,
     }
 
     [System.Serializable]
@@ -93,6 +95,12 @@ public class GameManager : MonoBehaviour
     public OperatorPanAndZoom operatorControls = null;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
+
+    private float gameTimer = GameSettings.GAME_SESSION_LENGTH;
+    public bool IsGameOver()
+    {
+        return gameTimer < 0f;
+    }
     
     private bool _gameHasStarted;
     public bool HasGameStarted() { return _gameHasStarted; }
@@ -126,6 +134,14 @@ public class GameManager : MonoBehaviour
                     remoteValidationSeed = -1;
                     LocalStatus = PlayerStatus.LoadingFailed;
                 }
+            }
+        }
+        else
+        {
+            gameTimer -= Time.deltaTime;
+            if (gameTimer <= 0f)
+            {
+                LocalStatus = PlayerStatus.GameOver;
             }
         }
     }

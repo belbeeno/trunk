@@ -123,7 +123,6 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     public void OnGameOverMsg(NetworkMessage msg)
     {
         // If we're getting this at the hostage end, then the operator found us!
-
         Log("Hostage found!  You win!");
         OnGameWin.Invoke();
         Restart();
@@ -154,7 +153,11 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         float distFromOriginSqrd = (Camera.main.transform.position - response.origin).sqrMagnitude;
         if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
         {
-            response.hints.Add(new APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), APBResponse.Hint.HintType.Hostage));
+            if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.InGame)
+            {
+                // Can only finish the game if we're still playing
+                response.hints.Add(new APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), APBResponse.Hint.HintType.Hostage));
+            }
         }
 
         if (outsideTrunk == null)

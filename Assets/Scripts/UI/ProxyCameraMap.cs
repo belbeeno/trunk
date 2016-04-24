@@ -100,15 +100,53 @@ public class ProxyCameraMap : MonoBehaviour
                         switch (opToggle.action)
                         {
                             case OperatorToggle.OperatorAction.APB:
-                                TrunkNetworkingOperator.Get().RequestAPB(hitInfo.point);
-                                Debug.DrawLine(ray.origin, hitInfo.point, Color.green, 10f);
+                                if (TrunkNetworkingOperator.Get())
+                                {
+                                    TrunkNetworkingOperator.Get().RequestAPB(hitInfo.point);
+                                }
+                                if (Debug.isDebugBuild)
+                                {
+                                    Debug.DrawLine(ray.origin, hitInfo.point, Color.green, 10f, false);
+                                    Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
+                                    Vector3 nextPos = new Vector3();
+                                    for (float i = 1f; i < 10f; i += 1f)
+                                    {
+                                        nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+                                        nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+
+                                        Debug.DrawLine(hitInfo.point + prevPos, hitInfo.point + nextPos, Color.green, 10f, false);
+
+                                        prevPos = nextPos;
+                                    }
+                                }
+
                                 break;
                             case OperatorToggle.OperatorAction.Siren:
-                                TrunkNetworkingOperator.Get().TriggerPoliceInHostageScene(new Vector2(hitInfo.point.x, hitInfo.point.z));
-                                Debug.DrawLine(ray.origin, hitInfo.point, Color.blue, 10f);
+                                if (TrunkNetworkingOperator.Get())
+                                {
+                                    TrunkNetworkingOperator.Get().TriggerPoliceInHostageScene(new Vector2(hitInfo.point.x, hitInfo.point.z));
+                                }
+                                if (Debug.isDebugBuild)
+                                {
+                                    Debug.DrawLine(ray.origin, hitInfo.point, Color.green, 10f, false);
+                                    Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
+                                    Vector3 nextPos = new Vector3();
+                                    for (float i = 1f; i < 10f; i += 1f)
+                                    {
+                                        nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+                                        nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+
+                                        Debug.DrawLine(hitInfo.point + prevPos, hitInfo.point + nextPos, Color.green, 10f, false);
+
+                                        prevPos = nextPos;
+                                    }
+                                }
                                 break;
                             case OperatorToggle.OperatorAction.Helicopter:
-                                TrunkNetworkingOperator.Get().TriggerHelicopterInHostageScene(hitInfo.point.z, true);
+                                if (TrunkNetworkingOperator.Get())
+                                {
+                                    TrunkNetworkingOperator.Get().TriggerHelicopterInHostageScene(hitInfo.point.z, true);
+                                }
                                 Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 10f);
                                 break;
                         }
