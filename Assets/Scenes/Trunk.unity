@@ -935,6 +935,10 @@ Prefab:
       propertyPath: actionBar
       value: 
       objectReference: {fileID: 850487109}
+    - target: {fileID: 11486918, guid: 0fc0b65bdfec5ac42a9208d94d2c60e9, type: 2}
+      propertyPath: pidParams.oMax
+      value: 5000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0fc0b65bdfec5ac42a9208d94d2c60e9, type: 2}
   m_IsPrefabParent: 0
@@ -4972,8 +4976,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 1
   toggle: {fileID: 679919719}
-  cooldown: 5
-  startAtFull: 1
   cooldownClock: {fileID: 157127237}
   OnOperatorAction:
     m_PersistentCalls:
@@ -4981,6 +4983,17 @@ MonoBehaviour:
       - m_Target: {fileID: 896614670}
         m_MethodName: OperatorAction
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1434044829}
+        m_MethodName: ExhaustPoliceTimer
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5916,7 +5929,7 @@ Prefab:
       objectReference: {fileID: 850487109}
     - target: {fileID: 22425492, guid: aa4ea203c37f76b469702e78537de64a, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 59.957172
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa4ea203c37f76b469702e78537de64a, type: 2}
@@ -6627,6 +6640,44 @@ MonoBehaviour:
   hScrollBar: {fileID: 245910157}
   vScrollBar: {fileID: 317886042}
   zoomSlider: {fileID: 4405652}
+  OnOrthoSizeChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1551040873}
+        m_MethodName: InitPositions
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 896614670}
+        m_MethodName: InitPositions
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1542985621}
+        m_MethodName: InitPositions
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: OperatorPanAndZoom+OnOrthoSizeChangedCB, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   MaxOrthographicSize: 1200
   MinOrthographicSize: 300
 --- !u!1 &855382429
@@ -6893,11 +6944,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -12.960175
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -0.58244133
       objectReference: {fileID: 0}
     - target: {fileID: 22443020, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_AnchoredPosition.x
@@ -7596,8 +7647,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 0
   toggle: {fileID: 917136510}
-  cooldown: 5
-  startAtFull: 0
   cooldownClock: {fileID: 209414739}
   OnOperatorAction:
     m_PersistentCalls:
@@ -7605,6 +7654,17 @@ MonoBehaviour:
       - m_Target: {fileID: 1551040873}
         m_MethodName: OperatorAction
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1434044829}
+        m_MethodName: ExhaustCheckArea
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11350,11 +11410,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -29.512638
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -0.58244133
       objectReference: {fileID: 0}
     - target: {fileID: 11481694, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_Sprite
@@ -11413,7 +11473,7 @@ GameObject:
   - 222: {fileID: 1434044827}
   - 114: {fileID: 1434044826}
   - 114: {fileID: 1434044825}
-  - 82: {fileID: 1434044829}
+  - 114: {fileID: 1434044829}
   m_Layer: 5
   m_Name: Operator Canvas
   m_TagString: Untagged
@@ -11505,80 +11565,23 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!82 &1434044829
-AudioSource:
+--- !u!114 &1434044829
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1434044823}
   m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 0.75
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  Priority: 196
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e435f05acf93eec4b8d17e2e1a063e9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkAreaTimer: 60
+  checkAreaToggle: {fileID: 917136509}
+  policeTimer: 45
+  policeToggle: {fileID: 679919718}
+  helicopterTimer: 45
+  helicopterToggle: {fileID: 1638615538}
 --- !u!1 &1434965800
 GameObject:
   m_ObjectHideFlags: 0
@@ -12060,11 +12063,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -15.808144
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -1.1648827
       objectReference: {fileID: 0}
     - target: {fileID: 11481694, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_Sprite
@@ -12434,11 +12437,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -12.382019
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -1.1648827
       objectReference: {fileID: 0}
     - target: {fileID: 11481694, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_Sprite
@@ -13556,8 +13559,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 2
   toggle: {fileID: 1638615539}
-  cooldown: 5
-  startAtFull: 1
   cooldownClock: {fileID: 1669666496}
   OnOperatorAction:
     m_PersistentCalls:
@@ -13565,6 +13566,17 @@ MonoBehaviour:
       - m_Target: {fileID: 1542985621}
         m_MethodName: OperatorAction
         m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1434044829}
+        m_MethodName: ExhaustHelicopterTimer
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -15201,7 +15213,7 @@ MonoBehaviour:
     isEnabled: 0
   operatorProxyCamera: {fileID: 371514723}
   operatorMapCanvasRect: {fileID: 1311964307}
-  operatorControls: {fileID: 0}
+  operatorControls: {fileID: 850487110}
   generationOptions:
     blocksWidth: 16
     blocksHeight: 16
@@ -16232,11 +16244,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -8.633835
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -0.58244133
       objectReference: {fileID: 0}
     - target: {fileID: 11481694, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_Sprite

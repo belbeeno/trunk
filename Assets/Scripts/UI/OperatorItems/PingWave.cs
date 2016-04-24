@@ -39,8 +39,9 @@ public class PingWave : OperatorItemBase
         get { return (int)PingState.Preview; }
     }
 
-    protected override void InitPositions()
+    public override void InitPositions(float oMax)
     {
+        pidParams.oMax = oMax;
         pidX.AssignInit(pidParams);
         pidY.AssignInit(pidParams);        
     }

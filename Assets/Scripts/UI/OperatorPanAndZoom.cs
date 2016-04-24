@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -9,6 +10,10 @@ public class OperatorPanAndZoom : MonoBehaviour
     public Scrollbar hScrollBar = null;
     public Scrollbar vScrollBar = null;
     public Slider zoomSlider = null;
+
+    [System.Serializable]
+    public class OnOrthoSizeChangedCB : UnityEvent<float> { }
+    public OnOrthoSizeChangedCB OnOrthoSizeChanged;
 
     public float MaxOrthographicSize = 1200f;
     public float MinOrthographicSize = 300f;
@@ -42,6 +47,7 @@ public class OperatorPanAndZoom : MonoBehaviour
     public void Init()
     {
         MaxOrthographicSize = proxyCamera.orthographicSize;
+        OnOrthoSizeChanged.Invoke(MaxOrthographicSize * 2f);
         zoomSlider.value = 0f;
         hScrollBar.value = 0.5f;
         vScrollBar.value = 0.5f;

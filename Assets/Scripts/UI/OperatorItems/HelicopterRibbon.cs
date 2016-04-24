@@ -61,8 +61,9 @@ public class HelicopterRibbon : OperatorItemBase
         currentState = (int)HeliState.Action;
         timer = GameSettings.HELICOPTER_PING_DURATION;
     }
-    protected override void InitPositions()
+    public override void InitPositions(float oMax)
     {
+        pidParams.oMax = oMax;
         pidY.AssignInit(pidParams);
     }
     protected override void ResetPositions()
