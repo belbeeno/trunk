@@ -24,6 +24,7 @@ public abstract class OperatorItemBase : MonoBehaviour
     protected abstract void InitPositions();
     protected abstract void ResetPositions();
     protected abstract void UpdatePositions();
+    protected virtual bool CanSetStateToInvalid() { return !animController.isPlaying;  }
 
     public abstract void OperatorAction(OperatorToggle.OperatorAction action);
 
@@ -151,7 +152,7 @@ public abstract class OperatorItemBase : MonoBehaviour
             UpdatePositions();
         }
 
-        if (!animController.isPlaying)
+        if (CanSetStateToInvalid())
         {
             currentState = -1;
         }

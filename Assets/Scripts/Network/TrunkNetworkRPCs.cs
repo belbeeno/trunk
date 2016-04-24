@@ -46,7 +46,7 @@ namespace NetMessage
 
         public const short APB                  = Base + 11;
         public const short TriggerPoliceCar     = Base + 12;
-        public const short TriggerCopter        = Base + 13;
+        public const short TriggerHelicopter    = Base + 13;
 
         public const short GameOver             = Base + 20;
     }
@@ -152,6 +152,12 @@ namespace NetMessage
             Helpers.DeserializeList(reader, ref hints);
             origin = reader.ReadVector3();
         }
+    }
+
+    public class TriggerHelicopterMsg : MessageBase
+    {
+        public float yPos;
+        public bool goingRight;
     }
 
     public class TriggerPoliceMsg : MessageBase

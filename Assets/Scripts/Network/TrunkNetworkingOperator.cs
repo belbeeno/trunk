@@ -199,6 +199,15 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         }
     }
 
+    public void TriggerHelicopterInHostageScene(float y, bool isRight)
+    {
+        Log("Requesting Helicoptor at y " + y.ToString());
+        TriggerHelicopterMsg msg = new TriggerHelicopterMsg();
+        msg.goingRight = isRight;
+        msg.yPos = y;
+        SendMessage(ID.TriggerHelicopter, msg);
+    }
+
     public void TriggerPoliceInHostageScene(Vector2 pos)
     {
         Log("Requesting Police car at pos " + pos.ToString());

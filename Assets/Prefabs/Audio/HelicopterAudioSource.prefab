@@ -1,41 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &127252
+--- !u!1 &115182
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 439666}
-  - 114: {fileID: 11401024}
-  - 114: {fileID: 11422512}
-  - 114: {fileID: 11449406}
+  - 4: {fileID: 431680}
   m_Layer: 0
-  m_Name: SchoolAudioSource
+  m_Name: HelicopterAudioSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!1 &166088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 420016}
+  - 114: {fileID: 11454684}
+  m_Layer: 0
+  m_Name: AudioPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &439666
+--- !u!4 &420016
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 127252}
+  m_GameObject: {fileID: 166088}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 500, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 431680}
+  m_RootOrder: 0
+--- !u!4 &431680
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 115182}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 420016}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11401024
+--- !u!114 &11454684
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 127252}
+  m_GameObject: {fileID: 166088}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6dbca64e524ea44f9b26142ec59aca8a, type: 3}
@@ -47,39 +73,14 @@ MonoBehaviour:
   occlusionEnabled: 0
   playOnAwake: 1
   rolloffMode: 1
-  sourceClip: {fileID: 8300000, guid: 5441d7e1fd264084dbab45b8ba9152c8, type: 3}
+  sourceClip: {fileID: 8300000, guid: 76b3eadb1f28bd04284d3e544d802119, type: 3}
   sourceLoop: 1
   sourceMute: 0
   sourcePitch: 1
   sourceVolume: 1
-  sourceMaxDistance: 150
+  sourceMaxDistance: 500
   sourceMinDistance: 0
   hrtfEnabled: 1
---- !u!114 &11422512
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 127252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7b60ab8645b23b4aa3b1cd8e6b387e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  winding: 0
-  axisToFreeze: 1
---- !u!114 &11449406
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 127252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4977b1ff90ca8a642997dba983312314, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  points: []
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -89,5 +90,5 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 127252}
+  m_RootGameObject: {fileID: 115182}
   m_IsPrefabParent: 1

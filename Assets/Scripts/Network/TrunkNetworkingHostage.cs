@@ -23,6 +23,8 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     Outside outsideTrunk = null;
     [SerializeField]
     GameObject policeCarInstance = null;
+    [SerializeField]
+    GameObject helicopterInstance = null;
     
     public override void Begin()
     {
@@ -40,6 +42,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         initParams.Add(new NetHandlerInitParams(ID.LoadSession, OnLoadSessionMsg));
         initParams.Add(new NetHandlerInitParams(ID.APB, OnAPBRequestMsg));
         initParams.Add(new NetHandlerInitParams(ID.TriggerPoliceCar, OnTriggerPoliceCarMsg));
+        initParams.Add(new NetHandlerInitParams(ID.TriggerHelicopter, OnTriggerHelicopterMsg));
         initParams.Add(new NetHandlerInitParams(ID.GameOver, OnGameOverMsg));
 
         base.Begin();
@@ -50,6 +53,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         _baseInstance = this;
 
         policeCarInstance.SetActive(false);
+        helicopterInstance.SetActive(false);
     }
     public void Update()
     {
@@ -202,6 +206,27 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         policeCarInstance.SetActive(true);
         yield return new WaitForSeconds(GameSettings.COP_SIREN_PING_DURATION);
         policeCarInstance.SetActive(false);
+    }
+
+    public void OnTriggerHelicopterMsg(NetworkMessage msg)
+    {
+        TriggerHelicopterMsg castedMsg = msg.ReadMessage<TriggerHelicopterMsg>();
+        StartCoroutine(HelicopterThread(castedMsg.yPos, castedMsg.goingRight));
+    }
+    public IEnumerator HelicopterThread(float yPos, bool goingRight)
+    {
+        Vector3 startPos = new Vector3((goingRight ? GameManager.Get().generationOptions.cityWidth : 0f), 0f, yPos);
+        Vector3 endPos = new Vector3((goingRight ? 0f : GameManager.Get().generationOptions.cityWidth), 0f, yPos);
+        helicopterInstance.transform.position = startPos;
+        helicopterInstance.SetActive(true);
+        float timer = GameSettings.HELICOPTER_PING_DURATION;
+        while (timer > 0f)
+        {
+            helicopterInstance.transform.position = Vector3.Lerp(startPos, endPos, 1f - Mathf.Clamp01(timer / GameSettings.HELICOPTER_PING_DURATION));
+            timer -= Time.deltaTime;
+            yield return 0;
+        }
+        helicopterInstance.SetActive(false);
     }
 
 }
