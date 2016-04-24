@@ -7,7 +7,11 @@ using Random = UnityEngine.Random;
 
 public class RoutePlanner : MonoBehaviour
 {
-    public RoadGraph graph;
+    public RoadGraph graph = null;
+    public bool IsReady()
+    {
+        return graph != null;
+    }
     
     public RoadEdge[] GetRandomPath()
     {

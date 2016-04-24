@@ -19,7 +19,7 @@ public class Route
 
     public bool CanMove()
     {
-        CheckPath();
+        if (!CheckPath()) return false;
         return _upcomingEdges != null && _upcomingEdges.Any();
     }
 
@@ -91,8 +91,10 @@ public class Route
         transform.rotation = Quaternion.Lerp(currentDirRot, nextDirRot, transitionLerpT);
     }
     
-    private void CheckPath()
+    private bool CheckPath()
     {
+        if (!_routePlanner.IsReady()) return false;
+
         if (_currentEdge == null)
         {
             var newPath = _routePlanner.GetRandomPath();
@@ -104,5 +106,6 @@ public class Route
             var newPath = _routePlanner.GetRandomPath(_currentEdge);
             _upcomingEdges = newPath.Skip(1).ToArray();
         }
+        return true;
     }
 }

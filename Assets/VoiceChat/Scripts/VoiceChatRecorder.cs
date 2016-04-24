@@ -153,18 +153,12 @@ namespace VoiceChat
 
         void OnDisable()
         {
-            if (instance == this)
-            {
-                instance = null;
-            }
+            instance = null;
         }
 
         void OnDestroy()
         {
-            if (instance == this)
-            {
-                instance = null;
-            }
+            instance = null;
         }
 
         void Update()
