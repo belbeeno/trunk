@@ -38,29 +38,20 @@ namespace NetMessage
     {
         public const short Base = MsgType.Highest;
 
-        public const short VoiceChatPacket  = Base + 1;
-        public const short InitSession      = Base + 2;
-        public const short Ping             = Base + 3;
-		public const short Ready			= Base + 4;
+        public const short VoiceChatPacket      = Base + 1;
+        public const short InitSession          = Base + 2;
+        public const short LoadSession        = Base + 3;
+        public const short ValidateSession      = Base + 4;
+        public const short PlayerStatusChange   = Base + 5;
 
-        public const short APB              = Base + 11;
-        public const short TriggerPoliceCar    = Base + 12;
-        public const short TriggerCopter    = Base + 13;
+        public const short APB                  = Base + 11;
+        public const short TriggerPoliceCar     = Base + 12;
+        public const short TriggerCopter        = Base + 13;
 
-        public const short GameOver         = Base + 20;
+        public const short GameOver             = Base + 20;
     }
 
-    public class InitSessionMsg : MessageBase
-    {
-        public int seed = -1;
-    }
-    
-    public class PingMsg : MessageBase
-    {
-        public string msg;
-    }
-
-    public class ReadyMsg : MessageBase
+    public class SeedMsg : MessageBase
     {
         public int seed = -1;
     }
@@ -199,5 +190,10 @@ namespace NetMessage
             payload.NetworkId = reader.ReadInt32();
             payload.PacketId = reader.ReadUInt64();
         }
+    }
+
+    public class UpdateStatusMsg : MessageBase
+    {
+        public int status;
     }
 }
