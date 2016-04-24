@@ -9,6 +9,8 @@ public class RiverVolumetricAudio : MonoBehaviour
     protected Vector3[] pointsArray = new Vector3[0];
     protected VolumetricAudioSource volumetricSource = null;
 
+    public float maxDistFromRiver = 50f;
+
     void Start()
     {
         volumetricSource = GetComponent<VolumetricAudioSource>();
@@ -31,7 +33,7 @@ public class RiverVolumetricAudio : MonoBehaviour
     {
         if (pointsArray.Length > 0)
         {
-            volumetricSource.MoveTowardsWhileInside(Camera.main.transform.position, pointsArray);
+            volumetricSource.MoveTowardsWhileCloseTo(Camera.main.transform.position, maxDistFromRiver, pointsArray);
         }
     }
 

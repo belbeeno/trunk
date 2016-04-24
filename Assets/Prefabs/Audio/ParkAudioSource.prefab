@@ -10,9 +10,9 @@ GameObject:
   - 4: {fileID: 439666}
   - 114: {fileID: 11401024}
   - 114: {fileID: 11422512}
-  - 114: {fileID: 11495466}
+  - 114: {fileID: 11449406}
   m_Layer: 8
-  m_Name: WaterAudioSource
+  m_Name: ParkAudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,16 +43,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   directivityAlpha: 0
   directivitySharpness: 1
-  gainDb: 10
+  gainDb: 7.5
   occlusionEnabled: 0
   playOnAwake: 1
   rolloffMode: 1
-  sourceClip: {fileID: 8300000, guid: 48992b63151ab9b47871ed2f20b8eb9f, type: 3}
+  sourceClip: {fileID: 8300000, guid: e2f6bccc01360a146a95e623b8b5b38c, type: 3}
   sourceLoop: 1
   sourceMute: 0
   sourcePitch: 1
   sourceVolume: 1
-  sourceMaxDistance: 275
+  sourceMaxDistance: 150
   sourceMinDistance: 0
   hrtfEnabled: 1
 --- !u!114 &11422512
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   winding: 0
   axisToFreeze: 1
---- !u!114 &11495466
+--- !u!114 &11449406
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -76,10 +76,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 127252}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d27918f438e25f44c95588bfd06b062b, type: 3}
+  m_Script: {fileID: 11500000, guid: 4977b1ff90ca8a642997dba983312314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistFromRiver: 150
+  points: []
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

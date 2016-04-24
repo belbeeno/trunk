@@ -83,7 +83,7 @@ public class City : MonoBehaviour
             var pos = parkPrefab.transform.position;
             parkPrefab.transform.position = new Vector3(pos.x, 3, pos.z);
 
-            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.schoolAudio);
+            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.bigParkAudio);
             audioInstance.transform.SetParent(parkObj.transform, false);
             audioInstance.transform.position = center;
             CardboardAudio.ActivatePostInitialization(audioInstance); 

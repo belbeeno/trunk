@@ -43,10 +43,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   directivityAlpha: 0
   directivitySharpness: 1
-  gainDb: 24
+  gainDb: 5
   occlusionEnabled: 0
   playOnAwake: 1
-  rolloffMode: 0
+  rolloffMode: 1
   sourceClip: {fileID: 8300000, guid: 5441d7e1fd264084dbab45b8ba9152c8, type: 3}
   sourceLoop: 1
   sourceMute: 0
