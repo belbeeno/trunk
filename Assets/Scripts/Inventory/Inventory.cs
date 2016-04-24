@@ -185,7 +185,7 @@ public class Inventory : MonoBehaviour {
         {
             return;
         }
-        StopAllCoroutines();
+
         currentInteractable.ItemDropped();
         currentItem.transform.localRotation = Quaternion.identity;
 
@@ -251,10 +251,13 @@ public class Inventory : MonoBehaviour {
     private IEnumerator AnimateToOutside(Vector3 finalLocalPosition, float duration, GameObject outside)
     {
         Vector3 startPos = currentItem.transform.localPosition;
+        var startRot = currentItem.transform.localRotation;
+        var endRot = Quaternion.FromToRotation(currentItem.transform.up, transform.up);
         float timer = 0f;
         while (timer < duration)
         {
             currentItem.transform.localPosition = Vector3.Lerp(startPos, finalLocalPosition, Mathf.Clamp01(timer / duration));
+            currentItem.transform.localRotation = Quaternion.Slerp(startRot, endRot, Mathf.Clamp01(timer / duration));
             timer += Time.deltaTime;
             yield return 0;
         }
