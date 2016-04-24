@@ -77,6 +77,11 @@ ModelImporter:
     100138: polySurface57
     100140: pTorus1
     100142: TireGr
+    100144: polySurface65
+    100146: polySurface66
+    100148: polySurface67
+    100150: polySurface68
+    100152: polySurface69
     400000: CarTrunk
     400002: polySurface49
     400004: transform10
@@ -149,17 +154,25 @@ ModelImporter:
     400138: polySurface57
     400140: pTorus1
     400142: TireGr
+    400144: polySurface65
+    400146: polySurface66
+    400148: polySurface67
+    400150: polySurface68
+    400152: polySurface69
     2300000: trunk
     2300002: polySurface53
     2300004: //RootNode
     2300006: polySurface57
+    2300008: polySurface69
     3300000: trunk
     3300002: polySurface53
     3300004: //RootNode
     3300006: polySurface57
+    3300008: polySurface69
     4300000: trunk
     4300002: polySurface53
     4300004: polySurface57
+    4300006: polySurface69
     9500000: //RootNode
   materials:
     importMaterials: 1

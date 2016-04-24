@@ -107,6 +107,10 @@ public class ProxyCameraMap : MonoBehaviour
                                 TrunkNetworkingOperator.Get().TriggerPoliceInHostageScene(new Vector2(hitInfo.point.x, hitInfo.point.z));
                                 Debug.DrawLine(ray.origin, hitInfo.point, Color.blue, 10f);
                                 break;
+                            case OperatorToggle.OperatorAction.Helicopter:
+                                TrunkNetworkingOperator.Get().TriggerHelicopterInHostageScene(hitInfo.point.z, true);
+                                Debug.DrawLine(ray.origin, hitInfo.point, Color.red, 10f);
+                                break;
                         }
 
                         opToggle.OnUse();

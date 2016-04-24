@@ -5,10 +5,20 @@ using UnityEngine;
 
 namespace VoiceChat
 {
-    [RequireComponent(typeof(AudioSource))]
     public class VoiceChatPlayer : MonoBehaviour
     {
         public event Action PlayerStarted;
+        public CardboardAudioSource source = null;
+        public AudioSource oldSource = null;
+
+        public AudioSource GetAudioSource()
+        {
+            if (source == null)
+            {
+                return oldSource;
+            }
+            return source.Audio;
+        }
 
         float lastTime = 0;
         double played = 0;
@@ -39,8 +49,16 @@ namespace VoiceChat
         {
             int size = VoiceChatSettings.Instance.Frequency * 10;
 
-            GetComponent<AudioSource>().loop = true;
-            GetComponent<AudioSource>().clip = AudioClip.Create("VoiceChat", size, 1, VoiceChatSettings.Instance.Frequency, false);
+            if (source != null)
+            {
+                source.loop = true;
+                source.clip = AudioClip.Create("VoiceChat", size, 1, VoiceChatSettings.Instance.Frequency, false);
+            }
+            else
+            {
+                oldSource.loop = true;
+                oldSource.clip = AudioClip.Create("VoiceChat", size, 1, VoiceChatSettings.Instance.Frequency, false);
+            }
             data = new float[size];
 
             if (VoiceChatSettings.Instance.LocalDebug)
@@ -56,18 +74,20 @@ namespace VoiceChat
 
         void Update()
         {
-            if (GetComponent<AudioSource>().isPlaying)
+            if ((source != null && source.isPlaying) 
+                || (oldSource != null && oldSource.isPlaying))
             {
+                float currTime = GetAudioSource().time;
                 // Wrapped around
-                if (lastTime > GetComponent<AudioSource>().time)
+                if (lastTime > currTime)
                 {
-                    played += GetComponent<AudioSource>().clip.length;
+                    played += GetAudioSource().clip.length;
                 }
 
-                lastTime = GetComponent<AudioSource>().time;
+                lastTime = currTime;
 
                 // Check if we've played to far
-                if (played + GetComponent<AudioSource>().time >= received)
+                if (played + currTime >= received)
                 {
                     Stop();
                     shouldPlay = false;
@@ -81,7 +101,7 @@ namespace VoiceChat
 
                     if (playDelay <= 0)
                     {
-                        GetComponent<AudioSource>().Play();
+                        GetAudioSource().Play();
                     }
                 }
             }
@@ -89,8 +109,16 @@ namespace VoiceChat
 
         void Stop()
         {
-            GetComponent<AudioSource>().Stop();
-            GetComponent<AudioSource>().time = 0;
+            if (source != null)
+            {
+                source.Stop();
+                source.Audio.time = 0;
+            }
+            if (oldSource != null)
+            {
+                oldSource.Stop();
+                oldSource.time = 0;
+            }
             index = 0;
             played = 0;
             received = 0;
@@ -132,16 +160,19 @@ namespace VoiceChat
             index += length;
 
             // Handle wrap-around
-            if (index >= GetComponent<AudioSource>().clip.samples)
+            if (index >= GetAudioSource().clip.samples)
             {
                 index = 0;
             }
 
             // Set data
-            GetComponent<AudioSource>().clip.SetData(data, 0);
+            if (source != null)
+                source.clip.SetData(data, 0);
+            else
+                oldSource.clip.SetData(data, 0);
             
             // If we're not playing
-            if (!GetComponent<AudioSource>().isPlaying)
+            if (!GetAudioSource().isPlaying)
             {
                 // Set that we should be playing
                 shouldPlay = true;

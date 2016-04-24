@@ -24,6 +24,7 @@ public class ChooseMode : MonoBehaviour
 
     public void Start()
     {
+        Application.targetFrameRate = 30;
         if (VoiceChatRecorder.Instance.AvailableDevices.Length > 0)
         {
             AudioEnabledGO.SetActive(true);

@@ -21,9 +21,10 @@ public abstract class OperatorItemBase : MonoBehaviour
 
     protected abstract Vector2 AnchoredPosition { get; set; }
     protected abstract int PreviewState { get; }
-    protected abstract void InitPositions();
+    public abstract void InitPositions(float oMax);
     protected abstract void ResetPositions();
     protected abstract void UpdatePositions();
+    protected virtual bool CanSetStateToInvalid() { return !animController.isPlaying;  }
 
     public abstract void OperatorAction(OperatorToggle.OperatorAction action);
 
@@ -58,7 +59,7 @@ public abstract class OperatorItemBase : MonoBehaviour
         rect = GetComponent<RectTransform>();
 
         UpdateStatus();
-        InitPositions();
+        InitPositions(1000f);
     }
 
     protected Vector2 target = new Vector2();
@@ -140,18 +141,13 @@ public abstract class OperatorItemBase : MonoBehaviour
         {
             if (currentState == PreviewState)
             {
-                if (UpdateTarget())
-                {
-#if UNITY_EDITOR
-                    InitPositions();
-#endif
-                }
+                UpdateTarget();
             }
 
             UpdatePositions();
         }
 
-        if (!animController.isPlaying)
+        if (CanSetStateToInvalid())
         {
             currentState = -1;
         }

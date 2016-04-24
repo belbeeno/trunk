@@ -2,21 +2,11 @@
 using System.Collections;
 using System;
 
-public class CellPhone : Interactable {
-    
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        
-	}
-
+public class CellPhone : Interactable 
+{
     public void CallOperator()
     {
         // Trigger animation to show up in inventory
+        GameManager.Get().LocalStatus = GameManager.PlayerStatus.InGameRinging;
     }
-    
 }

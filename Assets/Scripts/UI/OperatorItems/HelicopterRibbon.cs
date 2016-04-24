@@ -34,6 +34,12 @@ public class HelicopterRibbon : OperatorItemBase
         }
     }
 
+    protected float timer = -1f;
+    protected override bool CanSetStateToInvalid() 
+    {
+        return ((currentState == (int)HeliState.Action) && (timer <= 0f));
+    }
+
     protected override int PreviewState
     {
         get { return (int)HeliState.Preview; }
@@ -53,9 +59,11 @@ public class HelicopterRibbon : OperatorItemBase
     public override void OperatorAction(OperatorToggle.OperatorAction action)
     {
         currentState = (int)HeliState.Action;
+        timer = GameSettings.HELICOPTER_PING_DURATION;
     }
-    protected override void InitPositions()
+    public override void InitPositions(float oMax)
     {
+        pidParams.oMax = oMax;
         pidY.AssignInit(pidParams);
     }
     protected override void ResetPositions()
@@ -65,5 +73,9 @@ public class HelicopterRibbon : OperatorItemBase
     protected override void UpdatePositions()
     {
         pidY.Compute();
+        if (currentState == (int)HeliState.Action)
+        {
+            timer -= Time.deltaTime;
+        }
     }
 }

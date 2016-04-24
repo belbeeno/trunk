@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -26,6 +27,9 @@ public class GameManager : MonoBehaviour
         InGame,
     }
 
+    [System.Serializable]
+    public class OnPlayerStatusChangedCB : UnityEvent<PlayerStatus> { }
+
     [SerializeField, ShowOnly]
     private PlayerStatus localStatus = PlayerStatus.NotConnected;
     public PlayerStatus LocalStatus
@@ -33,17 +37,46 @@ public class GameManager : MonoBehaviour
         get { return localStatus; }
         set
         {
-            localStatus = value;
-            if (TrunkNetworkingBase.GetBase() != null)
+            if (localStatus != value)
             {
-                // Offline mode; ignore this
-                TrunkNetworkingBase.GetBase().LocalPlayerStatusChanged(localStatus);
+                localStatus = value;
+                if (TrunkNetworkingBase.GetBase() != null)
+                {
+                    TrunkNetworkingBase.GetBase().LocalPlayerStatusChanged(localStatus);
+                }
+                OnLocalStatusChanged.Invoke(localStatus);
             }
         }
     }
-    [ShowOnly]
-    public PlayerStatus remoteStatus = PlayerStatus.NotConnected;
-    public PlayerStatus RemoteStatus { get { return remoteStatus; } }
+    public OnPlayerStatusChangedCB OnLocalStatusChanged;
+
+    [SerializeField, ShowOnly]
+    private PlayerStatus remoteStatus = PlayerStatus.NotConnected;
+    public PlayerStatus RemoteStatus 
+    { 
+        get { return remoteStatus; } 
+        set
+        {
+            if (remoteStatus != value)
+            {
+                remoteStatus = value;
+                OnRemoteStatusChanged.Invoke(remoteStatus);
+            }
+        }
+    }
+    public OnPlayerStatusChangedCB OnRemoteStatusChanged;
+
+    public bool IsReadyToPlay()
+    {
+        // Eh it's the last day who cares.
+        return localStatus != PlayerStatus.NotConnected
+            && localStatus != PlayerStatus.Loading
+            && localStatus != PlayerStatus.LoadingFailed
+            && remoteStatus != PlayerStatus.NotConnected
+            && remoteStatus != PlayerStatus.Loading
+            && remoteStatus != PlayerStatus.LoadingFailed;
+    }
+
     public int remoteValidationSeed = -1;
 
     [System.Serializable]
@@ -57,6 +90,7 @@ public class GameManager : MonoBehaviour
 
     public Camera operatorProxyCamera;
     public RectTransform operatorMapCanvasRect;
+    public OperatorPanAndZoom operatorControls = null;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
@@ -78,13 +112,11 @@ public class GameManager : MonoBehaviour
     {
         if (!_gameHasStarted )
         {
-            if (remoteStatus == PlayerStatus.LoadingReady
-                && localStatus == PlayerStatus.LoadingReady)
+            if (IsReadyToPlay())
             {
                 if (Random.seed == remoteValidationSeed)
                 {
                     StartGame();
-                    _gameHasStarted = true;
 
                     LocalStatus = (TrunkNetworkingBase.GetBase().IsHost() ? PlayerStatus.InGamePreCall : PlayerStatus.PreGame);
                     TrunkNetworkingBase.GetBase().SetGameIsValid();
@@ -122,6 +154,7 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
+        _gameHasStarted = true;
         var gameObj = GameObject.Find("Car");
         var car = gameObj.GetComponent<TrunkMover>();
         car.isMoving = true;
@@ -156,6 +189,11 @@ public class GameManager : MonoBehaviour
 
         operatorMapCanvasRect.anchoredPosition3D = new Vector3(0f, 300f, 0f);
         operatorMapCanvasRect.sizeDelta = Vector2.one * Mathf.Min(generationOptions.cityHeight, generationOptions.cityWidth);
+        
+        if (operatorControls != null)
+        {
+            operatorControls.Init();
+        }
     }
     
     public void SetUpDebugGame()
