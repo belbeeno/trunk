@@ -41,8 +41,6 @@ public class WedgeGap : Interactable
         float timer = 0f;
         while (timer < duration)
         {
-            //item.localPosition = Vector3.Lerp(startPos, positionToolStartAt, Ease.QuartEaseOut(timer, 0f, 1f, duration));
-            
             cover.transform.localRotation = Quaternion.SlerpUnclamped(startRot, Quaternion.Euler(0, 360 - wedgeOpenedAngle, 0), Ease.QuadEaseInOut(timer, 0f, 1f, duration));
             timer += Time.deltaTime;
             yield return 0;
@@ -53,7 +51,6 @@ public class WedgeGap : Interactable
         {
             gap.GetComponent<BoxCollider>().enabled = false; 
         }
-        Debug.Log("Done Animating");
         
     }
 

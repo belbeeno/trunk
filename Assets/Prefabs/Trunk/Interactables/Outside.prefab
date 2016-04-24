@@ -1,78 +1,65 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &199894
+--- !u!1 &158128
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 423698}
-  - 33: {fileID: 3370820}
-  - 65: {fileID: 6556496}
-  - 114: {fileID: 11400576}
-  - 114: {fileID: 11476004}
+  - 4: {fileID: 474068}
+  - 65: {fileID: 6570094}
+  - 114: {fileID: 11475808}
+  - 114: {fileID: 11418250}
   m_Layer: 10
-  m_Name: Latch
+  m_Name: Outside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &423698
+--- !u!4 &474068
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199894}
-  m_LocalRotation: {x: -0.00001558095, y: 0.1737887, z: 0.000046890087, w: 0.984783}
-  m_LocalPosition: {x: 2.869, y: 0.071, z: -0.426}
+  m_GameObject: {fileID: 158128}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.13, y: 0, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!33 &3370820
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199894}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &6556496
+--- !u!65 &6570094
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199894}
+  m_GameObject: {fileID: 158128}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.268, y: 0.466, z: 0.275}
+  m_Size: {x: 0.2, y: 10, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11400576
+--- !u!114 &11418250
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199894}
+  m_GameObject: {fileID: 158128}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ae82cb4f835c8b44bd5f418a8cc223f, type: 3}
+  m_Script: {fileID: 11500000, guid: d8f4ec246e104a145b83aa927c395427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 0}
-  cover: {fileID: 0}
-  sideOpenings:
-  - {fileID: 0}
-  - {fileID: 0}
-  toolContactDirection: {x: -1, y: 0, z: 0}
---- !u!114 &11476004
+--- !u!114 &11475808
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199894}
+  m_GameObject: {fileID: 158128}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
@@ -84,11 +71,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_MethodName: InteractWithItem
-          m_Mode: 2
+          m_MethodName: GetOutsidePosition
+          m_Mode: 0
           m_Arguments:
-            m_ObjectArgument: {fileID: 199894}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -106,5 +93,5 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 199894}
+  m_RootGameObject: {fileID: 158128}
   m_IsPrefabParent: 1
