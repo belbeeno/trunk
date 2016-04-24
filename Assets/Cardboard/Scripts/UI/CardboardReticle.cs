@@ -54,8 +54,7 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   // before distance multiplication.
   private float reticleInnerDiameter = 0.0f;
   private float reticleOuterDiameter = 0.0f;
-
-    // Position of the gaze
+    
     [SerializeField]
     private bool drawReticle = false;
 
@@ -89,8 +88,8 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
 
   /// This is called when the 'BaseInputModule' system should be enabled.
   public void OnGazeEnabled() {
-
-  }
+        rendComp.enabled = true;
+    }
 
   /// This is called when the 'BaseInputModule' system should be disabled.
   public void OnGazeDisabled() {
@@ -157,7 +156,6 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// the user begins pressing the trigger.
   public void OnGazeTriggerStart(Camera camera) {
     // Put your reticle trigger start logic here :)
-      rendComp.enabled = true;
   }
 
   /// Called when the Cardboard trigger is finished. This is practically when
