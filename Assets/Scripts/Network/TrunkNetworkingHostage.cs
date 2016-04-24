@@ -215,8 +215,8 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     }
     public IEnumerator HelicopterThread(float yPos, bool goingRight)
     {
-        Vector3 startPos = new Vector3((goingRight ? GameManager.Get().generationOptions.cityWidth : 0f), 0f, yPos);
-        Vector3 endPos = new Vector3((goingRight ? 0f : GameManager.Get().generationOptions.cityWidth), 0f, yPos);
+        Vector3 startPos = new Vector3((goingRight ? -500f : GameManager.Get().generationOptions.cityWidth + 500f), 0f, yPos);
+        Vector3 endPos = new Vector3((goingRight ? GameManager.Get().generationOptions.cityWidth + 500f : -500f), 0f, yPos);
         helicopterInstance.transform.position = startPos;
         helicopterInstance.SetActive(true);
         float timer = GameSettings.HELICOPTER_PING_DURATION;

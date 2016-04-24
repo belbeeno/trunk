@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
 
     public Camera operatorProxyCamera;
     public RectTransform operatorMapCanvasRect;
+    public OperatorPanAndZoom operatorControls = null;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
@@ -156,6 +157,11 @@ public class GameManager : MonoBehaviour
 
         operatorMapCanvasRect.anchoredPosition3D = new Vector3(0f, 300f, 0f);
         operatorMapCanvasRect.sizeDelta = Vector2.one * Mathf.Min(generationOptions.cityHeight, generationOptions.cityWidth);
+        
+        if (operatorControls != null)
+        {
+            operatorControls.Init();
+        }
     }
     
     public void SetUpDebugGame()
