@@ -80,24 +80,23 @@ public class Inventory : MonoBehaviour {
     {
         if (isAnimating)
         {
-            return false; 
+            return false;
         }
-        if (!HasPhone())
+
+        if (item.GetComponent<CellPhone>() != null) {
+            return true; 
+        }
+
+        var targetInteractable = GetInteractable(item);
+        if (IsHoldingItem() && targetInteractable != null)
         {
-            return item.GetComponent<CellPhone>() != null;
+            // check if what we're holding can interact with what we're looking at
+            return currentInteractable.CanInteractWith(targetInteractable);
         }
-        else {
 
-            var targetInteractable = GetInteractable(item);
-            if (IsHoldingItem() && targetInteractable != null)
-            {
-                // check if what we're holding can interact with what we're looking at
-               return currentInteractable.CanInteractWith(targetInteractable);
-            }
+        return targetInteractable == null ? false : targetInteractable.CanBeHeld();
 
-            return targetInteractable == null ? false : targetInteractable.CanBeHeld();
 
-        }
     }
 
     public void InteractWithItem(GameObject item)
@@ -106,15 +105,13 @@ public class Inventory : MonoBehaviour {
         {
             return;
         }
-        if (!hasPhone)
-        {
-            if (item.GetComponent<CellPhone>())
+        if (item.GetComponent<CellPhone>())
             {
                 Collider col = item.GetComponent<Collider>();
                 col.attachedRigidbody.useGravity = false;
                 col.enabled = false;
                 StartCoroutine(AnimateIntoPosession(item.transform, (leftTarget.GetChild(0) ?? transform), toInventoryAnimationLength, PickUpPhone));
-            }
+            
             return; 
         }
         // Pick up the item
