@@ -57,7 +57,9 @@ public class Latch : Interactable
     public void Open()
     {
         isOpening = true;
-        isOpen = true; 
+        isOpen = true;
+        var openLatchSoundClip = GetComponent<CardboardAudioSource>();
+        openLatchSoundClip.PlayOneShot(openLatchSoundClip.clip);
     }
 
 }
