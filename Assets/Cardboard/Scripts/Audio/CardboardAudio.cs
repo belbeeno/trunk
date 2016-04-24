@@ -53,6 +53,16 @@ public static class CardboardAudio {
   }
   private static int framesPerBuffer = -1;
 
+  private static System.Collections.Generic.List<GameObject> GOsPendingInitialization = new System.Collections.Generic.List<GameObject>();
+  public static void ActivatePostInitialization(GameObject obj)
+  {
+      obj.SetActive(IsInitalized);
+      if (!IsInitalized)
+      {
+          GOsPendingInitialization.Add(obj);
+      }
+  }
+
   /// Initializes the audio system with the current audio configuration.
   /// @note This should only be called from the main Unity thread.
   public static void Initialize (CardboardAudioListener listener, Quality quality) {
@@ -80,6 +90,12 @@ public static class CardboardAudio {
       Debug.Log("Cardboard audio system is initialized (Quality: " + quality + ", Sample Rate: " +
                 sampleRate + ", Channels: " + numChannels + ", Frames Per Buffer: " +
                 framesPerBuffer + ").");
+
+        for (int i = 0; i < GOsPendingInitialization.Count; i++)
+        {
+            GOsPendingInitialization[i].SetActive(true);
+        }
+        GOsPendingInitialization.Clear();
     } else if (listener.transform != listenerTransform) {
       Debug.LogError("Only one CardboardAudioListener component is allowed in the scene.");
       CardboardAudioListener.Destroy(listener);
@@ -305,6 +321,7 @@ public static class CardboardAudio {
 
   // Denotes whether the system is initialized properly.
   private static bool initialized = false;
+  public static bool IsInitalized { get { return initialized; } }
 
   // Listener transform.
   private static Transform listenerTransform = null;

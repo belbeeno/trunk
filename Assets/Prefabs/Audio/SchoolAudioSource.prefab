@@ -11,13 +11,13 @@ GameObject:
   - 114: {fileID: 11401024}
   - 114: {fileID: 11422512}
   - 114: {fileID: 11449406}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SchoolAudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &439666
 Transform:
   m_ObjectHideFlags: 1
@@ -43,10 +43,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   directivityAlpha: 0
   directivitySharpness: 1
-  gainDb: 0
+  gainDb: 24
   occlusionEnabled: 0
   playOnAwake: 1
-  rolloffMode: 1
+  rolloffMode: 0
   sourceClip: {fileID: 8300000, guid: 5441d7e1fd264084dbab45b8ba9152c8, type: 3}
   sourceLoop: 1
   sourceMute: 0

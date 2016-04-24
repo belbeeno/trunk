@@ -1095,6 +1095,8 @@ MonoBehaviour:
   school: {fileID: 100066, guid: 9ab7edcb9620a3f498c94c0b97bb5a07, type: 3}
   monument: {fileID: 100000, guid: f2f4659fc120283409eb3f667ca324c4, type: 3}
   schoolAudio: {fileID: 127252, guid: 1d1dbdcb4cfef16409bf1fd7fd4fccfe, type: 2}
+  parkAudio: {fileID: 127252, guid: 1d1dbdcb4cfef16409bf1fd7fd4fccfe, type: 2}
+  bigParkAudio: {fileID: 127252, guid: 1d1dbdcb4cfef16409bf1fd7fd4fccfe, type: 2}
   waterAudio: {fileID: 127252, guid: 7cec72e4d7b511049a4cfb413d835c39, type: 2}
 --- !u!4 &137861385
 Transform:
