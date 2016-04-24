@@ -48,8 +48,7 @@ public class Tool : Interactable {
             var latch = (Latch)itemToInteractWith;
             if (!latch.isOpen)
             {
-                StopAllCoroutines(); 
-                StartCoroutine(AnimateIntoPosition(latch.transform, latch.toolContactDirection, 1f, GetComponent<Animation>(), toolData.openLatchAnimationClipName, true, latch.Open));
+                StartCoroutine(OpenLatchAnimation(latch, 1f));
             }
         }
         else if (toolData.canUnfastenFasteners && itemToInteractWith.GetType() == typeof(Fasteners))
@@ -59,8 +58,7 @@ public class Tool : Interactable {
         } else if (toolData.canWedgeOpenTrunk && itemToInteractWith.GetType() == typeof(WedgeGap))
         {
             var gap = (WedgeGap)itemToInteractWith;
-            StartCoroutine(AnimateIntoPosition(gap.transform, gap.gapUpPosition, 1f, GetComponent<Animation>(), toolData.wedgeOpenTrunkAnimationClipName, false, wcb: gap.WedgeOpenCover, offsetStart: gap.positionToolStartAt));
-                      
+            StartCoroutine(WedgeOpenTrunk(gap, 1f));
         }
         else
         {
@@ -68,25 +66,78 @@ public class Tool : Interactable {
         }
     }
 
-    protected delegate void latch();
-    protected delegate void wedge(float duration);
+
+    protected IEnumerator OpenLatchAnimation(Latch latch, float duration)
+    {
+        var curParent = transform.parent;
+
+        var startPos = transform.localPosition;
+        var startRot = transform.localRotation;
+        
+        yield return StartCoroutine(AnimateIntoPosition(latch.transform, latch.toolContactDirection, 1f));
+        
+        var actionAnimation = GetComponent<Animation>();
+        actionAnimation.Play(toolData.openLatchAnimationClipName);
+        while (actionAnimation.isPlaying)
+        {
+            yield return 0;
+        }
+
+        latch.Open();
+
+        transform.parent = curParent;
+
+        var curPos = transform.localPosition;
+        var rotationLayer = transform.GetChild(0);
+        var rotLayerRot = rotationLayer.localRotation;
+        var curRot = transform.localRotation; 
+
+        var timer = 0f;
+        while (timer < duration)
+        {
+            transform.localPosition = Vector3.Lerp(curPos, startPos, Mathf.Clamp01(timer / duration));
+            transform.localRotation = Quaternion.Slerp(curRot, startRot, Ease.CircEaseInOut(timer, 0f, 1f, duration));
+            rotationLayer.localRotation = Quaternion.SlerpUnclamped(rotLayerRot, Quaternion.identity, Ease.CircEaseInOut(timer, 0f, 1f, duration));
+            
+            timer += Time.deltaTime;
+            yield return 0;
+        }
+        
+    }
+
+    protected IEnumerator WedgeOpenTrunk(WedgeGap gap, float duration)
+    {
+        yield return StartCoroutine(AnimateIntoPosition(gap.transform, gap.gapUpPosition, 1f));
+
+        var timer = 0f;
+        var contactPosition = transform.localPosition;
+        var wedgeEndPos = gap.GetComponent<WedgeGap>().positionToolEndsAt;
+        var rotationLayer = transform.GetChild(0);
+        var wedgeEndRot = Quaternion.AngleAxis(-90, Vector3.right);
+        
+        gap.WedgeOpenCover(duration);
+
+        while (timer < duration)
+        {
+            transform.localPosition = Vector3.Lerp(contactPosition, wedgeEndPos, Ease.QuadEaseInOut(timer, 0f, 1f, duration));
+            rotationLayer.localRotation = Quaternion.Slerp(Quaternion.identity, wedgeEndRot, Ease.QuadEaseInOut(timer, 0f, 1f, duration));
+            timer += Time.deltaTime;
+            yield return 0;
+        }
+    }
+    
     protected IEnumerator AnimateIntoPosition(Transform newParent
                                             , Vector3 newParentLocalUpDirection
                                             , float duration
-                                            , Animation actionAnimation
-                                            , string animationName
-                                            , bool animateBack
-                                            , latch lcb = null
-                                            , wedge wcb = null
                                             , Vector3 offsetStart = new Vector3())
     {
-        var curParent = transform.parent; 
+        var curParent = transform.parent;
         transform.parent = newParent;
 
         Vector3 startPos = transform.localPosition;
         Quaternion startRot = transform.localRotation;
         var endRot = Quaternion.FromToRotation(toolData.frontDirection, -1 * newParentLocalUpDirection);
-        var contactPosition = (newParentLocalUpDirection * toolData.toolTipOffset) + offsetStart; 
+        var contactPosition = (newParentLocalUpDirection * toolData.toolTipOffset) + offsetStart;
         float timer = 0f;
         while (timer < duration)
         {
@@ -95,43 +146,7 @@ public class Tool : Interactable {
             timer += Time.deltaTime;
             yield return 0;
         }
-                
-        var isHatchAnimationTriggered = wcb == null;
-        if (!isHatchAnimationTriggered)
-        {
-            timer = 0f;
-            var wedgeEndPos = newParent.GetComponent<WedgeGap>().positionToolEndsAt;
-            var rotationLayer = transform.GetChild(0); 
-            var wedgeEndRot = Quaternion.FromToRotation(rotationLayer.up, wedgeEndPos);
-            wcb.Invoke(duration);
-            while (timer < duration)
-            {
-                transform.localPosition = Vector3.Lerp(contactPosition, wedgeEndPos, Ease.QuadEaseInOut(timer, 0f, 1f, duration));
-                rotationLayer.localRotation = Quaternion.Slerp(Quaternion.identity, Quaternion.Euler(0,90,0), Ease.QuadEaseInOut(timer, 0f, 1f, duration));
-                timer += Time.deltaTime;
-                yield return 0; 
-            }
-        }
         
-
-        if (lcb != null) lcb.Invoke();
-
-        if (!animateBack)
-        {
-            yield break; 
-        }
-
-        var curRot = transform.localRotation;
-        var curPos = transform.localPosition;
-        timer = 0f;
-        while (timer < duration)
-        {
-            transform.localPosition = Vector3.Lerp(curPos, startPos, Mathf.Clamp01(timer / duration));
-            transform.localRotation = Quaternion.SlerpUnclamped(curRot, startRot, Ease.CircEaseInOut(timer, 0f, 1f, duration));
-            timer += Time.deltaTime;
-            yield return 0;
-        }
-        transform.parent = curParent; 
     }
 
 }

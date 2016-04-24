@@ -16,14 +16,15 @@ MonoBehaviour:
   disposeOnUse: 0
   positionWhenInInventory: {x: 0.148, y: 0.73, z: 0.063}
   rotationWhenInInventory: {x: 47.198, y: 113, z: 305}
+  pivotLayer: {fileID: 0}
   interactableFastenerList: 
   canUnfastenFasteners: 0
   unfastenAnimationClipName: 
   canOpenLatch: 1
   openLatchAnimationClipName: CrowbarOpenLatch
   canWedgeOpenTrunk: 1
-  wedgeOpenTrunkAnimationClipName: 
+  localAxisToRotateForWedge: {x: 1, y: 0, z: 1}
   toolTipOffset: 0.672761
-  frontDirection: {x: -0.672, y: -0.032, z: 0}
-  toolUpDirectionWhenFlat: {x: 0, y: 0, z: 0}
+  frontDirection: {x: 0.672, y: 0.032, z: 0}
+  toolUpDirectionWhenFlat: {x: 0, y: 0, z: 1}
   wedgeStartTransform: {fileID: 0}

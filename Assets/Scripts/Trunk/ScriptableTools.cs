@@ -10,7 +10,7 @@ public class ScriptableTools : ScriptableInteractable
     public bool canOpenLatch = true;
     public string openLatchAnimationClipName; 
     public bool canWedgeOpenTrunk = true;
-    public string wedgeOpenTrunkAnimationClipName;
+    public Vector3 localAxisToRotateForWedge;
     
     public float toolTipOffset;
 

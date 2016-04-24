@@ -16,14 +16,15 @@ MonoBehaviour:
   disposeOnUse: 0
   positionWhenInInventory: {x: -0.264, y: 1.066, z: -0.015}
   rotationWhenInInventory: {x: 52.85, y: 77, z: 1.25}
+  pivotLayer: {fileID: 0}
   interactableFastenerList: 01000000
   canUnfastenFasteners: 1
   unfastenAnimationClipName: 
   canOpenLatch: 0
   openLatchAnimationClipName: 
   canWedgeOpenTrunk: 1
-  wedgeOpenTrunkAnimationClipName: TireIronWedgeOpenTrunk
+  localAxisToRotateForWedge: {x: 0, y: 0, z: 1}
   toolTipOffset: 0.451
-  frontDirection: {x: 0, y: 0, z: 0}
-  toolUpDirectionWhenFlat: {x: 0, y: 0, z: 0}
+  frontDirection: {x: 1, y: 0, z: 0}
+  toolUpDirectionWhenFlat: {x: 0, y: 0, z: 1}
   wedgeStartTransform: {fileID: 0}
