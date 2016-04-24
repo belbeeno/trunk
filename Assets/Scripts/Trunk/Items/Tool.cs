@@ -116,7 +116,7 @@ public class Tool : Interactable {
         var wedgeEndRot = Quaternion.AngleAxis(-90, Vector3.right);
         
         gap.WedgeOpenCover(duration);
-
+        gap.GetComponent<CardboardAudioSource>().Play(); 
         while (timer < duration)
         {
             transform.localPosition = Vector3.Lerp(contactPosition, wedgeEndPos, Ease.QuadEaseInOut(timer, 0f, 1f, duration));

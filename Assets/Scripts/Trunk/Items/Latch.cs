@@ -7,8 +7,7 @@ using System.Collections.Generic;
 public class Latch : Interactable
 {
     [SerializeField]
-    public bool isOpen { get; set; }
-
+    public bool isOpen;
     private float degreeTrunkLeftOpen = 3f;
     public GameObject cover;
     public List<GameObject> sideOpenings; 
@@ -59,7 +58,9 @@ public class Latch : Interactable
         isOpening = true;
         isOpen = true;
         var openLatchSoundClip = GetComponent<CardboardAudioSource>();
-        openLatchSoundClip.PlayOneShot(openLatchSoundClip.clip);
+        openLatchSoundClip.Play();
+        var lidOpeningSoundClip = cover.GetComponent<CardboardAudioSource>();
+        lidOpeningSoundClip.Play(); 
     }
 
 }
