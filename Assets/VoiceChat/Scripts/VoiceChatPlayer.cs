@@ -101,7 +101,7 @@ namespace VoiceChat
 
                     if (playDelay <= 0)
                     {
-                        source.Play();
+                        GetAudioSource().Play();
                     }
                 }
             }

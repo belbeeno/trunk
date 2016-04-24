@@ -13,12 +13,17 @@ public class PhoneIconLogic : MonoBehaviour
     public Vector2 randoRange = new Vector2(-5f, 5f);
 
     public UnityEngine.UI.Button myButton = null;
+    public AudioSource ringer = null;
 
     public void OnRemotePlayerStateChanged(GameManager.PlayerStatus status)
     {
         if (status == GameManager.PlayerStatus.InGameRinging)
         {
             myButton.interactable = true;
+            if (ringer != null)
+            {
+                ringer.Play();
+            }
         }
     }
 
@@ -27,6 +32,7 @@ public class PhoneIconLogic : MonoBehaviour
         transform.localRotation = Quaternion.identity;
         enabled = false;
         TrunkNetworkingBase.GetBase().EnableVoiceChat();
+        ringer.Stop();
     }
 
     void Start()

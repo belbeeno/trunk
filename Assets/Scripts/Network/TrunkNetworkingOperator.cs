@@ -224,7 +224,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
 
         SeedMsg initMsg = new SeedMsg();
         initMsg.seed = Random.seed;
-        SendMessage(ID.LoadSession, initMsg);
+        SendMessage(ID.InitSession, initMsg);
 
         SetUpSession(initMsg.seed);
     }
