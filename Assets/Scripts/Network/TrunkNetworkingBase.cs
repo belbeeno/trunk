@@ -97,6 +97,7 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     }
     public void EnableVoiceChat()
     {
+        voiceChatPlayer.gameObject.SetActive(true);
         VoiceChat.VoiceChatRecorder.Instance.AutoDetectSpeech = true;
         GameManager.Get().LocalStatus = GameManager.PlayerStatus.InGame;
     }

@@ -38,7 +38,7 @@ public class AudioIcon : MonoBehaviour
     {
         if (player != null && player.gameObject.activeSelf)
         {
-            player.source.volume = Mathf.Clamp01(vol);
+            player.GetAudioSource().volume = Mathf.Clamp01(vol);
         }
         image.sprite = spriteLevels[volume];
     }
