@@ -160,7 +160,7 @@ namespace VoiceChat
             index += length;
 
             // Handle wrap-around
-            if (index >= (source == null ? source.clip.samples : oldSource.clip.samples))
+            if (index >= GetAudioSource().clip.samples)
             {
                 index = 0;
             }

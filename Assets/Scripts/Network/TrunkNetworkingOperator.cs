@@ -56,7 +56,6 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         }
 
         server.RegisterHandler(MsgType.Connect, OnConnectMsg);
-        server.RegisterHandler(ID.InitSession, OnInitSessionMsg);
         server.RegisterHandler(ID.APB, OnAPBResponseMsg);
         server.RegisterHandler(ID.GameOver, OnGameOverMsg);
 
@@ -90,6 +89,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
             if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.LoadingFailed
                 || GameManager.Get().RemoteStatus == GameManager.PlayerStatus.LoadingFailed)
             {
+                Log("Loading failed!  Random seed validation step failed!");
                 StartReloading();
             }
 
@@ -222,14 +222,11 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         broadcaster.StopBroadcast();
         clientId = msg.conn.connectionId;
 
-        StartReloading();
-    }
+        SeedMsg initMsg = new SeedMsg();
+        initMsg.seed = Random.seed;
+        SendMessage(ID.LoadSession, initMsg);
 
-    public void OnInitSessionMsg(NetworkMessage msg)
-    {
-        SeedMsg castedMsg = msg.ReadMessage<SeedMsg>();
-        SendMessage(ID.InitSession, castedMsg);
-        SetUpSession(castedMsg.seed);
+        SetUpSession(initMsg.seed);
     }
 
     public void OnGameOverMsg(NetworkMessage msg)
