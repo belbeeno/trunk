@@ -16719,7 +16719,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-  voiceChatPlayer: {fileID: 0}
+  voiceChatPlayer: {fileID: 485350158}
   statusText: {fileID: 881470862}
   mover: {fileID: 1406049026}
   outsideTrunk: {fileID: 829516072}
