@@ -6896,11 +6896,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22423442, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 39.000122
+      value: 63.000122
       objectReference: {fileID: 0}
     - target: {fileID: 22423442, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -192.00003
+      value: -215.99995
       objectReference: {fileID: 0}
     - target: {fileID: 22423442, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.x
@@ -6928,11 +6928,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22423442, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_Pivot.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 22423442, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_Pivot.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 191062, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_Name
@@ -6944,7 +6944,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.x
-      value: -12.960175
+      value: -12.960167
       objectReference: {fileID: 0}
     - target: {fileID: 22444580, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_SizeDelta.y
@@ -6970,6 +6970,22 @@ Prefab:
     - target: {fileID: 11414394, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
       propertyPath: m_Interactable
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11411840, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
+      propertyPath: OnDoubleClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1320406155}
+    - target: {fileID: 11411840, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
+      propertyPath: OnDoubleClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Reset
+      objectReference: {fileID: 0}
+    - target: {fileID: 11411840, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
+      propertyPath: OnDoubleClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11411840, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
+      propertyPath: OnDoubleClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
@@ -10425,6 +10441,25 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1311964306}
+--- !u!1 &1320406154 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 191062, guid: b3aa55d5750ac7641b0fee81c98cb862, type: 2}
+  m_PrefabInternal: {fileID: 876647020}
+--- !u!114 &1320406155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1320406154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ccfc95cfaed954885e99e038e86a91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeDuration: 0.7
+  waitDuration: 1.4
+  randoRange: {x: -5, y: 5}
+  myButton: {fileID: 169976605}
 --- !u!1 &1334260215
 GameObject:
   m_ObjectHideFlags: 0
@@ -15200,7 +15235,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localStatus: 0
+  OnLocalStatusChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: GameManager+OnPlayerStatusChangedCB, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   remoteStatus: 0
+  OnRemoteStatusChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1320406155}
+        m_MethodName: OnRemotePlayerStateChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: GameManager+OnPlayerStatusChangedCB, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   remoteValidationSeed: -1
   initSteps:
   - target: {fileID: 898733339}

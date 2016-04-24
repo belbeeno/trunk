@@ -57,6 +57,11 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     }
     public void Update()
     {
+        if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.InGameRinging && 
+            GameManager.Get().RemoteStatus == GameManager.PlayerStatus.InGame)
+        {
+            EnableVoiceChat();
+        }
         if (Input.GetButtonUp("Back"))
         {
             Application.Quit();

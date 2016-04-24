@@ -95,6 +95,11 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
         //Debug.Log("Voicechat recieved packet id " + castedMsg.payload.PacketId);
         voiceChatPlayer.OnNewSample(castedMsg.payload);
     }
+    public void EnableVoiceChat()
+    {
+        VoiceChat.VoiceChatRecorder.Instance.AutoDetectSpeech = true;
+        GameManager.Get().LocalStatus = GameManager.PlayerStatus.InGame;
+    }
 
     public void LocalPlayerStatusChanged(GameManager.PlayerStatus newStatus)
     {
@@ -105,7 +110,7 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     public void OnPlayerStatusChanged(NetworkMessage msg)
     {
         UpdateStatusMsg castedMsg = msg.ReadMessage<UpdateStatusMsg>();
-        GameManager.Get().remoteStatus = (GameManager.PlayerStatus)castedMsg.status;
+        GameManager.Get().RemoteStatus = (GameManager.PlayerStatus)castedMsg.status;
     }
 
     public virtual void OnDestroy()
