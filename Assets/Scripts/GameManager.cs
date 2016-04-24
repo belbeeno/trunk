@@ -1,9 +1,51 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
+    protected static GameManager _instance;
+    public static GameManager Get()
+    {
+        if (_instance == null) _instance = FindObjectOfType<GameManager>();
+        return _instance;
+    }
+
+    public enum PlayerStatus : int
+    {
+        NotConnected,
+
+        Loading,        // Being loading
+        LoadingReady,   // Loading is complete; waiting for remote player
+        LoadingFailed,  // Random seed at the end of generation is divergent!  Retry...
+
+        PreGame,        // Mostly for showing UI to the hostage
+        InGamePreCall,  // Haven't picked up the phone yet
+        InGameRinging,  // It's ringing...
+        InGame,
+    }
+
+    [SerializeField, ShowOnly]
+    private PlayerStatus localStatus = PlayerStatus.NotConnected;
+    public PlayerStatus LocalStatus
+    {
+        get { return localStatus; }
+        set
+        {
+            localStatus = value;
+            if (TrunkNetworkingBase.GetBase() != null)
+            {
+                // Offline mode; ignore this
+                TrunkNetworkingBase.GetBase().LocalPlayerStatusChanged(localStatus);
+            }
+        }
+    }
+    [ShowOnly]
+    public PlayerStatus remoteStatus = PlayerStatus.NotConnected;
+    public PlayerStatus RemoteStatus { get { return remoteStatus; } }
+    public int remoteValidationSeed = -1;
+
     [System.Serializable]
     public struct GameManagerFlowStep
     {
@@ -18,50 +60,81 @@ public class GameManager : MonoBehaviour
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
     
-    private bool _readyToStart;
-    private bool _otherReadyToStart;
     private bool _gameHasStarted;
+    public bool HasGameStarted() { return _gameHasStarted; }
 
 	public void Start()
 	{
 		initSteps.ForEach(x => x.target.SetActive(x.isEnabled));
+        _instance = this;
 	}
     
+    public void OnDestroy()
+    {
+        if (_instance == this) _instance = null;
+    }
+
     public void Update()
     {
-        if (!_gameHasStarted && _otherReadyToStart && _readyToStart)
+        if (!_gameHasStarted )
         {
-            _gameHasStarted = true;
-            StartGame();
+            if (remoteStatus == PlayerStatus.LoadingReady
+                && localStatus == PlayerStatus.LoadingReady)
+            {
+                if (Random.seed == remoteValidationSeed)
+                {
+                    StartGame();
+                    _gameHasStarted = true;
+
+                    LocalStatus = (TrunkNetworkingBase.GetBase().IsHost() ? PlayerStatus.InGamePreCall : PlayerStatus.PreGame);
+                    TrunkNetworkingBase.GetBase().SetGameIsValid();
+                }
+                else
+                {
+                    remoteValidationSeed = -1;
+                    LocalStatus = PlayerStatus.LoadingFailed;
+                }
+            }
         }
-    }
-    
-    public void MarkOtherReady()
-    {
-        _otherReadyToStart = true;
     }
     
     public void SetUpGame(int seed, Action callback)
     {
+        StartCoroutine(SetUpGameCoroutine(seed, callback));
+    }
+
+    public IEnumerator SetUpGameCoroutine(int seed, Action callback)
+    {
         Random.seed = seed;
+        LocalStatus = PlayerStatus.Loading;
         
         var city = _generator.Generate(generationOptions);
+        yield return 0;
         GenerateCity(city);
+        yield return 0;
         InitializeRoutePlanner(city);
+        yield return 0;
         RefreshMapSizeAndPositions();
         
-        _readyToStart = true;
+        LocalStatus = PlayerStatus.LoadingReady;
         callback();
     }
     
     public void StartGame()
     {
-        StartCar();
+        var gameObj = GameObject.Find("Car");
+        var car = gameObj.GetComponent<TrunkMover>();
+        car.isMoving = true;
     }
     
     private void GenerateCity(GenerationData result)
     {
         var gameObj = GameObject.Find("City");
+        Transform xform = gameObj.transform;
+        for (int i = 0; i < xform.childCount; i++)
+        {
+            Destroy(xform.GetChild(i));
+        }
         var city = gameObj.GetComponent<City>();
         city.GenerateGeometry(result);
     }
@@ -85,16 +158,9 @@ public class GameManager : MonoBehaviour
         operatorMapCanvasRect.sizeDelta = Vector2.one * Mathf.Min(generationOptions.cityHeight, generationOptions.cityWidth);
     }
     
-    private static void StartCar()
-    {
-        var gameObj = GameObject.Find("Car");
-        var car = gameObj.GetComponent<TrunkMover>();
-        car.canMove = true;
-    }
-    
     public void SetUpDebugGame()
     {
-        SetUpGame(Random.Range(int.MinValue, int.MaxValue), () => {});
+        SetUpGame(Random.Range(int.MinValue, int.MaxValue), () => { });
         StartGame();
     }
 }

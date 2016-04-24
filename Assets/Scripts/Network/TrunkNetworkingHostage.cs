@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
+
+using NetMessage;
 
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingHostage : TrunkNetworkingBase
@@ -7,9 +10,9 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     protected static TrunkNetworkingHostage _instance = null;
     public static TrunkNetworkingHostage Get()
     {
-        if (_instance == null) _instance = FindObjectOfType<TrunkNetworkingHostage>();  // Shouldn't happen but just in case...
         return _instance;
     }
+    public override bool IsHost() { return false; }
 
     TrunkNetworkDiscovery broadcaster = null;
     NetworkClient network = null;
@@ -18,19 +21,8 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
     TrunkMover mover = null;
     [SerializeField]
     Outside outsideTrunk = null;
-
-    public override int VoiceChatID
-    {
-        get { return 1; }
-    }
-    public override void OnNewSampleCaptured(VoiceChat.VoiceChatPacket packet)
-    {
-        if (network == null) return;
-
-        //Debug.Log("New sample captured: " + packet.PacketId);
-        NetMessage.VoiceChatMsg msg = new NetMessage.VoiceChatMsg(packet);
-        network.SendUnreliable(NetMessage.ID.VoiceChatPacket, msg);
-    }
+    [SerializeField]
+    GameObject policeCarInstance = null;
     
     public override void Begin()
     {
@@ -42,75 +34,83 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
             return;
         }
         Log("Listening for a host!");
+
+        initParams.Add(new NetHandlerInitParams(MsgType.Connect, OnConnectMsg));
+        initParams.Add(new NetHandlerInitParams(ID.InitSession, OnInitSessionMsg));
+        initParams.Add(new NetHandlerInitParams(ID.LoadSession, OnLoadSessionMsg));
+        initParams.Add(new NetHandlerInitParams(ID.APB, OnAPBRequestMsg));
+        initParams.Add(new NetHandlerInitParams(ID.TriggerPoliceCar, OnTriggerPoliceCarMsg));
+        initParams.Add(new NetHandlerInitParams(ID.GameOver, OnGameOverMsg));
+
+        base.Begin();
+    }
+    public void Start()
+    {
+        _instance = this;
+        _baseInstance = this;
+
+        policeCarInstance.SetActive(false);
+    }
+    public void Update()
+    {
+        if (Input.GetButtonUp("Back"))
+        {
+            Application.Quit();
+        }
+    }
+    public override void OnDestroy()
+    {
+        if (network != null)
+        {
+            network.Disconnect();
+            network = null;
+        }
+
+        if (_instance == this)
+        {
+            _instance = null;
+        }
+
+        base.OnDestroy();
+    }
+
+    public override void SendMessage(short msgId, MessageBase msg)
+    {
+        if (network != null)
+        {
+            network.Send(msgId, msg);
+        }
+    }
+
+    public override int VoiceChatID
+    {
+        get { return 1; }
+    }
+    public override void OnNewSampleCaptured(VoiceChat.VoiceChatPacket packet)
+    {
+        if (network == null) return;
+
+        //Debug.Log("New sample captured: " + packet.PacketId);
+        VoiceChatMsg msg = new VoiceChatMsg(packet);
+        network.SendUnreliable(ID.VoiceChatPacket, msg);
     }
 
     public void Connect(string ip)
     {
         network = new NetworkClient();
-        network.RegisterHandler(MsgType.Connect, OnConnectMsg);
-        network.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
-        network.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
-        network.RegisterHandler(NetMessage.ID.Ready, OnReadyMsg);
-        network.RegisterHandler(NetMessage.ID.APB, OnAPBRequestMsg);
-        network.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
 
-        network.RegisterHandler(NetMessage.ID.VoiceChatPacket, OnVoiceChatMsg);
+        for (int i = 0; i < initParams.Count; i++ )
+        {
+            network.RegisterHandler(initParams[i].msgId, initParams[i].message);
+        }
 
         network.Connect(ip, TrunkNetworkingOperator.GAME_PORT);
     }
-
     public void OnConnectMsg(NetworkMessage msg)
     {
-        Log("Connected to server! " + msg.ToString());
-
-        NetMessage.PingMsg ping = new NetMessage.PingMsg();
-        ping.msg = "Hi!";
-        msg.conn.Send(NetMessage.ID.Ping, ping);
-
+        Log("Connected to server!");
         broadcaster.StopBroadcast();
     }
-
-    public void OnDisconnectMsg(NetworkMessage msg)
-    {
-        Restart("Disconnect detected!");
-    }
-
-    public void OnPingMsg(NetworkMessage msg)
-    {
-        NetMessage.PingMsg castedMsg = msg.ReadMessage<NetMessage.PingMsg>();
-        Log("Ping! " + castedMsg.msg);
-
-        NetMessage.InitSessionMsg initMsg = new NetMessage.InitSessionMsg();
-        initMsg.seed = Random.seed;
-        msg.conn.Send(NetMessage.ID.InitSession, initMsg);
-
-        SetUpSession(initMsg.seed, SendReadyMsg);
-    }
-    
-    private void SendReadyMsg()
-    {
-        if (network != null)
-        {
-            Log("Informing other player we're ready to start");
-            NetMessage.ReadyMsg msg = new NetMessage.ReadyMsg();
-            msg.seed = Random.seed;
-            network.Send(NetMessage.ID.Ready, msg);
-        }
-        else
-        {
-            Debug.LogWarning("Network is null!");
-        }
-    }
-    
-    private void OnReadyMsg(NetworkMessage msg)
-    {
-        var gameObj = GameObject.Find("GameManager");
-        var manager = gameObj.GetComponent<GameManager>();
-        
-        Log("Other player is ready!");
-        manager.MarkOtherReady();
-    }
-
     public void OnGameOverMsg(NetworkMessage msg)
     {
         // If we're getting this at the hostage end, then the operator found us!
@@ -119,23 +119,33 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         OnGameWin.Invoke();
         Restart();
     }
+    public void OnInitSessionMsg(NetworkMessage msg)
+    {
+        SeedMsg castedMsg = msg.ReadMessage<SeedMsg>();
+        SetUpSession(castedMsg.seed);
+    }
+    public void OnLoadSessionMsg(NetworkMessage msg)
+    {
+        SeedMsg castedMsg = msg.ReadMessage<SeedMsg>();
+        GameManager.Get().SetUpGame(castedMsg.seed, ValidateSession);
+    }
 
     public void OnAPBRequestMsg(NetworkMessage msg)
     {
-        NetMessage.APBRequest castedMsg = msg.ReadMessage<NetMessage.APBRequest>();
+        APBRequest castedMsg = msg.ReadMessage<APBRequest>();
         Log("APB requested at position " + castedMsg.position.ToString());
 
         // Will be needed for hints.
         //Physics.CheckSphere(castedMsg.position, GameSettings.APB_RADIUS, LayerMask.NameToLayer("ClientOnly"));
 
-        NetMessage.APBResponse response = new NetMessage.APBResponse();
+        APBResponse response = new APBResponse();
         response.origin = castedMsg.position;
         response.origin.y = 0f;
 
         float distFromOriginSqrd = (Camera.main.transform.position - response.origin).sqrMagnitude;
         if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
         {
-            response.hints.Add(new NetMessage.APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), NetMessage.APBResponse.Hint.HintType.Hostage));
+            response.hints.Add(new APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), APBResponse.Hint.HintType.Hostage));
         }
 
         if (outsideTrunk == null)
@@ -151,7 +161,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
                 distFromOriginSqrd = (allDroppedItems[i].positionDropped - response.origin).sqrMagnitude;
                 if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
                 {
-                    response.hints.Add(new NetMessage.APBResponse.Hint(allDroppedItems[i].positionDropped
+                    response.hints.Add(new APBResponse.Hint(allDroppedItems[i].positionDropped
                                                                         , allDroppedItems[i].itemName));
                 }
             }
@@ -178,30 +188,20 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         nextPos.Set(Mathf.Cos(0f), 0f, Mathf.Sin(0f));
         Debug.DrawLine(prevPos, nextPos * GameSettings.APB_RADIUS, Color.red, 5f);
 #endif
-        msg.conn.Send(NetMessage.ID.APB, response);
+        msg.conn.Send(ID.APB, response);
     }
 
-    public void Start()
+    public void OnTriggerPoliceCarMsg(NetworkMessage msg)
     {
-        _instance = this;
+        TriggerPoliceMsg castedMsg = msg.ReadMessage<TriggerPoliceMsg>();
+        StartCoroutine(PoliceCarThread(castedMsg.position));
     }
-
-    public void Update()
+    public IEnumerator PoliceCarThread(Vector2 pos)
     {
-        if (Input.GetButtonUp("Back"))
-        {
-            Application.Quit();
-        }
+        policeCarInstance.transform.position = new Vector3(pos.x, 0f, pos.y);
+        policeCarInstance.SetActive(true);
+        yield return new WaitForSeconds(GameSettings.COP_SIREN_PING_DURATION);
+        policeCarInstance.SetActive(false);
     }
 
-    public void OnDestroy()
-    {
-        if (network != null)
-        {
-            network.Disconnect();
-            network = null;
-        }
-
-        _instance = null;
-    }
 }

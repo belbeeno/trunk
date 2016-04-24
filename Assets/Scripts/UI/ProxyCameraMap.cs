@@ -104,7 +104,7 @@ public class ProxyCameraMap : MonoBehaviour
                                 Debug.DrawLine(ray.origin, hitInfo.point, Color.green, 10f);
                                 break;
                             case OperatorToggle.OperatorAction.Siren:
-                                //TrunkNetworkingOperator.Get().BroadcastSirens(hitInfo.point);
+                                TrunkNetworkingOperator.Get().TriggerPoliceInHostageScene(new Vector2(hitInfo.point.x, hitInfo.point.z));
                                 Debug.DrawLine(ray.origin, hitInfo.point, Color.blue, 10f);
                                 break;
                         }

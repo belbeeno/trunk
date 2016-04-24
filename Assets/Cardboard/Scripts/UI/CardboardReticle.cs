@@ -26,6 +26,7 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   public float reticleGrowthSpeed = 8.0f;
 
   // Private members
+  private Renderer rendComp;
   private Material materialComp;
   private GameObject targetObj;
 
@@ -61,21 +62,26 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
     [SerializeField]
     private Inventory inventory;
 
-  void Start () {
-    CreateReticleVertices();
+    void Start()
+    {
+        rendComp = gameObject.GetComponent<Renderer>();
+        CreateReticleVertices();
 
-    materialComp = gameObject.GetComponent<Renderer>().material;
-  }
-
-  void OnEnable() {
-    GazeInputModule.cardboardPointer = this;
-  }
-
-  void OnDisable() {
-    if (GazeInputModule.cardboardPointer == this) {
-      GazeInputModule.cardboardPointer = null;
+        materialComp = rendComp.material;
     }
-  }
+
+    void OnEnable() 
+    {
+        GazeInputModule.cardboardPointer = this;
+    }
+
+    void OnDisable() 
+    {
+        if (GazeInputModule.cardboardPointer == this) 
+        {
+            GazeInputModule.cardboardPointer = null;
+        }
+    }
 
   void Update() {
     UpdateDiameters();
@@ -151,6 +157,7 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   /// the user begins pressing the trigger.
   public void OnGazeTriggerStart(Camera camera) {
     // Put your reticle trigger start logic here :)
+      rendComp.enabled = true;
   }
 
   /// Called when the Cardboard trigger is finished. This is practically when
@@ -158,7 +165,9 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
   public void OnGazeTriggerEnd(Camera camera) {
   }
 
-  private void CreateReticleVertices() {
+  private void CreateReticleVertices() 
+  {
+    rendComp.enabled = false;
     Mesh mesh = new Mesh();
     gameObject.AddComponent<MeshFilter>();
     GetComponent<MeshFilter>().mesh = mesh;
@@ -173,15 +182,15 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
     const float kTwoPi = Mathf.PI * 2.0f;
     int vi = 0;
     for (int si = 0; si <= segments_count; ++si) {
-      // Add two vertices for every circle segment: one at the beginning of the
-      // prism, and one at the end of the prism.
-      float angle = (float)si / (float)(segments_count) * kTwoPi;
+        // Add two vertices for every circle segment: one at the beginning of the
+        // prism, and one at the end of the prism.
+        float angle = (float)si / (float)(segments_count) * kTwoPi;
 
-      float x = Mathf.Sin(angle);
-      float y = Mathf.Cos(angle);
+        float x = Mathf.Sin(angle);
+        float y = Mathf.Cos(angle);
 
-      vertices[vi++] = new Vector3(x, y, 0.0f); // Outer vertex.
-      vertices[vi++] = new Vector3(x, y, 1.0f); // Inner vertex.
+        vertices[vi++] = new Vector3(x, y, 0.0f); // Outer vertex.
+        vertices[vi++] = new Vector3(x, y, 1.0f); // Inner vertex.
     }
     #endregion
 
@@ -192,15 +201,15 @@ public class CardboardReticle : MonoBehaviour, ICardboardPointer {
     int vert = 0;
     int idx = 0;
     for (int si = 0; si < segments_count; ++si) {
-      indices[idx++] = vert+1;
-      indices[idx++] = vert;
-      indices[idx++] = vert+2;
+        indices[idx++] = vert+1;
+        indices[idx++] = vert;
+        indices[idx++] = vert+2;
 
-      indices[idx++] = vert+1;
-      indices[idx++] = vert+2;
-      indices[idx++] = vert+3;
+        indices[idx++] = vert+1;
+        indices[idx++] = vert+2;
+        indices[idx++] = vert+3;
 
-      vert += 2;
+        vert += 2;
     }
     #endregion
 

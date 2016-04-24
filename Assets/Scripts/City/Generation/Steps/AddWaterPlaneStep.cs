@@ -17,7 +17,7 @@ public class AddWaterPlaneStep : GenerationStepBase
             }.Outset(10 * options.blockSize).ToArray();
         
         var mesh = GetMesh(corners);
-        var material = MaterialsStore.instance.basic;
+        var material = MaterialsStore.instance.water;
         data.water = new WaterData(corners, mesh, material);
     }
     

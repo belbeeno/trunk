@@ -528,6 +528,8 @@ public class Cardboard : MonoBehaviour {
     }
 #if UNITY_IOS
     Application.targetFrameRate = 60;
+#else
+    Application.targetFrameRate = 90;
 #endif
     // Prevent the screen from dimming / sleeping
     Screen.sleepTimeout = SleepTimeout.NeverSleep;

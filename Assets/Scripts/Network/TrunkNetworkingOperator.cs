@@ -4,15 +4,17 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using System.Collections;
 
+using NetMessage;
+
 [RequireComponent(typeof(TrunkNetworkDiscovery))]
 public class TrunkNetworkingOperator : TrunkNetworkingBase
 {
     protected static TrunkNetworkingOperator _instance = null;
     public static TrunkNetworkingOperator Get() 
     {
-        if (_instance == null) _instance = FindObjectOfType<TrunkNetworkingOperator>(); // Shouldn't happen but just in case...
         return _instance;  
     }
+    public override bool IsHost() { return true; }
 
     public static int GAME_PORT = 7777;
 
@@ -37,8 +39,8 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         if (client != null)
         {
             //Debug.Log("New sample captured: " + packet.PacketId);
-            NetMessage.VoiceChatMsg msg = new NetMessage.VoiceChatMsg(packet);
-            client.SendUnreliable(NetMessage.ID.VoiceChatPacket, msg);
+            VoiceChatMsg msg = new VoiceChatMsg(packet);
+            client.SendUnreliable(ID.VoiceChatPacket, msg);
         }
     }
 
@@ -47,15 +49,16 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         server = new TrunkNetworkingServer();
         //server.Configure(topology);
         server.Initialize();
-        server.RegisterHandler(MsgType.Connect, OnConnectMsg);
-        server.RegisterHandler(MsgType.Disconnect, OnDisconnectMsg);
-        server.RegisterHandler(NetMessage.ID.InitSession, OnInitSessionMsg);
-        server.RegisterHandler(NetMessage.ID.Ping, OnPingMsg);
-        server.RegisterHandler(NetMessage.ID.Ready, OnReadyMsg);
-        server.RegisterHandler(NetMessage.ID.APB, OnAPBResponseMsg);
-        server.RegisterHandler(NetMessage.ID.GameOver, OnGameOverMsg);
+        base.Begin();
+        for (int i = 0; i < initParams.Count; i++ )
+        {
+            server.RegisterHandler(initParams[i].msgId, initParams[i].message);
+        }
 
-        server.RegisterHandler(NetMessage.ID.VoiceChatPacket, OnVoiceChatMsg);
+        server.RegisterHandler(MsgType.Connect, OnConnectMsg);
+        server.RegisterHandler(ID.InitSession, OnInitSessionMsg);
+        server.RegisterHandler(ID.APB, OnAPBResponseMsg);
+        server.RegisterHandler(ID.GameOver, OnGameOverMsg);
 
         if (!server.Listen(GAME_PORT))
         {
@@ -75,77 +78,133 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
             }
         }
     }
+    public void Start()
+    {
+        _instance = this;
+        _baseInstance = this;
+    }
+    public void Update()
+    {
+        if (server != null)
+        {
+            if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.LoadingFailed
+                || GameManager.Get().RemoteStatus == GameManager.PlayerStatus.LoadingFailed)
+            {
+                StartReloading();
+            }
+
+            server.Update();
+        }
+    }
+    public override void OnDestroy()
+    {
+        if (server != null)
+        {
+            server.DisconnectAllConnections();
+            server.Stop();
+            server = null;
+        }
+
+        if (_instance == this)
+        {
+            _instance = null;
+        }
+
+        base.OnDestroy();
+    }
+
+    public override void SendMessage(short msgId, MessageBase msg)
+    {
+        NetworkConnection client = server.FindConnection(clientId);
+        if (client != null)
+        {
+            client.Send(msgId, msg);
+        }
+        else
+        {
+            Debug.LogWarning("Connection for clientId " + clientId + " for message " + msgId + "not found.");
+        }
+    }
+
+    public void StartReloading()
+    {
+        SeedMsg initMsg = new SeedMsg();
+        initMsg.seed = Random.seed;
+        SendMessage(ID.LoadSession, initMsg);
+
+        GameManager.Get().SetUpGame(initMsg.seed, SendValidateMessageMsg);
+    }
+    private void SendValidateMessageMsg()
+    {
+        SeedMsg msg = new SeedMsg();
+        msg.seed = Random.seed;
+        SendMessage(ID.ValidateSession, msg);
+    }
 
     public void RequestAPB(Vector3 pos)
     {
         if (server == null) return;
 
 #if UNITY_EDITOR
-        Debug.DrawRay(pos, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(pos, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(pos, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
-        Debug.DrawRay(pos, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
-
-        Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
-        Vector3 nextPos = new Vector3();
-        for (float i = 1f; i < 10f; i += 1f)
+        if (Debug.isDebugBuild)
         {
-            nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
-            nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+            Debug.DrawRay(pos, Vector3.forward * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.back * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.left * GameSettings.APB_RADIUS, Color.red, 5f);
+            Debug.DrawRay(pos, Vector3.right * GameSettings.APB_RADIUS, Color.red, 5f);
 
-            Debug.DrawLine(pos + prevPos, pos + nextPos, Color.red, 5f, false);
+            Vector3 prevPos = new Vector3(Mathf.Cos(0f) * GameSettings.APB_RADIUS, 0f, Mathf.Sin(0f) * GameSettings.APB_RADIUS);
+            Vector3 nextPos = new Vector3();
+            for (float i = 1f; i < 10f; i += 1f)
+            {
+                nextPos.x = Mathf.Cos((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
+                nextPos.z = Mathf.Sin((i / 10f) * Mathf.PI * 2f) * GameSettings.APB_RADIUS;
 
-            prevPos = nextPos;
+                Debug.DrawLine(pos + prevPos, pos + nextPos, Color.red, 5f, false);
+
+                prevPos = nextPos;
+            }
+            nextPos.Set(Mathf.Cos(0f), 0f, Mathf.Sin(0f));
+            Debug.DrawLine(prevPos, nextPos * GameSettings.APB_RADIUS, Color.red, 5f, false);
         }
-        nextPos.Set(Mathf.Cos(0f), 0f, Mathf.Sin(0f));
-        Debug.DrawLine(prevPos, nextPos * GameSettings.APB_RADIUS, Color.red, 5f, false);
 #endif
 
-        NetworkConnection client = server.FindConnection(clientId);
-        if (client != null)
-        {
-            Log("Requesting APB at pos " + pos.ToString());
-            NetMessage.APBRequest msg = new NetMessage.APBRequest();
-            msg.position = pos;
-            client.Send(NetMessage.ID.APB, msg);
-        }
-        else
-        {
-            Debug.LogWarning("Attempting to find connection for clientId " + clientId + " but got nothin!");
-        }
+        Log("Requesting APB at pos " + pos.ToString());
+        APBRequest msg = new APBRequest();
+        msg.position = pos;
+        SendMessage(ID.APB, msg);
     }
-
     public void OnAPBResponseMsg(NetworkMessage msg)
     {
-        NetMessage.APBResponse castedMsg = msg.ReadMessage<NetMessage.APBResponse>();
+        APBResponse castedMsg = msg.ReadMessage<APBResponse>();
         Log("Attempting to find hostage at position " + castedMsg.origin);
         for (int i = 0; i < castedMsg.hints.Count; i++)
         {
-            if (castedMsg.hints[i].type == NetMessage.APBResponse.Hint.HintType.Hostage)
+            if (castedMsg.hints[i].type == APBResponse.Hint.HintType.Hostage)
             {
                 Log("Hostage found!  You win!");
                 OnGameWin.Invoke();
                 Restart();
 
-                NetMessage.GameOverMsg gameOverMsg = new NetMessage.GameOverMsg();
+                GameOverMsg gameOverMsg = new GameOverMsg();
                 gameOverMsg.timestamp = Network.time;
-                msg.conn.Send(NetMessage.ID.GameOver, gameOverMsg);
+                msg.conn.Send(ID.GameOver, gameOverMsg);
             }
             else
             {
-                string hintType = NetMessage.APBResponse.Hint.TypeToName(castedMsg.hints[i].type);
+                string hintType = APBResponse.Hint.TypeToName(castedMsg.hints[i].type);
                 Log(hintType + " found at position: " + castedMsg.hints[i].pos.ToString());
                 OperatorIcons.NewIcon(castedMsg.hints[i].pos, castedMsg.hints[i].type);
             }
         }
     }
 
-    public void Update()
+    public void TriggerPoliceInHostageScene(Vector2 pos)
     {
-        if (server != null)
-        {
-            server.Update();
-        }
+        Log("Requesting Police car at pos " + pos.ToString());
+        TriggerPoliceMsg msg = new TriggerPoliceMsg();
+        msg.position = pos;
+        SendMessage(ID.TriggerPoliceCar, msg);
     }
 
     public void OnConnectMsg(NetworkMessage msg)
@@ -153,53 +212,15 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         Log("New player connected!");
         broadcaster.StopBroadcast();
         clientId = msg.conn.connectionId;
-    }
 
-    public void OnDisconnectMsg(NetworkMessage msg)
-    {
-        Restart("Disconnect detected!");
+        StartReloading();
     }
 
     public void OnInitSessionMsg(NetworkMessage msg)
     {
-        // Don't really do anything with this yet.  Just for visual purposes.
-        NetMessage.InitSessionMsg castedMsg = msg.ReadMessage<NetMessage.InitSessionMsg>();
-        SetUpSession(castedMsg.seed, SendReadyMsg);
-    }
-    
-    private void SendReadyMsg()
-    {
-        NetworkConnection client = server.FindConnection(clientId);
-        if (client != null)
-        {
-            Log("Informing other player we're ready to start");
-            NetMessage.ReadyMsg msg = new NetMessage.ReadyMsg();
-            msg.seed = Random.seed;
-            client.Send(NetMessage.ID.Ready, msg);
-        }
-        else
-        {
-            Debug.LogWarning("Attempting to find connection for clientId " + clientId + " but got nothin!");
-        }
-    }
-    
-    private void OnReadyMsg(NetworkMessage msg)
-    {
-        var gameObj = GameObject.Find("GameManager");
-        var manager = gameObj.GetComponent<GameManager>();
-        
-        Log("Other player is ready!");
-        manager.MarkOtherReady();
-    }
-
-    public void OnPingMsg(NetworkMessage msg)
-    {
-        NetMessage.PingMsg castedMsg = msg.ReadMessage<NetMessage.PingMsg>();
-        Log("Ping! " + castedMsg.msg);
-
-        NetMessage.PingMsg response = new NetMessage.PingMsg();
-        response.msg = "Hello to you too!";
-        msg.conn.Send(NetMessage.ID.Ping, response);
+        SeedMsg castedMsg = msg.ReadMessage<SeedMsg>();
+        SendMessage(ID.InitSession, castedMsg);
+        SetUpSession(castedMsg.seed);
     }
 
     public void OnGameOverMsg(NetworkMessage msg)
@@ -209,19 +230,4 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         Restart();
     }
 
-    public void Start()
-    {
-        _instance = this;
-    }
-
-    public void OnDestroy()
-    {
-        if (server != null)
-        {
-            server.Stop();
-            server = null;
-        }
-
-        _instance = null;
-    }
 }

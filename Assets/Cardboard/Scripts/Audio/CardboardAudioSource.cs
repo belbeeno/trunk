@@ -160,13 +160,17 @@ public class CardboardAudioSource : MonoBehaviour {
 
   // Unity audio source attached to the game object.
   private AudioSource audioSource = null;
+    public AudioSource Audio
+    {
+        get { return audioSource; }
+    }
 
   // Denotes whether the source is currently paused or not.
   private bool isPaused = false;
 
   void Awake () {
     audioSource = gameObject.AddComponent<AudioSource>();
-    audioSource.hideFlags = HideFlags.HideInInspector;
+    //audioSource.hideFlags = HideFlags.HideInInspector;
     audioSource.playOnAwake = false;
     audioSource.bypassReverbZones = true;
 #if UNITY_4_5 || UNITY_4_6 || UNITY_4_7

@@ -149,6 +149,8 @@ public class Inventory : MonoBehaviour {
 
     public void GetOutsidePosition(BaseEventData data)
     {
+        if (currentItem == null) return;
+
         //DebugConsole.SetText("object", data.ToString());
         var pointerData = data as PointerEventData;
         var outside = pointerData.pointerCurrentRaycast.gameObject;

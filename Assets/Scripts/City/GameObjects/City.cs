@@ -57,11 +57,14 @@ public class City : MonoBehaviour
             var parkPrefab = (GameObject)GameObject.Instantiate(park.prefab, center, rotation);
             parkPrefab.transform.parent = parkObj.transform;
             
-            var parkGround = parkPrefab.transform.FindChild("pPlane1");
-            var groundRenderer = parkGround.GetComponent<MeshRenderer>();
             var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
             parkPrefab.transform.localScale = Vector3.one * parkSize;
             parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
+
+            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.schoolAudio);
+            audioInstance.transform.SetParent(parkObj.transform, false);
+            ManualVolumetricAudio audioBounds = audioInstance.GetComponent<ManualVolumetricAudio>();
+            audioBounds.points = park.corners;
         }
         foreach (var park in result.largeParks)
         {
@@ -73,13 +76,16 @@ public class City : MonoBehaviour
             var parkPrefab = (GameObject)GameObject.Instantiate(park.prefab, center, rotation);
             parkPrefab.transform.parent = parkObj.transform;
             
-            var parkGround = parkPrefab.transform.FindChild("pPlane1");
-            var groundRenderer = parkGround.GetComponent<MeshRenderer>();
             var parkSize = parkObj.GetComponent<MeshRenderer>().bounds.extents.x;
             parkPrefab.transform.localScale = Vector3.one * parkSize / 4f;
             parkPrefab.transform.position += parkPrefab.transform.forward * parkSize / 3;
             var pos = parkPrefab.transform.position;
             parkPrefab.transform.position = new Vector3(pos.x, 3, pos.z);
+
+            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.schoolAudio);
+            audioInstance.transform.SetParent(parkObj.transform, false);
+            ManualVolumetricAudio audioBounds = audioInstance.GetComponent<ManualVolumetricAudio>();
+            audioBounds.points = park.corners;
         }
 
         // Schools
@@ -100,6 +106,11 @@ public class City : MonoBehaviour
             schoolPrefab.transform.parent = schoolsObj.transform;
             schoolPrefab.transform.localScale = Vector3.one * Math.Min(width, length) / 3.5f;
             //schoolPrefab.transform.position -= schoolPrefab.transform.right * Math.Min(width, length) / 5;
+
+            GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.schoolAudio);
+            audioInstance.transform.SetParent(schoolObj.transform, false);
+            ManualVolumetricAudio audioBounds = audioInstance.GetComponent<ManualVolumetricAudio>();
+            audioBounds.points = school.corners;
         }
 
         // As an optimization, static batch all the unmoving objects with many common materials

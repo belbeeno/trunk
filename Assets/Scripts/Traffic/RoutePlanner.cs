@@ -7,7 +7,11 @@ using Random = UnityEngine.Random;
 
 public class RoutePlanner : MonoBehaviour
 {
-    public RoadGraph graph;
+    public RoadGraph graph = null;
+    public bool IsReady()
+    {
+        return graph != null;
+    }
     
     public RoadEdge[] GetRandomPath()
     {
@@ -16,8 +20,13 @@ public class RoutePlanner : MonoBehaviour
         {
             var from = RoadNodes[Random.Range(0, RoadNodes.Length)];
             var to = RoadNodes[Random.Range(0, RoadNodes.Length)];
-            var path = GetPath(graph, from, to);
+            IList<RoadEdge> path = null;
+            do
+            {
+                path = GetPath(graph, from, to);
+            } while (path == null);
             
+            // Getting a null ref here...? That's why the while loop is above.
             if (path.Count() > 2)
             {
                 return path.ToArray();
