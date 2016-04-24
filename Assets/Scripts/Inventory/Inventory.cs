@@ -85,46 +85,43 @@ public class Inventory : MonoBehaviour {
         }
         if (isAnimating)
         {
-            return false; 
+            return false;
         }
-        if (!HasPhone())
+
+        if (item.GetComponent<CellPhone>() != null) {
+            return true; 
+        }
+
+        var targetInteractable = GetInteractable(item);
+        if (IsHoldingItem() && targetInteractable != null)
         {
-            return item.GetComponent<CellPhone>() != null;
+            // check if what we're holding can interact with what we're looking at
+            return currentInteractable.CanInteractWith(targetInteractable);
         }
-        else {
 
-            var targetInteractable = GetInteractable(item);
-            if (IsHoldingItem() && targetInteractable != null)
-            {
-                // check if what we're holding can interact with what we're looking at
-               return currentInteractable.CanInteractWith(targetInteractable);
-            }
+        return targetInteractable == null ? false : targetInteractable.CanBeHeld();
 
-            return targetInteractable == null ? false : targetInteractable.CanBeHeld();
 
-        }
     }
 
     public void InteractWithItem(GameObject item)
-    {   
+    {
         if (isAnimating)
         {
             return;
         }
-        if (!hasPhone)
+        if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGamePreCall)
         {
-            if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGamePreCall)
-            {
-                // Not ready yet; wait for the cinematic to finish!
-                return;
-            }
-            if (item.GetComponent<CellPhone>())
-            {
-                Collider col = item.GetComponent<Collider>();
-                col.attachedRigidbody.useGravity = false;
-                col.enabled = false;
-                StartCoroutine(AnimateIntoPosession(item.transform, (leftTarget.GetChild(0) ?? transform), toInventoryAnimationLength, PickUpPhone));
-            }
+            // Not ready yet; wait for the cinematic to finish!
+            return;
+        }
+        if (item.GetComponent<CellPhone>())
+        {
+            Collider col = item.GetComponent<Collider>();
+            col.attachedRigidbody.useGravity = false;
+            col.enabled = false;
+            StartCoroutine(AnimateIntoPosession(item.transform, (leftTarget.GetChild(0) ?? transform), toInventoryAnimationLength, PickUpPhone));
+            
             return; 
         }
         // Pick up the item
@@ -181,6 +178,14 @@ public class Inventory : MonoBehaviour {
         rigidBody.isKinematic = true;
         isAnimating = true;
         StopAllCoroutines();
+        var pickupSoundClip = currentInteractable.itemData.itemPickedUpSoundClip;        
+        if ( pickupSoundClip == null)
+        {
+            GetComponent<CardboardAudioSource>().Play();
+        } else
+        {
+            GetComponent<CardboardAudioSource>().PlayOneShot(pickupSoundClip);
+        }
         StartCoroutine(AnimateIntoPosession(item.transform, (rightTarget.GetChild(0) ?? transform), toInventoryAnimationLength));
     }
 
@@ -190,8 +195,9 @@ public class Inventory : MonoBehaviour {
         {
             return;
         }
-        StopAllCoroutines();
+
         currentInteractable.ItemDropped();
+        currentItem.transform.localRotation = Quaternion.identity;
 
         // throws item in the direction currently facing
         //currentItem.transform.localScale = start.localScale;
@@ -255,10 +261,13 @@ public class Inventory : MonoBehaviour {
     private IEnumerator AnimateToOutside(Vector3 finalLocalPosition, float duration, GameObject outside)
     {
         Vector3 startPos = currentItem.transform.localPosition;
+        var startRot = currentItem.transform.localRotation;
+        var endRot = Quaternion.FromToRotation(currentItem.transform.up, transform.up);
         float timer = 0f;
         while (timer < duration)
         {
             currentItem.transform.localPosition = Vector3.Lerp(startPos, finalLocalPosition, Mathf.Clamp01(timer / duration));
+            currentItem.transform.localRotation = Quaternion.Slerp(startRot, endRot, Mathf.Clamp01(timer / duration));
             timer += Time.deltaTime;
             yield return 0;
         }

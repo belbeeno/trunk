@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // This marks a gameobject as something that the player can interact with
-public abstract class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour
 {
     public ScriptableInteractable itemData; 
 
@@ -19,6 +19,7 @@ public abstract class Interactable : MonoBehaviour
         
     void Start()
     {
+        canBeHeld = itemData.canBeHeld; 
     }
 
     public virtual void InteractWith(Interactable itemToInteractWith)
@@ -30,9 +31,7 @@ public abstract class Interactable : MonoBehaviour
         if (itemToInteractWith.GetType() == typeof(Outside))
         {
             var itemName = itemData.itemName;
-            var position = transform.position;
             ((Outside)itemToInteractWith).DropItem(itemName);
-            Debug.Log(string.Format("itemName {0}, position {1}", itemName, position));
         }
     }
     
