@@ -24,5 +24,7 @@ public class PrefabStore : MonoBehaviour
 
     [Header("Audio")]
     public GameObject schoolAudio;
+    public GameObject parkAudio;
+    public GameObject bigParkAudio;
     public GameObject waterAudio;
 }
