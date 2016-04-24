@@ -6998,6 +6998,12 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &829516072 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11418250, guid: 7bca0eed7b890104aaca2894082b1b80,
+    type: 2}
+  m_PrefabInternal: {fileID: 469717922}
+  m_Script: {fileID: 11500000, guid: d8f4ec246e104a145b83aa927c395427, type: 3}
 --- !u!1 &850487106
 GameObject:
   m_ObjectHideFlags: 0
@@ -15399,7 +15405,7 @@ MonoBehaviour:
   voiceChatPlayer: {fileID: 485350158}
   statusText: {fileID: 881470862}
   mover: {fileID: 1406049026}
-  outsideTrunk: {fileID: 0}
+  outsideTrunk: {fileID: 829516072}
   policeCarInstance: {fileID: 301568341}
   helicopterInstance: {fileID: 803978718}
 --- !u!114 &1685588525

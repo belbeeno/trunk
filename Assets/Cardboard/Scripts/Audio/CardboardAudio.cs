@@ -113,6 +113,8 @@ public static class CardboardAudio {
       numChannels = -1;
       framesPerBuffer = -1;
 
+      GOsPendingInitialization.Clear();
+
       Debug.Log("Cardboard audio system is shutdown.");
     }
   }
