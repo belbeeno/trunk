@@ -8,4 +8,7 @@ public class ScriptableInteractable : ScriptableObject {
     public string itemName;
     public bool disposeOnUse = false;
     public float rotationWhenInInventory;
+    
+    public AudioClip itemDroppedSoundClip;
+
 }

@@ -149,6 +149,7 @@ GameObject:
   - 114: {fileID: 11407986}
   - 33: {fileID: 3397926}
   - 23: {fileID: 2364650}
+  - 114: {fileID: 11496066}
   m_Layer: 11
   m_Name: Trunk Floor
   m_TagString: Untagged
@@ -255,6 +256,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 404694}
+  - 114: {fileID: 11423522}
   m_Layer: 8
   m_Name: Trunk Hinge
   m_TagString: Untagged
@@ -275,6 +277,7 @@ GameObject:
   - 114: {fileID: 11435764}
   - 33: {fileID: 3306726}
   - 23: {fileID: 2339428}
+  - 114: {fileID: 11426792}
   m_Layer: 11
   m_Name: Trunk Floor (1)
   m_TagString: Untagged
@@ -1266,6 +1269,31 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+--- !u!114 &11423522
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dbca64e524ea44f9b26142ec59aca8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  directivityAlpha: 0
+  directivitySharpness: 1
+  gainDb: 0
+  occlusionEnabled: 0
+  playOnAwake: 1
+  rolloffMode: 1
+  sourceClip: {fileID: 8300000, guid: 6195ad68c4b2db040873f056d4d525aa, type: 3}
+  sourceLoop: 0
+  sourceMute: 0
+  sourcePitch: 1
+  sourceVolume: 1
+  sourceMaxDistance: 10
+  sourceMinDistance: 0
+  hrtfEnabled: 1
 --- !u!114 &11425138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1296,6 +1324,17 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+--- !u!114 &11426792
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c9f4c8684ea304ba16ad546f072679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11435764
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1386,6 +1425,17 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+--- !u!114 &11496066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 132984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c9f4c8684ea304ba16ad546f072679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11497708
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -78,6 +78,8 @@ public class Tool : Interactable {
         
         var actionAnimation = GetComponent<Animation>();
         actionAnimation.Play(toolData.openLatchAnimationClipName);
+        var audioSource = GetComponent<CardboardAudioSource>();
+        audioSource.PlayOneShot(toolData.itemLatchSoundClip);
         while (actionAnimation.isPlaying)
         {
             yield return 0;

@@ -18,5 +18,7 @@ public class ScriptableTools : ScriptableInteractable
     public Vector3 frontDirection;
     public Vector3 toolUpDirectionWhenFlat;
 
-    public Transform wedgeStartTransform; 
+    public Transform wedgeStartTransform;
+
+    public AudioClip itemLatchSoundClip;  
 }

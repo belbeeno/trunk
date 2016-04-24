@@ -171,6 +171,7 @@ public class Inventory : MonoBehaviour {
         rigidBody.isKinematic = true;
         isAnimating = true;
         StopAllCoroutines();
+        GetComponent<CardboardAudioSource>().Play(); 
         StartCoroutine(AnimateIntoPosession(item.transform, (rightTarget.GetChild(0) ?? transform), toInventoryAnimationLength));
     }
 
