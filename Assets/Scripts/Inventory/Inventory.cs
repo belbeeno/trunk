@@ -78,7 +78,9 @@ public class Inventory : MonoBehaviour {
     // currently holding something and the two items can interact 
     public bool CanInteractWith(GameObject item)
     {
-        if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.PreGame 
+        if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGame 
+            && GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGamePreCall
+            && GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGameRinging
             && GameManager.Get().RemoteStatus != GameManager.PlayerStatus.NotConnected)
         {
             return false;
@@ -110,7 +112,10 @@ public class Inventory : MonoBehaviour {
         {
             return;
         }
-        if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGamePreCall)
+        if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGame
+            && GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGamePreCall
+            && GameManager.Get().LocalStatus != GameManager.PlayerStatus.InGameRinging
+            && GameManager.Get().RemoteStatus != GameManager.PlayerStatus.NotConnected)
         {
             // Not ready yet; wait for the cinematic to finish!
             return;
