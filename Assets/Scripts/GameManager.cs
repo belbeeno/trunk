@@ -146,19 +146,19 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    public void SetUpGame(int seed, Action callback)
+    public void SetUpGame(int seed, Action callback, bool isHostage)
     {
-        StartCoroutine(SetUpGameCoroutine(seed, callback));
+        StartCoroutine(SetUpGameCoroutine(seed, callback, isHostage));
     }
 
-    public IEnumerator SetUpGameCoroutine(int seed, Action callback)
+    public IEnumerator SetUpGameCoroutine(int seed, Action callback, bool isHostage)
     {
         Random.seed = seed;
         LocalStatus = PlayerStatus.Loading;
-        
-        var city = _generator.Generate(generationOptions);
-        yield return 0;
-        GenerateCity(city);
+
+        GenerationData city = _generator.Generate(generationOptions);
+        city.isHostage = isHostage;
+        yield return StartCoroutine(GenerateCity(city));
         yield return 0;
         InitializeRoutePlanner(city);
         yield return 0;
@@ -176,7 +176,7 @@ public class GameManager : MonoBehaviour
         car.isMoving = true;
     }
     
-    private void GenerateCity(GenerationData result)
+    private IEnumerator GenerateCity(GenerationData result)
     {
         var gameObj = GameObject.Find("City");
         Transform xform = gameObj.transform;
@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
             Destroy(xform.GetChild(i));
         }
         var city = gameObj.GetComponent<City>();
-        city.GenerateGeometry(result);
+        yield return StartCoroutine(city.GenerateGeometry(result));
     }
     
     private void InitializeRoutePlanner(GenerationData result)
@@ -212,9 +212,9 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    public void SetUpDebugGame()
+    public void SetUpDebugGame(bool isHostage)
     {
-        SetUpGame(Random.Range(int.MinValue, int.MaxValue), () => { });
+        SetUpGame(Random.Range(int.MinValue, int.MaxValue), () => { }, isHostage);
         StartGame();
     }
 }

@@ -48,14 +48,14 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
         initParams.Add(new NetHandlerInitParams(ID.ValidateSession, OnValidateSessionMsg));
     }
 
-    public abstract void SendMessage(short msgId, MessageBase msg);
+    public abstract void SendNetMessage(short msgId, MessageBase msg);
 
     public void OnDisconnectMsg(NetworkMessage msg)
     {
         Restart("Disconnect detected!");
     }
 
-    public void SetUpSession(int citySeed)
+    public void SetUpSession(int citySeed, bool isHostage)
     {
         VoiceChat.VoiceChatRecorder.Instance.NetworkId = VoiceChatID;
         if (!VoiceChat.VoiceChatRecorder.Instance.StartRecording())
@@ -70,13 +70,13 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
             voiceChatPlayer.gameObject.SetActive(true);
         }
 
-        GameManager.Get().SetUpGame(citySeed, ValidateSession);
+        GameManager.Get().SetUpGame(citySeed, ValidateSession, isHostage);
     }
     public void ValidateSession()
     {
         SeedMsg msg = new SeedMsg();
         msg.seed = Random.seed;
-        SendMessage(ID.ValidateSession, msg);
+        SendNetMessage(ID.ValidateSession, msg);
     }
     public void OnValidateSessionMsg(NetworkMessage msg)
     {
@@ -106,7 +106,7 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     {
         UpdateStatusMsg castedMsg = new UpdateStatusMsg();
         castedMsg.status = (int)newStatus;
-        SendMessage(ID.PlayerStatusChange, castedMsg);
+        SendNetMessage(ID.PlayerStatusChange, castedMsg);
     }
     public void OnPlayerStatusChanged(NetworkMessage msg)
     {

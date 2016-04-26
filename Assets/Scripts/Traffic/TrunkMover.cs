@@ -19,6 +19,9 @@ public class TrunkMover : MonoBehaviour
     float timer = 0f;
     bool wasTurning = false;
 
+    [HideInInspector]
+    public Vector3 forward = new Vector3();
+
     public void Start()
     {
         _route = new Route();
@@ -32,10 +35,12 @@ public class TrunkMover : MonoBehaviour
         }
 
         timer = Random.Range(bounceRangeInSeconds.x, bounceRangeInSeconds.y);
+        forward = transform.forward;
     }
 
 	public void Update () 
     {
+        forward = transform.forward;
         if (!isMoving) return;
 
         if (_route != null && _route.IsAtIntersection() != wasTurning)
@@ -62,5 +67,11 @@ public class TrunkMover : MonoBehaviour
             }
             timer = Random.Range(bounceRangeInSeconds.x, bounceRangeInSeconds.y);
         }
+    }
+
+    public void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(Camera.main.transform.position + Camera.main.transform.forward * (GameSettings.HOSTAGE_CULLING_RADIUS / 2f), GameSettings.HOSTAGE_CULLING_RADIUS);
     }
 }
