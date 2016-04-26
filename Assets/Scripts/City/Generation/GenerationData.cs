@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GenerationData
-{    
+{
+    public bool isHostage { get; set; }
     public RoadGraph roadGraph { get; set; }
     public ICollection<CityBlockData> cityBlocks { get; set; }
     public ICollection<SidewalkData> sidewalks { get; set; }

@@ -1,13 +1,14 @@
 using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
 public class City : MonoBehaviour 
 {
-    public void GenerateGeometry(GenerationData result)
+    public IEnumerator GenerateGeometry(GenerationData result)
     {
         ClearChildren();
-        AddMeshes(result);
+        yield return StartCoroutine(AddMeshes(result));
         AddColliders(result);
 //      AddDebugObjs(result);
     }
@@ -20,7 +21,7 @@ public class City : MonoBehaviour
         }
     }
     
-    private void AddMeshes(GenerationData result)
+    private IEnumerator AddMeshes(GenerationData result)
     {                         
         // Buildings
         var buildingsObj = CreateGameObject("Buildings");
@@ -28,7 +29,15 @@ public class City : MonoBehaviour
         {
             var plotObj = CreateGameObject(buildingsObj, "Building");
             AddMesh(plotObj, plot.mesh, plot.material);
+
+            if (result.isHostage)
+            {
+                HostageCullable culler = plotObj.AddComponent<HostageCullable>();
+                culler.CenterPos = plot.corners.Average();
+                culler.CreateCollider();
+            }
         }
+        yield return 0;
         
         // Sidewalks
         var sidewalksObj = CreateGameObject("Sidewalks");
@@ -36,7 +45,15 @@ public class City : MonoBehaviour
         {
             var sidewalkObj = CreateGameObject(sidewalksObj, "Sidewalk");
             AddMesh(sidewalkObj, sidewalk.mesh, sidewalk.material);
+
+            if (result.isHostage)
+            {
+                HostageCullable culler = sidewalkObj.AddComponent<HostageCullable>();
+                culler.CenterPos = sidewalk.corners.Average();
+                culler.CreateCollider();
+            }
         }
+        yield return 0;
         
         // Road meshes
         var roadMeshesObj = CreateGameObject("Road Meshes");
@@ -44,7 +61,15 @@ public class City : MonoBehaviour
         {
             var roadMeshObj = CreateGameObject(roadMeshesObj, "Road Mesh");
             AddMesh(roadMeshObj, roadMesh.mesh, roadMesh.material);
+
+            if (result.isHostage)
+            {
+                HostageCullable culler = roadMeshObj.AddComponent<HostageCullable>();
+                culler.CenterPos = roadMesh.corners.Average();
+                culler.CreateCollider();
+            }
         }
+        yield return 0;
         
         // Parks
         var parksObj = CreateGameObject("Parks");
@@ -66,7 +91,16 @@ public class City : MonoBehaviour
             CardboardAudio.ActivatePostInitialization(audioInstance); 
             ManualVolumetricAudio audioBounds = audioInstance.GetComponent<ManualVolumetricAudio>();
             audioBounds.points = park.corners;
+
+            if (result.isHostage)
+            {
+                HostageCullable culler = parkObj.AddComponent<HostageCullable>();
+                culler.CenterPos = park.corners.Average();
+                culler.CreateCollider();
+            }
         }
+        yield return 0;
+
         foreach (var park in result.largeParks)
         {
             var parkObj = CreateGameObject(parksObj, "Large Park");
@@ -93,13 +127,21 @@ public class City : MonoBehaviour
             if (park == null) Debug.LogError("park is null!");
             if (park.corners == null) Debug.LogError("corners is null!");
             audioBounds.points = park.corners;
+
+            if (result.isHostage)
+            {
+                HostageCullable culler = parkObj.AddComponent<HostageCullable>();
+                culler.CenterPos = park.corners.Average();
+                culler.CreateCollider();
+            }
         }
+        yield return 0;
 
         // Schools
         var schoolsObj = CreateGameObject("Schools");
         foreach (var school in result.schools)
         {
-            var schoolObj = CreateGameObject(parksObj, "School");
+            var schoolObj = CreateGameObject(schoolsObj, "School");
             var center = school.corners.Average();
             
             var rotDeg = UnityEngine.Random.Range(0f, 1f) > 0.5 ? 0 : 180;
@@ -110,23 +152,31 @@ public class City : MonoBehaviour
                 : Quaternion.Euler(0, rotDeg + 90, 0);
             
             var schoolPrefab = (GameObject)GameObject.Instantiate(PrefabStore.instance.school, center, rotation);
-            schoolPrefab.transform.parent = schoolsObj.transform;
+            schoolPrefab.transform.parent = schoolObj.transform;
             schoolPrefab.transform.localScale = Vector3.one * Math.Min(width, length) / 3.5f;
             //schoolPrefab.transform.position -= schoolPrefab.transform.right * Math.Min(width, length) / 5;
 
             GameObject audioInstance = GameObject.Instantiate<GameObject>(PrefabStore.instance.schoolAudio);
-            audioInstance.transform.SetParent(schoolObj.transform, false);
+            audioInstance.transform.SetParent(schoolPrefab.transform, false);
             audioInstance.transform.position = center;
             CardboardAudio.ActivatePostInitialization(audioInstance); 
             ManualVolumetricAudio audioBounds = audioInstance.GetComponent<ManualVolumetricAudio>();
             audioBounds.points = school.corners;
+
+            if (result.isHostage)
+            {
+                HostageCullable culler = schoolObj.AddComponent<HostageCullable>();
+                culler.CenterPos = center;
+            }
         }
+        yield return 0;
 
         // As an optimization, static batch all the unmoving objects with many common materials
         //*
         StaticBatchingUtility.Combine(buildingsObj);
         StaticBatchingUtility.Combine(sidewalksObj);
         StaticBatchingUtility.Combine(roadMeshesObj);
+        yield return 0;
         //*/
 
         // Water

@@ -12,7 +12,7 @@ public class GameManagerEditor : Editor
         EditorGUILayout.Space();
         if (GUILayout.Button("Start Debug Game"))
         {
-            gameManager.SetUpDebugGame();
+            gameManager.SetUpDebugGame(false);
         }
     }
 }
