@@ -15,9 +15,11 @@ public class TimeDisplay : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-	    if (GameManager.Get() != null && TrunkNetworkingBase.GetBase().IsHost())
+	    if (GameManager.Get() != null 
+            && TrunkNetworkingBase.GetBase() != null
+            && TrunkNetworkingBase.GetBase().IsHost())
         {
-            text.text = "2:0" + Mathf.FloorToInt(GameManager.Get().GetElapsedTime() / 60f).ToString() + " PM";
+            text.text = "2:0" + Mathf.FloorToInt((GameSettings.GAME_SESSION_LENGTH - GameManager.Get().GetElapsedTime()) / 60f).ToString() + " PM";
             
         }
 	}
