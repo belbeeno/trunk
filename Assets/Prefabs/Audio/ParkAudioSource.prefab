@@ -43,7 +43,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   directivityAlpha: 0
   directivitySharpness: 1
-  gainDb: 7.5
+  gainDb: -12
   occlusionEnabled: 0
   playOnAwake: 1
   rolloffMode: 1
