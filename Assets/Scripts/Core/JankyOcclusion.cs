@@ -144,7 +144,7 @@ public class JankyOcclusion : MonoBehaviour
                 hits[i].SendMessage("SetVisible", 3f);
             }
 
-            yield return 0;
+            yield return pause;
         }
     }
 
