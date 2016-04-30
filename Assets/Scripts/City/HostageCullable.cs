@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class HostageCullable : MonoBehaviour
 {
     private Vector3 centerPos = new Vector3();
-    private bool isInitialized = false;
+    //private bool isInitialized = false;
     private bool wasEnabled = true;
     public Vector3 CenterPos
     {
@@ -16,7 +16,7 @@ public class HostageCullable : MonoBehaviour
         }
         set
         {
-            isInitialized = true;
+            //isInitialized = true;
             centerPos = value;
         }
     }
@@ -36,7 +36,7 @@ public class HostageCullable : MonoBehaviour
         }
     }
 
-    TrunkMover mover = null;
+    //TrunkMover mover = null;
     ForwardCache camFwd = null;
     ForwardCache trunkFwd = null;
     private readonly float halfCullRad = (GameSettings.HOSTAGE_CULLING_RADIUS / 2f);

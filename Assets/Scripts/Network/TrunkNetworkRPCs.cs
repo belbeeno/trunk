@@ -80,7 +80,7 @@ namespace NetMessage
                 Screwdriver,
                 Crowbar,
                 TireIron,
-                Blanket,
+                Newspaper,
                 Rope,
                 Hostage,        // <- if you get this, you've won!!!!
             }
@@ -124,6 +124,8 @@ namespace NetMessage
                         return HintType.Crowbar;
                     case "TireIron":
                         return HintType.TireIron;
+                    case "Newspaper":
+                        return HintType.Newspaper;
                     default:
                         return HintType.INVALID;
                 }
@@ -138,6 +140,8 @@ namespace NetMessage
                         return "Crowbar";
                     case HintType.TireIron:
                         return "TireIron";
+                    case HintType.Newspaper:
+                        return "Newspaper";
                     default:
                         return string.Empty;
                 }

@@ -85,6 +85,8 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 0607f4c5a290464489a1a3ab3a7d6a90, type: 3}
   - hintType: 3
     icon: {fileID: 21300000, guid: c834d05f89f4e7842abeba7e2367b714, type: 3}
+  - hintType: 4
+    icon: {fileID: 21300000, guid: 5ad71a1706faf034bb7df54fae88fa9f, type: 3}
   animDuration: 1
 --- !u!114 &11482380
 MonoBehaviour:
