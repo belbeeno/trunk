@@ -60,7 +60,8 @@ public class OperatorStatus : MonoBehaviour
 
     public void Update()
     {
-        if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.InGame)
+        if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.InGame
+            || GameManager.Get().RemoteStatus == GameManager.PlayerStatus.NotConnected)
         {
             SetTimers(ref checkAreaTimer, GameSettings.APB_COOLDOWN, ref checkAreaToggle);
             SetTimers(ref policeTimer, GameSettings.COP_SIREN_PING_COOLDOWN, ref policeToggle);
