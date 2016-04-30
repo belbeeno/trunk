@@ -68,6 +68,19 @@ public class GameManager : MonoBehaviour
     }
     public OnPlayerStatusChangedCB OnRemoteStatusChanged;
 
+    public static bool IsInGame(PlayerStatus status)
+    {
+        switch (status)
+        {
+            case PlayerStatus.InGame:
+            case PlayerStatus.InGamePreCall:
+            case PlayerStatus.InGameRinging:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public bool IsReadyToPlay()
     {
         // Eh it's the last day who cares.
