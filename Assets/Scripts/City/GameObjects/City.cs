@@ -50,7 +50,10 @@ public class City : MonoBehaviour
             {
                 HostageCullable culler = sidewalkObj.AddComponent<HostageCullable>();
                 culler.CenterPos = sidewalk.corners.Average();
-                culler.CreateCollider();
+                BoxCollider collider = culler.CreateCollider();
+                Vector3 yPaddedSize = collider.size;
+                yPaddedSize.y = 10f;
+                collider.size = yPaddedSize;
             }
         }
         yield return 0;
@@ -167,6 +170,7 @@ public class City : MonoBehaviour
             {
                 HostageCullable culler = schoolObj.AddComponent<HostageCullable>();
                 culler.CenterPos = center;
+                culler.CreateCollider();
             }
         }
         yield return 0;

@@ -43,7 +43,8 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         initParams.Add(new NetHandlerInitParams(ID.APB, OnAPBRequestMsg));
         initParams.Add(new NetHandlerInitParams(ID.TriggerPoliceCar, OnTriggerPoliceCarMsg));
         initParams.Add(new NetHandlerInitParams(ID.TriggerHelicopter, OnTriggerHelicopterMsg));
-        initParams.Add(new NetHandlerInitParams(ID.GameOver, OnGameOverMsg));
+        initParams.Add(new NetHandlerInitParams(ID.GameWon, OnGameWinMsg));
+        initParams.Add(new NetHandlerInitParams(ID.GameLost, OnGameLoseMsg));
 
         if (Debug.isDebugBuild)
         {
@@ -125,12 +126,20 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         Log("Connected to server!");
         broadcaster.StopBroadcast();
     }
-    public void OnGameOverMsg(NetworkMessage msg)
+    
+    public void OnGameWinMsg(NetworkMessage msg)
     {
-        // If we're getting this at the hostage end, then the operator found us!
         Log("Hostage found!  You win!");
+
+        GameManager.Get().LocalStatus = GameManager.PlayerStatus.GameOverWin;
         OnGameWin.Invoke();
-        Restart();
+    }
+    public void OnGameLoseMsg(NetworkMessage msg)
+    {
+        Log("Game Lost!");
+
+        GameManager.Get().LocalStatus = GameManager.PlayerStatus.GameOverLoss;
+        OnGameLost.Invoke();
     }
     public void OnInitSessionMsg(NetworkMessage msg)
     {

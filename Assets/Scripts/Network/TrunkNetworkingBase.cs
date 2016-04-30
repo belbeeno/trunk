@@ -36,6 +36,7 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
     public UnityEvent OnSessionEstablished;
     public UnityEvent OnResetImminent;
     public UnityEvent OnGameWin;
+    public UnityEvent OnGameLost;
 
     public abstract int VoiceChatID { get; }
     public VoiceChatPlayer voiceChatPlayer = null;
@@ -100,6 +101,10 @@ public abstract class TrunkNetworkingBase : MonoBehaviour
         voiceChatPlayer.gameObject.SetActive(true);
         VoiceChat.VoiceChatRecorder.Instance.AutoDetectSpeech = true;
         GameManager.Get().LocalStatus = GameManager.PlayerStatus.InGame;
+    }
+    public static void DisableVoiceChat()
+    {
+        VoiceChat.VoiceChatRecorder.Instance.AutoDetectSpeech = false;
     }
 
     public void LocalPlayerStatusChanged(GameManager.PlayerStatus newStatus)

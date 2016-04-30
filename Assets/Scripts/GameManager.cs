@@ -25,8 +25,9 @@ public class GameManager : MonoBehaviour
         InGamePreCall,  // Haven't picked up the phone yet
         InGameRinging,  // It's ringing...
         InGame,
-        
-        GameOver,
+
+        GameOverWin,
+        GameOverLoss,
     }
 
     [System.Serializable]
@@ -55,7 +56,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, ShowOnly]
     private PlayerStatus remoteStatus = PlayerStatus.NotConnected;
     public PlayerStatus RemoteStatus 
-    { 
+    {
         get { return remoteStatus; } 
         set
         {
@@ -79,6 +80,10 @@ public class GameManager : MonoBehaviour
             default:
                 return false;
         }
+    }
+    public bool IsGameOver()
+    {
+        return LocalStatus == PlayerStatus.GameOverWin || LocalStatus == PlayerStatus.GameOverLoss;
     }
 
     public bool IsReadyToPlay()
@@ -110,9 +115,9 @@ public class GameManager : MonoBehaviour
     private CityGenerator _generator = new CityGenerator();
 
     private float gameTimer = GameSettings.GAME_SESSION_LENGTH;
-    public bool IsGameOver()
+    public float GetElapsedTime()
     {
-        return gameTimer < 0f;
+        return gameTimer;
     }
     
     private bool _gameHasStarted;
@@ -149,12 +154,20 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        else
+        else if ( TrunkNetworkingBase.GetBase() != null && TrunkNetworkingBase.GetBase().IsHost() )
         {
+            if (IsGameOver())
+            {
+                return;
+            }
+
+            // Only the client has the authority to game over the game... this makes sense, yeah?  Because the host would
+            // be triggering the win state?
             gameTimer -= Time.deltaTime;
             if (gameTimer <= 0f)
             {
-                LocalStatus = PlayerStatus.GameOver;
+                LocalStatus = PlayerStatus.GameOverLoss;
+                TrunkNetworkingOperator.Get().SendGameLostMsg();
             }
         }
     }
@@ -187,6 +200,11 @@ public class GameManager : MonoBehaviour
         var gameObj = GameObject.Find("Car");
         var car = gameObj.GetComponent<TrunkMover>();
         car.isMoving = true;
+
+        if (TrunkNetworkingBase.GetBase() != null)
+        {
+            TrunkNetworkingBase.GetBase().OnGameLost.AddListener(OnGameEnd);
+        }
     }
     
     private IEnumerator GenerateCity(GenerationData result)
@@ -199,6 +217,11 @@ public class GameManager : MonoBehaviour
         }
         var city = gameObj.GetComponent<City>();
         yield return StartCoroutine(city.GenerateGeometry(result));
+    }
+
+    public void OnGameEnd()
+    {
+        TrunkNetworkingBase.DisableVoiceChat();
     }
     
     private void InitializeRoutePlanner(GenerationData result)

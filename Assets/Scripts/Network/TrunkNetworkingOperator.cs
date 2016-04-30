@@ -57,7 +57,6 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
 
         server.RegisterHandler(MsgType.Connect, OnConnectMsg);
         server.RegisterHandler(ID.APB, OnAPBResponseMsg);
-        server.RegisterHandler(ID.GameOver, OnGameOverMsg);
 
         if (!server.Listen(GAME_PORT))
         {
@@ -194,13 +193,12 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         {
             if (castedMsg.hints[i].type == APBResponse.Hint.HintType.Hostage)
             {
-                Log("Hostage found!  You win!");
                 OnGameWin.Invoke();
                 Restart();
 
                 GameOverMsg gameOverMsg = new GameOverMsg();
                 gameOverMsg.timestamp = Network.time;
-                msg.conn.Send(ID.GameOver, gameOverMsg);
+                msg.conn.Send(ID.GameWon, gameOverMsg);
             }
             else
             {
@@ -241,9 +239,14 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         SetUpSession(initMsg.seed, false);
     }
 
-    public void OnGameOverMsg(NetworkMessage msg)
+    public void SendGameLostMsg()
     {
-        // If we're getting this from the client, the captors are out of range and we lost.
+        GameOverMsg msg = new GameOverMsg();
+        msg.timestamp = Network.time;
+        SendNetMessage(ID.GameLost, msg);
+
+        OnGameLost.Invoke();
+
         Log("You took too long, the captors won!");
         Restart();
     }

@@ -44,7 +44,7 @@ public class HostageCullable : MonoBehaviour
 
     Bounds totalBounds = new Bounds();
 
-    public void CreateCollider()
+    public BoxCollider CreateCollider()
     {
         totalBounds.center = CenterPos;
         for (int i = 0; i < Meshes.Count; i++)
@@ -56,6 +56,8 @@ public class HostageCullable : MonoBehaviour
         col.center = totalBounds.center;
         col.size = totalBounds.size;
         col.isTrigger = true;
+
+        return col;
     }
 
     void Start()

@@ -54,17 +54,17 @@ public class JankyOcclusion : MonoBehaviour
         , (Mathf.PI / 2f)};
     */
     private readonly float[] rayGridY = new float[] {
-          -(90f) *  5f / 15f
-        , -(90f) *  4f / 15f
+          -(90f) *  15f / 15f
+        , -(90f) *  12f / 15f
+        , -(90f) *  9f / 15f
+        , -(90f) *  6f / 15f
         , -(90f) *  3f / 15f
-        , -(90f) *  2f / 15f
-        , -(90f) *  1f / 15f
         , 0f
-        , (90f) *  1f / 15f
-        , (90f) *  2f / 15f
         , (90f) *  3f / 15f
-        , (90f) *  4f / 15f
-        , (90f) *  5f / 15f
+        , (90f) *  6f / 15f
+        , (90f) *  9f / 15f
+        , (90f) *  12f / 15f
+        , (90f) *  15f / 15f
     };
     private readonly float[] rayGridX = new float[] { 
           -(90f)

@@ -9,6 +9,8 @@ public class TextSequence3D : MonoBehaviour
     public Transform endPos = null;
 
     public string[] lines = new string[0];
+    public string winMessage = "You were rescued by the police.";
+    public string loseMessage = "You were never heard from again...";
     protected int linePointer = 0;
     protected float timer = 0f;
     protected bool easingIn = true;
@@ -26,6 +28,8 @@ public class TextSequence3D : MonoBehaviour
         {
             text.text = lines[linePointer];
         }
+        TrunkNetworkingBase.GetBase().OnGameWin.AddListener(OnWin);
+        TrunkNetworkingBase.GetBase().OnGameLost.AddListener(OnLost);
     }
 
     void UpdateText()
@@ -34,15 +38,31 @@ public class TextSequence3D : MonoBehaviour
         text.color = Color.Lerp(Color.clear, Color.white, Ease.EnumToFunc(easingIn ? alphaFuncIn : alphaFuncOut).Invoke(Mathf.Clamp01(timer / tweenTime), 0f, 1f, 1f));
     }
 
+    public void OnWin()
+    {
+        lines = new string[1];
+        lines[0] = winMessage;
+        linePointer = 0;
+    }
+
+    public void OnLost()
+    {
+        lines = new string[1];
+        lines[0] = loseMessage;
+        linePointer = 0;
+    }
+
     public void Update()
     {
-        if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.PreGame && GameManager.Get().RemoteStatus != GameManager.PlayerStatus.NotConnected) return;
-
-        if (linePointer >= lines.Length)
+        if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.PreGame
+            && GameManager.Get().RemoteStatus != GameManager.PlayerStatus.NotConnected)
         {
-            enabled = false;
-            GameManager.Get().LocalStatus = GameManager.PlayerStatus.InGamePreCall;
             return;
+        }
+        else if (GameManager.Get().IsGameOver())
+        {
+            // Getting lazyyyy
+            if (linePointer >= lines.Length) Application.Quit();
         }
 
         if (easingIn)
@@ -73,10 +93,19 @@ public class TextSequence3D : MonoBehaviour
                 {
                     text.text = lines[linePointer];
                 }
+                else if (GameManager.Get().IsGameOver())
+                {
+                    Application.Quit();
+                }
+                else
+                {
+                    GameManager.Get().LocalStatus = GameManager.PlayerStatus.InGamePreCall;
+                }
                 easingIn = true;
             }
         }
 
         UpdateText();
+
     }
 }
