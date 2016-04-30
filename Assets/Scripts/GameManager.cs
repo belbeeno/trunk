@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
         InGamePreCall,  // Haven't picked up the phone yet
         InGameRinging,  // It's ringing...
         InGame,
+
+        GameOverWin,
+        GameOverLoss,
     }
 
     [System.Serializable]
@@ -53,7 +56,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, ShowOnly]
     private PlayerStatus remoteStatus = PlayerStatus.NotConnected;
     public PlayerStatus RemoteStatus 
-    { 
+    {
         get { return remoteStatus; } 
         set
         {
@@ -65,6 +68,23 @@ public class GameManager : MonoBehaviour
         }
     }
     public OnPlayerStatusChangedCB OnRemoteStatusChanged;
+
+    public static bool IsInGame(PlayerStatus status)
+    {
+        switch (status)
+        {
+            case PlayerStatus.InGame:
+            case PlayerStatus.InGamePreCall:
+            case PlayerStatus.InGameRinging:
+                return true;
+            default:
+                return false;
+        }
+    }
+    public bool IsGameOver()
+    {
+        return LocalStatus == PlayerStatus.GameOverWin || LocalStatus == PlayerStatus.GameOverLoss;
+    }
 
     public bool IsReadyToPlay()
     {
@@ -93,6 +113,12 @@ public class GameManager : MonoBehaviour
     public OperatorPanAndZoom operatorControls = null;
     public GenerationOptions generationOptions;
     private CityGenerator _generator = new CityGenerator();
+
+    private float gameTimer = GameSettings.GAME_SESSION_LENGTH;
+    public float GetElapsedTime()
+    {
+        return gameTimer;
+    }
     
     private bool _gameHasStarted;
     public bool HasGameStarted() { return _gameHasStarted; }
@@ -128,21 +154,37 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        else if ( TrunkNetworkingBase.GetBase() != null && TrunkNetworkingBase.GetBase().IsHost() )
+        {
+            if (IsGameOver())
+            {
+                return;
+            }
+
+            // Only the client has the authority to game over the game... this makes sense, yeah?  Because the host would
+            // be triggering the win state?
+            gameTimer -= Time.deltaTime;
+            if (gameTimer <= 0f)
+            {
+                LocalStatus = PlayerStatus.GameOverLoss;
+                TrunkNetworkingOperator.Get().SendGameLostMsg();
+            }
+        }
     }
     
-    public void SetUpGame(int seed, Action callback)
+    public void SetUpGame(int seed, Action callback, bool isHostage)
     {
-        StartCoroutine(SetUpGameCoroutine(seed, callback));
+        StartCoroutine(SetUpGameCoroutine(seed, callback, isHostage));
     }
 
-    public IEnumerator SetUpGameCoroutine(int seed, Action callback)
+    public IEnumerator SetUpGameCoroutine(int seed, Action callback, bool isHostage)
     {
         Random.seed = seed;
         LocalStatus = PlayerStatus.Loading;
-        
-        var city = _generator.Generate(generationOptions);
-        yield return 0;
-        GenerateCity(city);
+
+        GenerationData city = _generator.Generate(generationOptions);
+        city.isHostage = isHostage;
+        yield return StartCoroutine(GenerateCity(city));
         yield return 0;
         InitializeRoutePlanner(city);
         yield return 0;
@@ -158,9 +200,14 @@ public class GameManager : MonoBehaviour
         var gameObj = GameObject.Find("Car");
         var car = gameObj.GetComponent<TrunkMover>();
         car.isMoving = true;
+
+        if (TrunkNetworkingBase.GetBase() != null)
+        {
+            TrunkNetworkingBase.GetBase().OnGameLost.AddListener(OnGameEnd);
+        }
     }
     
-    private void GenerateCity(GenerationData result)
+    private IEnumerator GenerateCity(GenerationData result)
     {
         var gameObj = GameObject.Find("City");
         Transform xform = gameObj.transform;
@@ -169,7 +216,12 @@ public class GameManager : MonoBehaviour
             Destroy(xform.GetChild(i));
         }
         var city = gameObj.GetComponent<City>();
-        city.GenerateGeometry(result);
+        yield return StartCoroutine(city.GenerateGeometry(result));
+    }
+
+    public void OnGameEnd()
+    {
+        TrunkNetworkingBase.DisableVoiceChat();
     }
     
     private void InitializeRoutePlanner(GenerationData result)
@@ -196,9 +248,9 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    public void SetUpDebugGame()
+    public void SetUpDebugGame(bool isHostage)
     {
-        SetUpGame(Random.Range(int.MinValue, int.MaxValue), () => { });
+        SetUpGame(Random.Range(int.MinValue, int.MaxValue), () => { }, isHostage);
         StartGame();
     }
 }

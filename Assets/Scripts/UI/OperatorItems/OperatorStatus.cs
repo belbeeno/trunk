@@ -31,9 +31,18 @@ public class OperatorStatus : MonoBehaviour
         helicopterToggle.SetInteractable(false);
     }
 
-    protected void SetTimers(ref float timer, float cooldown, ref OperatorToggle target)
+    public void FillTimers(GameManager.PlayerStatus status)
     {
-        if (timer < cooldown)
+        if (status != GameManager.PlayerStatus.InGame) return;
+
+        SetTimers(ref checkAreaTimer, GameSettings.APB_COOLDOWN, ref checkAreaToggle, true);
+        SetTimers(ref policeTimer, GameSettings.COP_SIREN_PING_COOLDOWN, ref policeToggle, true);
+        SetTimers(ref helicopterTimer, GameSettings.HELICOPTER_PING_COOLDOWN, ref helicopterToggle, true);
+    }
+
+    protected void SetTimers(ref float timer, float cooldown, ref OperatorToggle target, bool force = false)
+    {
+        if (timer < cooldown || force)
         {
             timer += Time.deltaTime;
             if (timer >= cooldown)
@@ -44,10 +53,25 @@ public class OperatorStatus : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        GameManager.Get().OnLocalStatusChanged.AddListener(FillTimers);
+    }
+
     public void Update()
     {
-        SetTimers(ref checkAreaTimer, GameSettings.APB_COOLDOWN, ref checkAreaToggle);
-        SetTimers(ref policeTimer, GameSettings.COP_SIREN_PING_COOLDOWN, ref policeToggle);
-        SetTimers(ref helicopterTimer, GameSettings.HELICOPTER_PING_COOLDOWN, ref helicopterToggle);
+        if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.InGame
+            || GameManager.Get().RemoteStatus == GameManager.PlayerStatus.NotConnected)
+        {
+            SetTimers(ref checkAreaTimer, GameSettings.APB_COOLDOWN, ref checkAreaToggle);
+            SetTimers(ref policeTimer, GameSettings.COP_SIREN_PING_COOLDOWN, ref policeToggle);
+            SetTimers(ref helicopterTimer, GameSettings.HELICOPTER_PING_COOLDOWN, ref helicopterToggle);
+        }
+        else
+        {
+            checkAreaToggle.SetInteractable(false);
+            policeToggle.SetInteractable(false);
+            helicopterToggle.SetInteractable(false);
+        }
     }
 }

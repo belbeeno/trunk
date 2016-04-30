@@ -6,7 +6,7 @@ public class ChangeCursorOnMouseOver : MonoBehaviour, IPointerEnterHandler, IPoi
 {
     public Texture2D cursorToUse = null;
     public Vector2 hotSpot = new Vector2();
-    public CursorMode mode = CursorMode.Auto;
+    private CursorMode mode = CursorMode.ForceSoftware;
 
     public void OnPointerEnter(PointerEventData eventData)
     {

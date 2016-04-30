@@ -57,7 +57,6 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
 
         server.RegisterHandler(MsgType.Connect, OnConnectMsg);
         server.RegisterHandler(ID.APB, OnAPBResponseMsg);
-        server.RegisterHandler(ID.GameOver, OnGameOverMsg);
 
         if (!server.Listen(GAME_PORT))
         {
@@ -94,6 +93,18 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
             }
 
             server.Update();
+
+            if (Debug.isDebugBuild)
+            {
+                if (Input.GetKeyUp(KeyCode.KeypadPlus))
+                {
+                    DEBUGIncrementRadius();
+                }
+                else if (Input.GetKeyUp(KeyCode.KeypadMinus))
+                {
+                    DEBUGDecrementRadius();
+                }
+            }
         }
     }
     public override void OnDestroy()
@@ -113,7 +124,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         base.OnDestroy();
     }
 
-    public override void SendMessage(short msgId, MessageBase msg)
+    public override void SendNetMessage(short msgId, MessageBase msg)
     {
         NetworkConnection client = server.FindConnection(clientId);
         if (client != null)
@@ -130,15 +141,15 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
     {
         SeedMsg initMsg = new SeedMsg();
         initMsg.seed = Random.seed;
-        SendMessage(ID.LoadSession, initMsg);
+        SendNetMessage(ID.LoadSession, initMsg);
 
-        GameManager.Get().SetUpGame(initMsg.seed, SendValidateMessageMsg);
+        GameManager.Get().SetUpGame(initMsg.seed, SendValidateMessageMsg, false);
     }
     private void SendValidateMessageMsg()
     {
         SeedMsg msg = new SeedMsg();
         msg.seed = Random.seed;
-        SendMessage(ID.ValidateSession, msg);
+        SendNetMessage(ID.ValidateSession, msg);
     }
 
     public void RequestAPB(Vector3 pos)
@@ -172,7 +183,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         Log("Requesting APB at pos " + pos.ToString());
         APBRequest msg = new APBRequest();
         msg.position = pos;
-        SendMessage(ID.APB, msg);
+        SendNetMessage(ID.APB, msg);
     }
     public void OnAPBResponseMsg(NetworkMessage msg)
     {
@@ -182,13 +193,12 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         {
             if (castedMsg.hints[i].type == APBResponse.Hint.HintType.Hostage)
             {
-                Log("Hostage found!  You win!");
                 OnGameWin.Invoke();
                 Restart();
 
                 GameOverMsg gameOverMsg = new GameOverMsg();
                 gameOverMsg.timestamp = Network.time;
-                msg.conn.Send(ID.GameOver, gameOverMsg);
+                msg.conn.Send(ID.GameWon, gameOverMsg);
             }
             else
             {
@@ -205,7 +215,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         TriggerHelicopterMsg msg = new TriggerHelicopterMsg();
         msg.goingRight = isRight;
         msg.yPos = y;
-        SendMessage(ID.TriggerHelicopter, msg);
+        SendNetMessage(ID.TriggerHelicopter, msg);
     }
 
     public void TriggerPoliceInHostageScene(Vector2 pos)
@@ -213,7 +223,7 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
         Log("Requesting Police car at pos " + pos.ToString());
         TriggerPoliceMsg msg = new TriggerPoliceMsg();
         msg.position = pos;
-        SendMessage(ID.TriggerPoliceCar, msg);
+        SendNetMessage(ID.TriggerPoliceCar, msg);
     }
 
     public void OnConnectMsg(NetworkMessage msg)
@@ -224,16 +234,35 @@ public class TrunkNetworkingOperator : TrunkNetworkingBase
 
         SeedMsg initMsg = new SeedMsg();
         initMsg.seed = Random.seed;
-        SendMessage(ID.InitSession, initMsg);
+        SendNetMessage(ID.InitSession, initMsg);
 
-        SetUpSession(initMsg.seed);
+        SetUpSession(initMsg.seed, false);
     }
 
-    public void OnGameOverMsg(NetworkMessage msg)
+    public void SendGameLostMsg()
     {
-        // If we're getting this from the client, the captors are out of range and we lost.
+        GameOverMsg msg = new GameOverMsg();
+        msg.timestamp = Network.time;
+        SendNetMessage(ID.GameLost, msg);
+
+        OnGameLost.Invoke();
+
         Log("You took too long, the captors won!");
         Restart();
+    }
+
+    public void DEBUGIncrementRadius()
+    {
+        DEBUGIntMsg incMsg = new DEBUGIntMsg();
+        incMsg.value = 100;
+        SendNetMessage(NetMessage.ID.DEBUG_ChangeCullingRadius, incMsg);
+    }
+
+    public void DEBUGDecrementRadius()
+    {
+        DEBUGIntMsg decMsg = new DEBUGIntMsg();
+        decMsg.value = -100;
+        SendNetMessage(NetMessage.ID.DEBUG_ChangeCullingRadius, decMsg);
     }
 
 }

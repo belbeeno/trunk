@@ -40,7 +40,7 @@ namespace NetMessage
 
         public const short VoiceChatPacket      = Base + 1;
         public const short InitSession          = Base + 2;
-        public const short LoadSession        = Base + 3;
+        public const short LoadSession          = Base + 3;
         public const short ValidateSession      = Base + 4;
         public const short PlayerStatusChange   = Base + 5;
 
@@ -48,7 +48,15 @@ namespace NetMessage
         public const short TriggerPoliceCar     = Base + 12;
         public const short TriggerHelicopter    = Base + 13;
 
-        public const short GameOver             = Base + 20;
+        public const short GameLost             = Base + 20;
+        public const short GameWon              = Base + 21;
+
+        public const short DEBUG_ChangeCullingRadius     = Base + 30;
+    }
+
+    public class DEBUGIntMsg : MessageBase 
+    {
+        public int value;
     }
 
     public class SeedMsg : MessageBase

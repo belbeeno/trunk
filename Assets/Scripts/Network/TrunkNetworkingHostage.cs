@@ -43,7 +43,13 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         initParams.Add(new NetHandlerInitParams(ID.APB, OnAPBRequestMsg));
         initParams.Add(new NetHandlerInitParams(ID.TriggerPoliceCar, OnTriggerPoliceCarMsg));
         initParams.Add(new NetHandlerInitParams(ID.TriggerHelicopter, OnTriggerHelicopterMsg));
-        initParams.Add(new NetHandlerInitParams(ID.GameOver, OnGameOverMsg));
+        initParams.Add(new NetHandlerInitParams(ID.GameWon, OnGameWinMsg));
+        initParams.Add(new NetHandlerInitParams(ID.GameLost, OnGameLoseMsg));
+
+        if (Debug.isDebugBuild)
+        {
+            initParams.Add(new NetHandlerInitParams(ID.DEBUG_ChangeCullingRadius, OnDEBUGChangeCullingRadius));
+        }
 
         base.Begin();
     }
@@ -83,7 +89,7 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         base.OnDestroy();
     }
 
-    public override void SendMessage(short msgId, MessageBase msg)
+    public override void SendNetMessage(short msgId, MessageBase msg)
     {
         if (network != null)
         {
@@ -120,23 +126,30 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         Log("Connected to server!");
         broadcaster.StopBroadcast();
     }
-    public void OnGameOverMsg(NetworkMessage msg)
+    
+    public void OnGameWinMsg(NetworkMessage msg)
     {
-        // If we're getting this at the hostage end, then the operator found us!
-
         Log("Hostage found!  You win!");
+
+        GameManager.Get().LocalStatus = GameManager.PlayerStatus.GameOverWin;
         OnGameWin.Invoke();
-        Restart();
+    }
+    public void OnGameLoseMsg(NetworkMessage msg)
+    {
+        Log("Game Lost!");
+
+        GameManager.Get().LocalStatus = GameManager.PlayerStatus.GameOverLoss;
+        OnGameLost.Invoke();
     }
     public void OnInitSessionMsg(NetworkMessage msg)
     {
         SeedMsg castedMsg = msg.ReadMessage<SeedMsg>();
-        SetUpSession(castedMsg.seed);
+        SetUpSession(castedMsg.seed, true);
     }
     public void OnLoadSessionMsg(NetworkMessage msg)
     {
         SeedMsg castedMsg = msg.ReadMessage<SeedMsg>();
-        GameManager.Get().SetUpGame(castedMsg.seed, ValidateSession);
+        GameManager.Get().SetUpGame(castedMsg.seed, ValidateSession, true);
     }
 
     public void OnAPBRequestMsg(NetworkMessage msg)
@@ -154,7 +167,11 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         float distFromOriginSqrd = (Camera.main.transform.position - response.origin).sqrMagnitude;
         if (distFromOriginSqrd <= GameSettings.APB_RADIUS * GameSettings.APB_RADIUS)
         {
-            response.hints.Add(new APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), APBResponse.Hint.HintType.Hostage));
+            if (GameManager.Get().LocalStatus == GameManager.PlayerStatus.InGame)
+            {
+                // Can only finish the game if we're still playing
+                response.hints.Add(new APBResponse.Hint((mover != null ? mover.transform.position : Camera.main.transform.position), APBResponse.Hint.HintType.Hostage));
+            }
         }
 
         if (outsideTrunk == null)
@@ -234,4 +251,9 @@ public class TrunkNetworkingHostage : TrunkNetworkingBase
         helicopterInstance.SetActive(false);
     }
 
+    public void OnDEBUGChangeCullingRadius(NetworkMessage msg)
+    {
+        DEBUGIntMsg castedMsg = msg.ReadMessage<DEBUGIntMsg>();
+        GameSettings.HOSTAGE_CULLING_RADIUS = Mathf.Max(GameSettings.HOSTAGE_CULLING_RADIUS + castedMsg.value, 50f);
+    }
 }

@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 public class EnableCBAudioSources : MonoBehaviour
 {
     public List<CardboardAudioSource> allSources = null;
-    public bool enableOnStart = true;
     void EnableAllCBAudioSources()
     {
         for (int i = 0; i < allSources.Count; i++)
