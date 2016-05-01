@@ -15,12 +15,7 @@ public class Tool : Interactable {
         canBeHeld = toolData.canBeHeld; 
     }
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-    
-    public override bool CanInteractWith(Interactable item)
+	public override bool CanInteractWith(Interactable item)
     {
         if (item.GetType() == typeof(Latch))
         {

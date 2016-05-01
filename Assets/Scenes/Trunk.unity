@@ -11812,10 +11812,14 @@ Prefab:
     - target: {fileID: 11149444, guid: 43086242d821c2940bfc0dafb4051d36, type: 2}
       propertyPath: m_Animations.Array.data[0]
       value: 
-      objectReference: {fileID: 7400000, guid: bbd7fb2cee4858348927537590d4cf0e, type: 2}
+      objectReference: {fileID: 7400000, guid: 36f6c1069f9a9a54f8a000e07221153d, type: 2}
     - target: {fileID: 170292, guid: 43086242d821c2940bfc0dafb4051d36, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11149444, guid: 43086242d821c2940bfc0dafb4051d36, type: 2}
+      propertyPath: m_PlayAutomatically
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 43086242d821c2940bfc0dafb4051d36, type: 2}
@@ -13390,6 +13394,7 @@ GameObject:
   - 4: {fileID: 1406049025}
   - 114: {fileID: 1406049026}
   - 114: {fileID: 1406049027}
+  - 114: {fileID: 1406049028}
   m_Layer: 8
   m_Name: Car
   m_TagString: Untagged
@@ -13425,7 +13430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 30
   maxTurnAngle: 3
-  bounceRangeInSeconds: {x: 30, y: 45}
+  bounceRangeInSeconds: {x: 20, y: 45}
   bounceDuration: 2
   isMoving: 0
   banking: {fileID: 117290910}
@@ -13443,6 +13448,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dae380f4b5197e44896c4f4bd4478ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1406049028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1406049024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dbca64e524ea44f9b26142ec59aca8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  directivityAlpha: 0
+  directivitySharpness: 1
+  gainDb: 0
+  occlusionEnabled: 0
+  playOnAwake: 0
+  rolloffMode: 1
+  sourceClip: {fileID: 8300000, guid: a4efabda044be22439b5f250b991c06c, type: 3}
+  sourceLoop: 0
+  sourceMute: 0
+  sourcePitch: 1
+  sourceVolume: 1
+  sourceMaxDistance: 10
+  sourceMinDistance: 0
+  hrtfEnabled: 1
 --- !u!1001 &1412976056
 Prefab:
   m_ObjectHideFlags: 0
@@ -14352,10 +14382,6 @@ Prefab:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1441971183}
-    - target: {fileID: 177004, guid: b3aa78864b0ce6748b5897bdeae600d6, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b3aa78864b0ce6748b5897bdeae600d6, type: 2}
   m_IsPrefabParent: 0

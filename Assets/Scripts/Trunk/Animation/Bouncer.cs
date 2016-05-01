@@ -56,6 +56,7 @@ public class Bouncer : MonoBehaviour {
         _duration = duration;
         _timer = 0;
         _isBouncing = true;
+        
         //Debug.Log("Starting bounce");
     }
 }

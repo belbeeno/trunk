@@ -28,8 +28,14 @@ public class TextSequence3D : MonoBehaviour
         {
             text.text = lines[linePointer];
         }
-        TrunkNetworkingBase.GetBase().OnGameWin.AddListener(OnWin);
-        TrunkNetworkingBase.GetBase().OnGameLost.AddListener(OnLost);
+        if (TrunkNetworkingBase.GetBase() != null)
+        {
+            TrunkNetworkingBase.GetBase().OnGameWin.AddListener(OnWin);
+            TrunkNetworkingBase.GetBase().OnGameLost.AddListener(OnLost); 
+        } else if (Debug.isDebugBuild)
+        {
+            GameManager.Get().LocalStatus = GameManager.PlayerStatus.InGamePreCall; 
+        }
     }
 
     void UpdateText()
@@ -55,7 +61,8 @@ public class TextSequence3D : MonoBehaviour
     public void Update()
     {
         if (GameManager.Get().LocalStatus != GameManager.PlayerStatus.PreGame
-            && GameManager.Get().RemoteStatus != GameManager.PlayerStatus.NotConnected)
+            && GameManager.Get().RemoteStatus != GameManager.PlayerStatus.NotConnected
+            )
         {
             return;
         }

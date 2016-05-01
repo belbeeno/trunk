@@ -64,6 +64,8 @@ public class TrunkMover : MonoBehaviour
             if (latch.isOpen)
             {
                 bouncer.Bounce(bounceDuration);
+                var audioSource = GetComponent<CardboardAudioSource>();
+                audioSource.Play();
             }
             timer = Random.Range(bounceRangeInSeconds.x, bounceRangeInSeconds.y);
         }
